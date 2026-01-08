@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram,Mail } from 'lucide-react';
 
 const Home = () => {
   return (
@@ -43,6 +43,10 @@ const Home = () => {
         </a>
         <a href="https://instagram.com/your-username" target="_blank" rel="noreferrer" style={styles.socialLink}>
           <Instagram size={28} />
+        </a>
+        {/* New Email Link */}
+        <a href="mailto:your-email@example.com" style={styles.socialLink}>
+          <Mail size={28} />
         </a>
       </div>
     </div>
