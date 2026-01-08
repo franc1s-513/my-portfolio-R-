@@ -1,3 +1,6 @@
+import React from 'react';
+import { Github, Linkedin, Instagram } from 'lucide-react';
+
 const Home = () => {
   return (
     <div style={{ 
@@ -15,13 +18,12 @@ const Home = () => {
         Full-Stack Developer & UI Designer
       </p>
       
+      {/* Button Row */}
       <div style={{ display: 'flex', gap: '15px', marginTop: '25px' }}>
-        {/* Primary Action Button */}
         <button style={styles.primaryButton}>
           Let's Talk
         </button>
 
-        {/* Secondary Download Button */}
         <a 
           href="/resume.pdf" 
           download="Francis_Resume.pdf" 
@@ -30,11 +32,23 @@ const Home = () => {
           Download CV
         </a>
       </div>
+
+      {/* Social Icons Row */}
+      <div style={{ display: 'flex', gap: '25px', marginTop: '40px' }}>
+        <a href="https://github.com/your-username" target="_blank" rel="noreferrer" style={styles.socialLink}>
+          <Github size={28} />
+        </a>
+        <a href="https://linkedin.com/in/your-username" target="_blank" rel="noreferrer" style={styles.socialLink}>
+          <Linkedin size={28} />
+        </a>
+        <a href="https://instagram.com/your-username" target="_blank" rel="noreferrer" style={styles.socialLink}>
+          <Instagram size={28} />
+        </a>
+      </div>
     </div>
   );
 };
 
-// This is the part you were missing!
 const styles = {
   primaryButton: {
     padding: '12px 30px',
@@ -59,6 +73,13 @@ const styles = {
     textDecoration: 'none',
     display: 'inline-block',
     transition: '0.3s'
+  },
+  socialLink: {
+    color: '#64748b',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 };
 

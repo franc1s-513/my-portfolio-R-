@@ -32,3 +32,13 @@ a[style*="border: 2px solid #0ea5e9"]:hover {
   background-color: #0ea5e9 !important;
   color: white !important;
 }
+/* Add this at the bottom of your CSS file */
+a svg {
+  transition: all 0.3s ease;
+}
+
+a svg:hover {
+  color: #0ea5e9; /* Sky Blue */
+  transform: translateY(-5px); /* Lift effect */
+  filter: drop-shadow(0 4px 6px rgba(14, 165, 233, 0.3));
+}
