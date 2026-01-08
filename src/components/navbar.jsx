@@ -49,10 +49,10 @@ const styles = {
     transform: 'translateX(-50%)',
     // 1. Widened the bar
     width: '95%',            
-    maxWidth: '1000px', // Increased from 850px for a more "full" look
+    maxWidth: '800px', // Increased from 850px for a more "full" look
     padding: '0 20px',
     height: '60px',
-    background: 'rgba(255, 255, 255, 0.4)',
+    background: 'rgba(255, 255, 255, 0.3)', // Lowered from 0.4 for more "clear" glass
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     borderRadius: '50px', 
