@@ -47,29 +47,34 @@ const styles = {
     top: '25px',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: 'fit-content', // Makes it wrap tightly around the content
-    padding: '0 10px',
-    height: '55px',
-    background: 'rgba(255, 255, 255, 0.6)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    borderRadius: '50px', // Perfect Pill Shape
-    border: '1px solid rgba(255, 255, 255, 0.4)',
+    // 1. Widened the bar
+    width: '95%',            
+    maxWidth: '1000px', // Increased from 850px for a more "full" look
+    padding: '0 20px',
+    height: '60px',
+    background: 'rgba(255, 255, 255, 0.4)',
+    backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
+    borderRadius: '50px', 
+    border: '1px solid rgba(255, 255, 255, 0.3)',
     zIndex: 1000,
     display: 'flex',
     alignItems: 'center',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
   },
   navContainer: {
+    width: '100%',
     display: 'flex',
-    gap: '40px',
+    // 2. This creates the "Space in the middle" by pushing items to the ends
+    justifyContent: 'space-between', 
     alignItems: 'center',
-    padding: '0 25px',
+    padding: '0 15px',
   },
   leftSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '15px', // Keep Francis and Toggle close together
+  
   },
   logoText: {
     fontWeight: '900',
@@ -89,10 +94,11 @@ const styles = {
     justifyContent: 'center',
     transition: 'transform 0.3s ease'
   },
-  links: {
+links: {
     display: 'flex',
-    gap: '20px',
-  }
+    // 3. Spaced out the links on the right corner
+    gap: '30px', 
+  },
 };
 
 export default Navbar;
