@@ -42,3 +42,73 @@ a svg:hover {
   transform: translateY(-5px); /* Lift effect */
   filter: drop-shadow(0 4px 6px rgba(14, 165, 233, 0.3));
 }
+/* Navigation Link Hover Effect */
+.nav-link {
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #0ea5e9;
+}
+
+/* The sliding underline effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #0ea5e9;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Apply a global transition to EVERYTHING */
+* {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+body {
+  margin: 0;
+  background-color: #f8fafc; /* Light mode bg */
+  color: #1e293b;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+  background-color: #020617 !important; /* Rich Dark Blue */
+  color: #f1f5f9;
+}
+
+/* Update Nav for Dark Mode */
+body.dark-mode nav {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .nav-link {
+  color: #94a3b8;
+}
+
+/* Hover effects for the Pill Links */
+.nav-link {
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #0ea5e9;
+}
