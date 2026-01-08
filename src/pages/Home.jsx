@@ -9,7 +9,8 @@ const Home = () => {
       flexDirection: 'column', 
       justifyContent: 'center', 
       alignItems: 'center',
-      textAlign: 'center'
+      textAlign: 'center',
+      background:'transparent'
     }}>
       <h1 style={{ fontSize: '4rem', marginBottom: '10px', color: '#0f172a' }}>
         Hi, I'm <span style={{ color: '#0ea5e9' }}>Francis</span>

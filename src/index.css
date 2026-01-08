@@ -1,62 +1,63 @@
 :root {
   --sky-blue: #38bdf8;
   --soft-white: #f8fafc;
-  --dark-text: #0f172a;
+  --dark-bg: #020617; /* Midnight Blue for dark mode */
+}
+
+/* 1. Global Transition - Makes the color shift smooth everywhere */
+* {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
 }
 
 body {
   margin: 0;
-  /* A soft gradient from very light blue to white */
-  background: linear-gradient(180deg, #d8eefd 80%, #f8fafc 100%);
-  color: #0f172a; /* Deep navy for text contrast */
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
+  /* Light Mode: Soft gradient */
+  background: linear-gradient(180deg, #d8eefd 80%, #f8fafc 100%);
+  color: #0f172a;
+  overflow-x: hidden;
 }
+
+/* 2. Dark Mode Force - This targets the whole site */
+body.dark-mode {
+  background: var(--dark-bg) !important; /* Removes the light gradient */
+  color: #f1f5f9 !important;
+}
+
+/* 3. Dark Mode Nav & Links */
+body.dark-mode nav {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .nav-link {
+  color: #94a3b8;
+}
+
+body.dark-mode .nav-link:hover {
+  color: #38bdf8;
+}
+
+/* 4. Your Hover & Component Effects */
 .card-shadow {
   box-shadow: 0 10px 30px -5px rgba(56, 189, 248, 0.3);
 }
-/* This makes every button in your app grow slightly when hovered */
+
 button:hover {
   transform: translateY(-3px);
   filter: brightness(1.1);
-  transition: all 0.3s ease;
 }
 
-/* This makes your navbar icons glow when hovered */
-a:hover {
-  transform: scale(1.2);
-  transition: all 0.3s ease;
-}
-/* This targets your secondary button specifically for a pro feel */
-a[style*="border: 2px solid #0ea5e9"]:hover {
-  background-color: #0ea5e9 !important;
-  color: white !important;
-}
-/* Add this at the bottom of your CSS file */
-a svg {
-  transition: all 0.3s ease;
-}
-
-a svg:hover {
-  color: #0ea5e9; /* Sky Blue */
-  transform: translateY(-5px); /* Lift effect */
-  filter: drop-shadow(0 4px 6px rgba(14, 165, 233, 0.3));
-}
-/* Navigation Link Hover Effect */
 .nav-link {
   text-decoration: none;
   color: #64748b;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   position: relative;
-  transition: color 0.3s ease;
 }
 
-.nav-link:hover {
-  color: #0ea5e9;
-}
-
-/* The sliding underline effect */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -72,43 +73,19 @@ a svg:hover {
   width: 100%;
 }
 
-/* Apply a global transition to EVERYTHING */
-* {
-  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+/* Secondary Button Hover */
+a[style*="border: 2px solid #0ea5e9"]:hover {
+  background-color: #0ea5e9 !important;
+  color: white !important;
 }
 
-body {
-  margin: 0;
-  background-color: #f8fafc; /* Light mode bg */
-  color: #1e293b;
+/* Social Icons Glow */
+a svg {
+  transition: all 0.3s ease;
 }
 
-/* Dark Mode Overrides */
-body.dark-mode {
-  background-color: #020617 !important; /* Rich Dark Blue */
-  color: #f1f5f9;
-}
-
-/* Update Nav for Dark Mode */
-body.dark-mode nav {
-  background: rgba(15, 23, 42, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-}
-
-body.dark-mode .nav-link {
-  color: #94a3b8;
-}
-
-/* Hover effects for the Pill Links */
-.nav-link {
-  text-decoration: none;
-  color: #64748b;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
+a svg:hover {
   color: #0ea5e9;
+  transform: translateY(-5px);
+  filter: drop-shadow(0 4px 6px rgba(14, 165, 233, 0.3));
 }
