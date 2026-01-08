@@ -1,0 +1,29 @@
+:root {
+  --sky-blue: #38bdf8;
+  --soft-white: #f8fafc;
+  --dark-text: #0f172a;
+}
+
+body {
+  margin: 0;
+  /* A soft gradient from very light blue to white */
+  background: linear-gradient(180deg, #d8eefd 80%, #f8fafc 100%);
+  color: #0f172a; /* Deep navy for text contrast */
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+.card-shadow {
+  box-shadow: 0 10px 30px -5px rgba(56, 189, 248, 0.3);
+}
+/* This makes every button in your app grow slightly when hovered */
+button:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+  transition: all 0.3s ease;
+}
+
+/* This makes your navbar icons glow when hovered */
+a:hover {
+  transform: scale(1.2);
+  transition: all 0.3s ease;
+}
