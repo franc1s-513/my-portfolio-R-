@@ -1,24 +1,25 @@
 :root {
   --sky-blue: #38bdf8;
   --soft-white: #f8fafc;
-  --dark-bg: #020617; /* Midnight Blue for dark mode */
+  --dark-bg: #020617; 
 }
 
-/* 1. Global Transition - Makes the color shift smooth everywhere */
 * {
-  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  /* Light Mode: Soft gradient */
-  background: linear-gradient(180deg, #d8eefd 80%, #f8fafc 100%);
+  /* IMPORTANT: Set to transparent so the SkyAndBirds canvas is visible */
+  background: transparent; 
   color: #0f172a;
   overflow-x: hidden;
 }
-
+html {
+  background-color: #7dd3fc; 
+}
 /* 2. Dark Mode Force - This targets the whole site */
 body.dark-mode {
   background: var(--dark-bg) !important; /* Removes the light gradient */
