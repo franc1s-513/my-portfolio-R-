@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const Home = () => {
+const Home = ({ isDark }) => { // 1. Added isDark prop
   return (
     <div style={styles.container}>
       <div style={styles.wrapper}>
@@ -46,11 +46,11 @@ const Home = () => {
         >
           <motion.div 
             animate={{ 
-              y: [0, -20, 0], // Floating up and down
+              y: [0, -20, 0],
               borderRadius: [
-                '30% 70% 70% 30% / 30% 30% 70% 70%', // Blob 1
-                '50% 50% 33% 67% / 55% 27% 73% 45%', // Blob 2
-                '30% 70% 70% 30% / 30% 30% 70% 70%'  // Return to 1
+                '30% 70% 70% 30% / 30% 30% 70% 70%', 
+                '50% 50% 33% 67% / 55% 27% 73% 45%', 
+                '30% 70% 70% 30% / 30% 30% 70% 70%'
               ]
             }}
             transition={{ 
@@ -58,7 +58,13 @@ const Home = () => {
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            style={styles.imageFrame}
+            style={{
+              ...styles.imageFrame,
+              // 2. Add a glow effect in Dark Mode
+              boxShadow: isDark 
+                ? '0 30px 60px rgba(14, 165, 233, 0.4)' 
+                : '0 30px 60px rgba(0, 74, 124, 0.2)',
+            }}
           >
             <img 
               src="YOUR_IMAGE_URL_HERE" 
@@ -81,7 +87,8 @@ const styles = {
     justifyContent: 'center',
     padding: '0 10%',
     position: 'relative',
-    zIndex: 1,
+    // 3. Ensure Z-index is higher than the canvas
+    zIndex: 10, 
   },
   wrapper: {
     display: 'grid',
@@ -106,14 +113,13 @@ const styles = {
     WebkitBackdropFilter: 'blur(10px)',
     border: '3px solid rgba(255, 255, 255, 0.4)',
     overflow: 'hidden',
-    boxShadow: '0 30px 60px rgba(0, 74, 124, 0.2)', // Deep blue shadow for sky depth
     cursor: 'pointer',
+    transition: 'box-shadow 0.8s ease',
   },
   image: {
     width: '110%',
     height: '110%',
     objectFit: 'cover',
-    // Slight shift to center the image within the morphing blob
     marginLeft: '-5%',
     marginTop: '-5%',
   },
@@ -123,8 +129,8 @@ const styles = {
   tagline: { color: 'rgba(255, 255, 255, 0.9)', fontSize: '1.25rem', maxWidth: '500px', marginTop: '20px', lineHeight: '1.6' },
   highlight: { color: '#fff', fontWeight: '700', borderBottom: '2px solid #0ea5e9', paddingBottom: '2px' },
   ctaGroup: { display: 'flex', gap: '20px', marginTop: '40px' },
-  primaryBtn: { padding: '15px 35px', borderRadius: '50px', border: 'none', background: '#fff', color: '#0ea5e9', fontWeight: '700', fontSize: '1rem', cursor: 'pointer', transition: 'all 0.3s ease' },
-  secondaryBtn: { padding: '15px 35px', borderRadius: '50px', border: '2px solid #fff', background: 'transparent', color: '#fff', fontWeight: '700', fontSize: '1rem', cursor: 'pointer', transition: 'all 0.3s ease' },
+  primaryBtn: { padding: '15px 35px', borderRadius: '50px', border: 'none', background: '#fff', color: '#0ea5e9', fontWeight: '700', fontSize: '1rem', cursor: 'pointer' },
+  secondaryBtn: { padding: '15px 35px', borderRadius: '50px', border: '2px solid #fff', background: 'transparent', color: '#fff', fontWeight: '700', fontSize: '1rem', cursor: 'pointer' },
 };
 
 export default Home;

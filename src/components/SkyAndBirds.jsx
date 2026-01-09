@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-const SkyAndBirds = () => {
+const SkyAndBirds = ({ isDark }) => { // 1. Added isDark prop
   const canvasRef = useRef(null);
-  const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,49 +12,35 @@ const SkyAndBirds = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-
-    const handleMouseMove = (e) => {
-      // Normalize mouse position to -1 to 1
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
-    };
-
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
     handleResize();
 
     const birds = [];
-    const formationCount = 3; 
-    const birdsPerFormation = 5;
+    const birdCount = 12;
 
     class Bird {
-      constructor(groupIndex, birdIndex) {
-        this.groupIndex = groupIndex;
-        this.birdIndex = birdIndex;
+      constructor() {
         this.reset();
         this.x = Math.random() * canvas.width;
       }
 
       reset() {
-        const verticalOffset = this.birdIndex % 2 === 0 ? this.birdIndex * 15 : -this.birdIndex * 15;
-        const horizontalOffset = this.birdIndex * -25;
-
-        this.x = horizontalOffset - 100;
-        this.baseY = (canvas.height * 0.2) + (this.groupIndex * 200);
-        this.y = this.baseY + verticalOffset;
-        
-        this.size = 4;
-        this.speedX = 1.2 + (this.groupIndex * 0.2); 
-        this.wingSpan = this.birdIndex * 0.3; 
-        this.wingSpeed = 0.08;
-        this.opacity = 0.6;
+        this.x = -50;
+        this.y = Math.random() * (canvas.height * 0.7);
+        this.size = Math.random() * 4 + 3;
+        this.speedX = Math.random() * 1.5 + 1; 
+        this.speedY = Math.random() * 0.4 - 0.2;
+        this.wingSpan = Math.random() * Math.PI;
+        this.wingSpeed = Math.random() * 0.1 + 0.05;
+        this.opacity = Math.random() * 0.6 + 0.4;
       }
 
       update() {
         this.x += this.speedX;
+        this.y += this.speedY;
         this.wingSpan += this.wingSpeed;
 
-        if (this.x > canvas.width + 200) {
+        if (this.x > canvas.width + 50) {
           this.reset();
         }
       }
@@ -63,20 +48,19 @@ const SkyAndBirds = () => {
       draw() {
         const flap = Math.sin(this.wingSpan) * this.size;
         
-        // PARALLAX CALCULATION: Shift position based on mouse
-        const parallaxX = mouse.current.x * 20; 
-        const parallaxY = mouse.current.y * 20;
-
         ctx.save();
-        // The bird moves with its speed + the parallax shift
-        ctx.translate(this.x + parallaxX, this.y + parallaxY);
+        ctx.translate(this.x, this.y);
         
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
-        ctx.shadowBlur = 5;
-        ctx.shadowOffsetY = 5;
+        // 2. Dynamic Shadow: Subtle dark in day, glowing blue at night
+        ctx.shadowColor = isDark ? 'rgba(56, 189, 248, 0.8)' : 'rgba(0, 0, 0, 0.1)';
+        ctx.shadowBlur = isDark ? 8 : 4;
 
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.lineWidth = 2;
+        // 3. Bird Color: Pure white in day, bright sky-blue glow at night
+        ctx.strokeStyle = isDark 
+          ? `rgba(125, 211, 252, ${this.opacity})` 
+          : `rgba(255, 255, 255, ${this.opacity})`;
+          
+        ctx.lineWidth = 1.8;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
@@ -90,10 +74,8 @@ const SkyAndBirds = () => {
       }
     }
 
-    for (let g = 0; g < formationCount; g++) {
-      for (let b = 0; b < birdsPerFormation; b++) {
-        birds.push(new Bird(g, b));
-      }
+    for (let i = 0; i < birdCount; i++) {
+      birds.push(new Bird());
     }
 
     const animate = () => {
@@ -109,10 +91,9 @@ const SkyAndBirds = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [isDark]); // 4. Added isDark to dependency array
 
   return (
     <canvas
@@ -125,7 +106,11 @@ const SkyAndBirds = () => {
         height: '100vh',
         zIndex: -1,
         pointerEvents: 'none',
-        background: 'linear-gradient(180deg, #7dd3fc 0%, #38bdf8 100%)'
+        // 5. SUNSET TRANSITION: Fades from Sky Blue to Midnight Blue
+        background: isDark 
+          ? 'linear-gradient(180deg, #020617 0%, #0f172a 100%)' 
+          : 'linear-gradient(180deg, #7dd3fc 0%, #38bdf8 100%)',
+        transition: 'background 1.5s ease-in-out' // Makes the change feel natural
       }}
     />
   );

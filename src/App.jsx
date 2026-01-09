@@ -1,27 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SkyAndBirds from './components/WindParticles'; 
+import WindParticles from './components/WindParticles'; 
+import SkyAndBirds from './components/SkyAndBirds'; // Ensure the name matches your file
 import CustomCursor from './components/CustomCursor';
 import Navbar from './components/navbar';
 import Home from './pages/Home';
-import About from './pages/About'; // 1. IMPORT YOUR ABOUT PAGE
+import About from './pages/About';
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+
   return (
     <Router>
-      {/* Background and UI layers */}
-      <SkyAndBirds /> 
-      <CustomCursor /> 
-      <Navbar />
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
+      <div style={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
         
-        {/* 2. ADD THIS ROUTE FOR THE ABOUT PAGE */}
-        <Route path="/about" element={<About />} />
+        {/* Layer 1: Backgrounds (Fixed and behind everything) */}
+        <WindParticles isDark={isDark} />
+        <SkyAndBirds isDark={isDark} />
         
-        {/* You can add more routes here as you build them */}
-      </Routes>
+        {/* Layer 2: UI (Fixed on top) */}
+        <CustomCursor /> 
+        <Navbar isDark={isDark} setIsDark={setIsDark} />
+        
+        {/* Layer 3: Routing Content (Relative and above backgrounds) */}
+        <main style={{ position: 'relative', zIndex: 10 }}>
+          <Routes>
+            <Route path="/" element={<Home isDark={isDark} />} />
+            <Route path="/about" element={<About isDark={isDark} />} />
+            {/* Add placeholders for missing routes to avoid blank screens */}
+            <Route path="/projects" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Projects Page Coming Soon</div>} />
+            <Route path="/certificates" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Certificates Page Coming Soon</div>} />
+            <Route path="/contact" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Contact Page Coming Soon</div>} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const SkyAndBirds = () => {
+const WindParticles = ({ isDark }) => { // 1. Accept the isDark prop
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -15,77 +15,68 @@ const SkyAndBirds = () => {
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    const birds = [];
-    const birdCount = 12; // Fewer birds make it look more realistic and "elevated"
+    const particles = [];
+    const particleCount = 150;
 
-    class Bird {
+    class Particle {
       constructor() {
         this.reset();
-        // Randomize initial positions so they don't all fly in a line
+        // Scatter initially so they don't all start at once
         this.x = Math.random() * canvas.width;
       }
 
       reset() {
-        this.x = -50; // Start off-screen
-        this.y = Math.random() * (canvas.height * 0.7); // Stay in upper sky area
-        this.size = Math.random() * 4 + 3; // Small and elegant
-        this.speedX = Math.random() * 1.5 + 1; 
-        this.speedY = Math.random() * 0.4 - 0.2;
-        this.wingSpan = Math.random() * Math.PI; // Random start for wing flap
-        this.wingSpeed = Math.random() * 0.1 + 0.05;
-        this.opacity = Math.random() * 0.6 + 0.4;
+        this.x = -20;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 0.8 + 0.2; 
+        this.speedX = Math.random() * 2 + 1.5; 
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.3 + 0.1;
+        this.wobble = Math.random() * 0.01;
       }
 
       update() {
         this.x += this.speedX;
-        this.y += this.speedY;
-        this.wingSpan += this.wingSpeed;
+        this.y += Math.sin(this.x * this.wobble) * 0.8;
 
-        // Reset when bird flies off right side
-        if (this.x > canvas.width + 50) {
+        if (this.x > canvas.width) {
           this.reset();
         }
       }
 
       draw() {
-        const flap = Math.sin(this.wingSpan) * this.size;
+        // 2. Change particle color based on theme
+        // In dark mode, they look like glowing sparks; in light mode, soft wind streaks
+        const color = isDark 
+          ? `rgba(125, 211, 252, ${this.opacity + 0.2})` 
+          : `rgba(255, 255, 255, ${this.opacity})`;
+          
+        ctx.fillStyle = color;
         
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        
-        // Elevation effect: Subtle shadow behind the bird
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 4;
+        // Add glow in dark mode
+        if (isDark) {
+          ctx.shadowBlur = 5;
+          ctx.shadowColor = '#7dd3fc';
+        } else {
+          ctx.shadowBlur = 0;
+        }
 
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.lineWidth = 1.8;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        // Draw simple flapping V-shape bird
         ctx.beginPath();
-        // Left wing
-        ctx.moveTo(-this.size, flap);
-        ctx.quadraticCurveTo(-this.size / 2, 0, 0, 2);
-        // Right wing
-        ctx.quadraticCurveTo(this.size / 2, 0, this.size, flap);
-        ctx.stroke();
-
-        ctx.restore();
+        // Elongated wind streaks
+        ctx.ellipse(this.x, this.y, this.size * 4, this.size, 0, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    for (let i = 0; i < birdCount; i++) {
-      birds.push(new Bird());
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      birds.forEach(bird => {
-        bird.update();
-        bird.draw();
+      particles.forEach(p => {
+        p.update();
+        p.draw();
       });
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -96,7 +87,7 @@ const SkyAndBirds = () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [isDark]); // 3. Re-run effect when theme changes
 
   return (
     <canvas
@@ -109,11 +100,14 @@ const SkyAndBirds = () => {
         height: '100vh',
         zIndex: -1,
         pointerEvents: 'none',
-        // SOLID SKY BLUE GRADIENT (Removes the whitish corners)
-        background: 'linear-gradient(180deg, #7dd3fc 0%, #38bdf8 100%)'
+        // 4. Dynamic Background Transition
+        background: isDark 
+          ? 'linear-gradient(180deg, #020617 0%, #0f172a 100%)' // Midnight Blue
+          : 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #f0f9ff 100%)', // Airy Sky
+        transition: 'background 1.2s ease-in-out'
       }}
     />
   );
 };
 
-export default SkyAndBirds;
+export default WindParticles;

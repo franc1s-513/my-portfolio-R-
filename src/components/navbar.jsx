@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 
-const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+// 1. Receive state as props from App.jsx
+const Navbar = ({ isDark, setIsDark }) => {
 
   useEffect(() => {
-    if (darkMode) {
+    // 2. Apply dark mode class to body for global CSS changes
+    if (isDark) {
       document.body.classList.add('dark-mode');
     } else {
       document.body.classList.remove('dark-mode');
     }
-  }, [darkMode]);
+  }, [isDark]);
 
   return (
     <nav style={styles.nav}>
@@ -21,23 +22,21 @@ const Navbar = () => {
         <div style={styles.leftSection}>
           <span style={styles.logoText}>FRANCIS</span>
           <button 
-            onClick={() => setDarkMode(!darkMode)} 
+            onClick={() => setIsDark(!isDark)} // 3. Use the passed function
             style={styles.toggleBtn}
           >
-            {darkMode ? <Sun size={18} color="#fbbf24" /> : <Moon size={18} color="#0ea5e9" />}
+            {isDark ? <Sun size={18} color="#fbbf24" /> : <Moon size={18} color="#0ea5e9" />}
           </button>
         </div>
 
-        
-       {/* RIGHT SIDE: Text Links */}
-      <div style={styles.links}>
-      {/* Change "/" to "/about" and add a link for Home */}
-      <Link to="/" className="nav-link">Home</Link>
-      <Link to="/about" className="nav-link">About</Link>
-      <Link to="/projects" className="nav-link">Projects</Link>
-      <Link to="/certificates" className="nav-link">Certificates</Link>
-      <Link to="/contact" className="nav-link">Contact</Link>
-    </div>
+        {/* RIGHT SIDE: Text Links */}
+        <div style={styles.links}>
+          <Link to="/" style={styles.linkText}>Home</Link>
+          <Link to="/about" style={styles.linkText}>About</Link>
+          <Link to="/projects" style={styles.linkText}>Projects</Link>
+          <Link to="/certificates" style={styles.linkText}>Certificates</Link>
+          <Link to="/contact" style={styles.linkText}>Contact</Link>
+        </div>
 
       </div>
     </nav>
@@ -50,12 +49,11 @@ const styles = {
     top: '25px',
     left: '50%',
     transform: 'translateX(-50%)',
-    // 1. Widened the bar
     width: '95%',            
-    maxWidth: '800px', // Increased from 850px for a more "full" look
+    maxWidth: '800px', 
     padding: '0 20px',
     height: '60px',
-    background: 'rgba(255, 255, 255, 0.3)', // Lowered from 0.4 for more "clear" glass
+    background: 'rgba(255, 255, 255, 0.2)', 
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     borderRadius: '50px', 
@@ -68,7 +66,6 @@ const styles = {
   navContainer: {
     width: '100%',
     display: 'flex',
-    // 2. This creates the "Space in the middle" by pushing items to the ends
     justifyContent: 'space-between', 
     alignItems: 'center',
     padding: '0 15px',
@@ -76,32 +73,36 @@ const styles = {
   leftSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: '15px', // Keep Francis and Toggle close together
-  
+    gap: '15px',
   },
   logoText: {
-  fontWeight: '900',
-  color: '#FFFFFF', // Changed from blue to white for better sky contrast
-  fontSize: '1.1rem',
-  letterSpacing: '1px'
-},
-toggleBtn: {
-  background: 'rgba(255, 255, 255, 0.2)', // Whiter glass background
-  border: 'none',
-  borderRadius: '50%',
-  width: '36px',
-  height: '36px',
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  transition: 'transform 0.3s ease'
-},
-links: {
-    display: 'flex',
-    // 3. Spaced out the links on the right corner
-    gap: '30px', 
+    fontWeight: '900',
+    color: '#FFFFFF', 
+    fontSize: '1.1rem',
+    letterSpacing: '1px'
   },
+  toggleBtn: {
+    background: 'rgba(255, 255, 255, 0.2)',
+    border: 'none',
+    borderRadius: '50%',
+    width: '36px',
+    height: '36px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'transform 0.3s ease'
+  },
+  links: {
+    display: 'flex',
+    gap: '20px', 
+  },
+  linkText: {
+    color: 'white',
+    textDecoration: 'none',
+    fontSize: '0.9rem',
+    fontWeight: '500'
+  }
 };
 
 export default Navbar;

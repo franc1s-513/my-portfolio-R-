@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const About = () => {
+const About = ({ isDark }) => { // 1. Added isDark prop
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -32,7 +32,19 @@ const About = () => {
 
         <div style={styles.grid}>
           {/* Main Bio - Glass Card */}
-          <motion.div variants={itemVariants} style={styles.mainCard}>
+          <motion.div 
+            variants={itemVariants} 
+            style={{
+              ...styles.mainCard,
+              // Dynamic glow based on theme
+              boxShadow: isDark 
+                ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
+                : '0 20px 40px rgba(0, 0, 0, 0.1)',
+              background: isDark 
+                ? 'rgba(255, 255, 255, 0.05)' 
+                : 'rgba(255, 255, 255, 0.12)',
+            }}
+          >
             <h3 style={styles.cardTitle}>My Story</h3>
             <p style={styles.text}>
               I'm a developer who thrives at the intersection of **clean code** and 
@@ -43,7 +55,13 @@ const About = () => {
           </motion.div>
 
           {/* Skills Bento Box */}
-          <motion.div variants={itemVariants} style={styles.skillCard}>
+          <motion.div 
+            variants={itemVariants} 
+            style={{
+              ...styles.skillCard,
+              background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.08)',
+            }}
+          >
             <h3 style={styles.cardTitle}>Tech Stack</h3>
             <div style={styles.skillGrid}>
               {['React', 'Framer Motion', 'Node.js', 'UI Design'].map((skill) => (
@@ -53,7 +71,13 @@ const About = () => {
           </motion.div>
 
           {/* Education / Experience Box */}
-          <motion.div variants={itemVariants} style={styles.infoCard}>
+          <motion.div 
+            variants={itemVariants} 
+            style={{
+              ...styles.infoCard,
+              background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.08)',
+            }}
+          >
             <h3 style={styles.cardTitle}>Education</h3>
             <p style={styles.smallText}>Currently exploring the depths of Software Engineering and modern Web Architectures.</p>
           </motion.div>
@@ -69,6 +93,9 @@ const styles = {
     padding: '120px 10% 60px',
     display: 'flex',
     justifyContent: 'center',
+    // FIX: Ensure content is above the canvas
+    position: 'relative',
+    zIndex: 10, 
   },
   container: {
     maxWidth: '1100px',
@@ -100,31 +127,33 @@ const styles = {
     gap: '20px',
   },
   mainCard: {
-    gridColumn: '1 / 3', // Spans two columns
-    background: 'rgba(255, 255, 255, 0.12)',
+    gridColumn: '1 / 3',
     backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '30px',
     padding: '40px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.5s ease',
   },
   skillCard: {
-    background: 'rgba(255, 255, 255, 0.08)',
     backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '30px',
     padding: '30px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    transition: 'all 0.5s ease',
   },
   infoCard: {
     gridColumn: '3 / 4',
-    background: 'rgba(255, 255, 255, 0.08)',
     backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '30px',
     padding: '30px',
+    transition: 'all 0.5s ease',
   },
   cardTitle: {
     color: '#fff',
