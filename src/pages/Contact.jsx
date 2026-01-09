@@ -1,49 +1,139 @@
-const Contact = () => {
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Github, Linkedin, Send } from 'lucide-react';
+
+const Contact = ({ isDark }) => {
   return (
-    <div style={{ padding: '120px 20px', display: 'flex', justifyContent: 'center' }}>
-      <div style={{
-        background: '#ffffff',
-        padding: '40px',
-        borderRadius: '30px',
-        boxShadow: '0 20px 50px rgba(56, 189, 248, 0.15)',
-        width: '100%',
-        maxWidth: '500px',
-        border: '1px solid rgba(56, 189, 248, 0.2)',
-        textAlign: 'center'
-      }}>
-        <h2 style={{ color: '#0ea5e9', marginBottom: '10px' }}>Get In Touch</h2>
-        <p style={{ color: '#64748b', marginBottom: '30px' }}>Have a project in mind? Let's build something great together.</p>
-        
-        <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <input type="text" placeholder="Your Name" style={styles.input} />
-          <input type="email" placeholder="Your Email" style={styles.input} />
-          <textarea placeholder="Your Message" rows="5" style={styles.input}></textarea>
-          <button type="submit" style={styles.button}>Send Message</button>
-        </form>
-      </div>
+    <div style={styles.section}>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={styles.container}
+      >
+        <div style={styles.header}>
+          <h1 style={styles.title}>Get In <span style={styles.highlight}>Touch</span></h1>
+          <p style={styles.subtitle}>Let's build something amazing together.</p>
+        </div>
+
+        <div style={styles.content}>
+          {/* Left Side: Contact Info */}
+          <div style={styles.infoSide}>
+            <div style={styles.infoCard}>
+              <Mail color="#0ea5e9" size={24} />
+              <div>
+                <h4 style={styles.infoTitle}>Email</h4>
+                <p style={styles.infoText}>yourname@email.com</p>
+              </div>
+            </div>
+
+            <div style={styles.socialGroup}>
+              <a href="#" style={styles.socialIcon}><Github size={24} /></a>
+              <a href="#" style={styles.socialIcon}><Linkedin size={24} /></a>
+            </div>
+          </div>
+
+          {/* Right Side: Contact Form */}
+          <form style={{
+            ...styles.form,
+            background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.2)',
+          }}>
+            <div style={styles.inputGroup}>
+              <input type="text" placeholder="Your Name" style={styles.input} />
+              <input type="email" placeholder="Your Email" style={styles.input} />
+            </div>
+            <textarea placeholder="Your Message" rows="5" style={styles.textarea}></textarea>
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              style={styles.button}
+            >
+              Send Message <Send size={18} style={{marginLeft: '10px'}} />
+            </motion.button>
+          </form>
+        </div>
+      </motion.div>
     </div>
   );
 };
 
 const styles = {
+  section: {
+    minHeight: '100vh',
+    padding: '120px 10% 60px',
+    zIndex: 10,
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  container: {
+    maxWidth: '1000px',
+    width: '100%'
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '50px'
+  },
+  title: { fontSize: '3.5rem', color: '#fff', fontWeight: '800' },
+  highlight: { color: '#0ea5e9' },
+  subtitle: { color: 'rgba(255,255,255,0.6)', marginTop: '10px' },
+  content: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '50px',
+    alignItems: 'start'
+  },
+  infoSide: { display: 'flex', flexDirection: 'column', gap: '30px' },
+  infoCard: {
+    display: 'flex',
+    gap: '20px',
+    alignItems: 'center',
+    color: '#fff'
+  },
+  infoTitle: { margin: 0, fontSize: '1.1rem' },
+  infoText: { margin: 0, color: 'rgba(255,255,255,0.6)' },
+  socialGroup: { display: 'flex', gap: '20px', marginTop: '20px' },
+  socialIcon: { color: '#fff', opacity: 0.7, transition: '0.3s' },
+  form: {
+    padding: '40px',
+    borderRadius: '30px',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px'
+  },
+  inputGroup: { display: 'flex', gap: '20px', flexWrap: 'wrap' },
   input: {
-    padding: '12px 20px',
+    flex: 1,
+    padding: '15px',
     borderRadius: '12px',
-    border: '1px solid #e2e8f0',
-    background: '#f8fafc',
-    fontSize: '1rem',
+    border: '1px solid rgba(255,255,255,0.1)',
+    background: 'rgba(255,255,255,0.05)',
+    color: '#fff',
     outline: 'none',
-    transition: '0.3s'
+    minWidth: '200px'
+  },
+  textarea: {
+    padding: '15px',
+    borderRadius: '12px',
+    border: '1px solid rgba(255,255,255,0.1)',
+    background: 'rgba(255,255,255,0.05)',
+    color: '#fff',
+    outline: 'none',
+    resize: 'none'
   },
   button: {
     padding: '15px',
     borderRadius: '12px',
     border: 'none',
-    backgroundColor: '#0ea5e9',
-    color: 'white',
-    fontWeight: 'bold',
+    background: '#0ea5e9',
+    color: '#fff',
+    fontWeight: '700',
     cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(14, 165, 233, 0.3)'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 };
 
