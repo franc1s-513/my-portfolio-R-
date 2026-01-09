@@ -1,181 +1,133 @@
 import React from 'react';
-import { ExternalLink, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const certificates = [
-  {
-    id: 1,
-    title: "Full-Stack Web Development",
-    issuer: "Coursera / Meta",
-    date: "Dec 2025",
-    link: "#", 
-    image: "https://via.placeholder.com/400x250?text=Fullstack+Certificate" 
-  },
-  {
-    id: 2,
-    title: "UI/UX Design Essentials",
-    issuer: "Google",
-    date: "Oct 2025",
-    link: "#",
-    image: "https://via.placeholder.com/400x250?text=UI+UX+Design"
-  },
-  {
-    id: 3,
-    title: "Advanced React & Next.js",
-    issuer: "Udemy",
-    date: "Jan 2026",
-    link: "#",
-    image: "https://via.placeholder.com/400x250?text=React+Pro"
-  }
-];
-
-// 1. Define Animation Variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // Time between each card appearing
+const Certificates = ({ isDark }) => {
+  const certs = [
+    {
+      id: 1,
+      title: "Full Stack Web Development",
+      issuer: "Udemy / Meta",
+      date: "2023",
+      image: "https://api.placeholder.com/600/400", // Replace with your cert image
+    },
+    {
+      id: 2,
+      title: "React Advanced Patterns",
+      issuer: "Coursera",
+      date: "2023",
+      image: "https://api.placeholder.com/600/400",
+    },
+    {
+      id: 3,
+      title: "UI/UX Design Essentials",
+      issuer: "Google",
+      date: "2024",
+      image: "https://api.placeholder.com/600/400",
     }
-  }
-};
+  ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: "easeOut" } 
-  }
-};
-
-const Certificates = () => {
   return (
-    <div className="page-container" style={styles.container}>
-      {/* Animated Header */}
+    <div style={styles.section}>
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        style={styles.header}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        style={styles.container}
       >
-        <h2 style={styles.title}>My <span style={{ color: '#0ea5e9' }}>Certifications</span></h2>
-        <p style={styles.subtitle}>Verified proof of my technical expertise and commitment to learning.</p>
-      </motion.div>
+        <div style={styles.header}>
+          <h1 style={styles.title}>My <span style={styles.highlight}>Certificates</span></h1>
+          <p style={styles.subtitle}>Recognitions and verified skills</p>
+        </div>
 
-      {/* Animated Grid Container */}
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }} // Starts when 10% of grid is visible
-        style={styles.grid}
-      >
-        {certificates.map((cert) => (
-          <motion.div 
-            key={cert.id} 
-            variants={cardVariants}
-            className="cert-card" 
-            style={styles.card}
-            whileHover={{ y: -10 }} // Framer motion hover lift
-          >
-            <div style={styles.imageContainer}>
-              <img src={cert.image} alt={cert.title} style={styles.image} />
-              <div className="cert-overlay" style={styles.overlay}>
-                <Award size={48} color="white" />
+        <div style={styles.grid}>
+          {certs.map((cert) => (
+            <motion.div
+              key={cert.id}
+              whileHover={{ scale: 1.05, rotate: 1 }}
+              style={{
+                ...styles.certCard,
+                background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.2)',
+                boxShadow: isDark ? '0 10px 30px rgba(14, 165, 233, 0.2)' : '0 10px 30px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              <div style={styles.imageBox}>
+                <img src={cert.image} alt={cert.title} style={styles.image} />
               </div>
-            </div>
-            
-            <div style={styles.content}>
-              <h3 style={styles.certTitle}>{cert.title}</h3>
-              <p style={styles.issuer}>{cert.issuer} • {cert.date}</p>
-              <a href={cert.link} target="_blank" rel="noreferrer" style={styles.viewLink}>
-                View Certificate <ExternalLink size={16} style={{ marginLeft: '5px' }} />
-              </a>
-            </div>
-          </motion.div>
-        ))}
+              <div style={styles.info}>
+                <h3 style={styles.certTitle}>{cert.title}</h3>
+                <p style={styles.issuer}>{cert.issuer} • {cert.date}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     </div>
   );
 };
 
 const styles = {
-  container: {
-    padding: '140px 20px 80px', // Extra top padding for the fixed pill nav
-    maxWidth: '1100px',
-    margin: '0 auto',
+  section: {
     minHeight: '100vh',
+    padding: '120px 10% 60px',
+    zIndex: 10,
+    position: 'relative'
+  },
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto'
   },
   header: {
     textAlign: 'center',
-    marginBottom: '60px',
+    marginBottom: '60px'
   },
   title: {
     fontSize: '3rem',
-    marginBottom: '15px',
-    fontWeight: '800',
+    color: '#fff',
+    fontWeight: '800'
+  },
+  highlight: {
+    color: '#0ea5e9'
   },
   subtitle: {
-    color: '#64748b',
-    fontSize: '1.2rem',
+    color: 'rgba(255,255,255,0.6)',
+    letterSpacing: '2px'
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: '35px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '40px'
   },
-  card: {
-    background: 'rgba(255, 255, 255, 0.4)',
-    backdropFilter: 'blur(12px)',
-    borderRadius: '24px',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    overflow: 'hidden',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
-    cursor: 'pointer',
+  certCard: {
+    borderRadius: '20px',
+    padding: '15px',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255,255,255,0.2)',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer'
   },
-  imageContainer: {
-    position: 'relative',
+  imageBox: {
+    width: '100%',
     height: '220px',
+    borderRadius: '12px',
     overflow: 'hidden',
+    marginBottom: '15px'
   },
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
+    objectFit: 'cover'
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(14, 165, 233, 0.7)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0,
-    transition: '0.4s ease',
-  },
-  content: {
-    padding: '25px',
+  info: {
+    textAlign: 'left',
+    padding: '0 10px'
   },
   certTitle: {
-    fontSize: '1.4rem',
-    marginBottom: '10px',
-    fontWeight: '700',
+    color: '#fff',
+    fontSize: '1.2rem',
+    margin: '5px 0'
   },
   issuer: {
-    color: '#64748b',
-    fontSize: '1rem',
-    marginBottom: '20px',
-  },
-  viewLink: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    color: '#0ea5e9',
-    textDecoration: 'none',
-    fontWeight: 'bold',
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: '0.9rem'
   }
 };
 

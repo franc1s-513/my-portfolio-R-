@@ -6,6 +6,8 @@ import CustomCursor from './components/CustomCursor';
 import Navbar from './components/navbar';
 import Home from './pages/Home';
 import About from './pages/About';
+import Projects from './pages/Projects';
+import Certificates from './pages/Certificates';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -28,8 +30,8 @@ function App() {
             <Route path="/" element={<Home isDark={isDark} />} />
             <Route path="/about" element={<About isDark={isDark} />} />
             {/* Add placeholders for missing routes to avoid blank screens */}
-            <Route path="/projects" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Projects Page Coming Soon</div>} />
-            <Route path="/certificates" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Certificates Page Coming Soon</div>} />
+            <Route path="/projects" element={<Projects isDark={isDark} />} />
+            <Route path="/certificates" element={<Certificates isDark={isDark} />} />
             <Route path="/contact" element={<div style={{paddingTop: '150px', textAlign: 'center', color: 'white'}}>Contact Page Coming Soon</div>} />
           </Routes>
         </main>
