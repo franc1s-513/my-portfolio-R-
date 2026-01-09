@@ -28,13 +28,16 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* RIGHT SIDE: Text Links */}
-        <div style={styles.links}>
-          <Link to="/" className="nav-link">About</Link>
-          <Link to="/projects" className="nav-link">Projects</Link>
-          <Link to="/certificates" className="nav-link">Certificates</Link>
-          <Link to="/contact" className="nav-link">Contact</Link>
-        </div>
+        
+       {/* RIGHT SIDE: Text Links */}
+      <div style={styles.links}>
+      {/* Change "/" to "/about" and add a link for Home */}
+      <Link to="/" className="nav-link">Home</Link>
+      <Link to="/about" className="nav-link">About</Link>
+      <Link to="/projects" className="nav-link">Projects</Link>
+      <Link to="/certificates" className="nav-link">Certificates</Link>
+      <Link to="/contact" className="nav-link">Contact</Link>
+    </div>
 
       </div>
     </nav>
@@ -77,23 +80,23 @@ const styles = {
   
   },
   logoText: {
-    fontWeight: '900',
-    color: '#0ea5e9',
-    fontSize: '1rem',
-    letterSpacing: '0.5px'
-  },
-  toggleBtn: {
-    background: 'rgba(14, 165, 233, 0.1)',
-    border: 'none',
-    borderRadius: '50%',
-    width: '32px',
-    height: '32px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'transform 0.3s ease'
-  },
+  fontWeight: '900',
+  color: '#FFFFFF', // Changed from blue to white for better sky contrast
+  fontSize: '1.1rem',
+  letterSpacing: '1px'
+},
+toggleBtn: {
+  background: 'rgba(255, 255, 255, 0.2)', // Whiter glass background
+  border: 'none',
+  borderRadius: '50%',
+  width: '36px',
+  height: '36px',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'transform 0.3s ease'
+},
 links: {
     display: 'flex',
     // 3. Spaced out the links on the right corner
