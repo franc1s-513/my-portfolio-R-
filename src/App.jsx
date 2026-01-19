@@ -26,8 +26,9 @@ function App() {
         <Navbar isDark={isDark} setIsDark={setIsDark} />
         
         {/* Layer 3: Routing Content (Relative and above backgrounds) */}
-        <main style={{ position: 'relative', zIndex: 10 }}>
-          <Routes>
+       {/* Layer 3: Routing Content */}
+        <main style={{ position: 'relative', zIndex: 10, background: 'transparent' }}>
+            <Routes>
             <Route path="/" element={<Home isDark={isDark} />} />
             <Route path="/about" element={<About isDark={isDark} />} />
             {/* Add placeholders for missing routes to avoid blank screens */}

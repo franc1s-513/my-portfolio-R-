@@ -122,14 +122,16 @@ const SkyAndBirds = ({ isDark }) => {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: -1, overflow: 'hidden' }}>
       {/* BACKGROUND GRADIENT */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        transition: 'background 1.5s ease',
-        background: isDark 
-          ? 'radial-gradient(circle at 50% -20%, #1e293b 0%, #0f172a 40%, #020617 100%)' 
-          : 'radial-gradient(circle at 50% -20%, #e0f2fe 0%, #7dd3fc 30%, #38bdf8 100%)'
-      }} />
+      {/* BACKGROUND GRADIENT - MODIFIED FOR GLASSMOPRHISM */}
+<div style={{
+  position: 'absolute',
+  inset: 0,
+  transition: 'background 1.5s ease',
+  /* We use rgba with 0.8 opacity so the "glass" above it can actually work */
+  background: isDark 
+    ? 'radial-gradient(circle at 50% -20%, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 40%, rgba(2, 6, 23, 1) 100%)' 
+    : 'radial-gradient(circle at 50% -20%, rgba(224, 242, 254, 0.8) 0%, rgba(125, 211, 252, 0.8) 30%, rgba(56, 189, 248, 0.9) 100%)'
+}} />
 
       {/* OPTIONAL: MIST LAYER */}
       <div style={{
