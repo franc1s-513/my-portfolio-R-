@@ -3,80 +3,104 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
   
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
 
-  // High performance spring settings
-  const springConfig = { 
-    damping: 50, 
-    stiffness: 1000, 
-    mass: 0.1,
-    restDelta: 0.001 // Forces the cursor to land on a sharp pixel
-  };
+  // Physics: Stiffness 500 + Damping 30 = Fast, snappy, no wobble
+  const springConfig = { damping: 30, stiffness: 500, mass: 0.5 };
   
-  const sx = useSpring(cursorX, springConfig);
-  const sy = useSpring(cursorY, springConfig);
+  const cursorX = useSpring(mouseX, springConfig);
+  const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const moveCursor = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
+
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
 
     const handleMouseOver = (e) => {
       const target = e.target;
       const isPointer = window.getComputedStyle(target).cursor === 'pointer' || 
                         target.closest('a') || 
-                        target.closest('button') ||
-                        target.closest('.cert-card');
-      
+                        target.closest('button');
       setIsHovering(!!isPointer);
     };
 
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [cursorX, cursorY]);
+  }, []);
 
   return (
-    <motion.div
-      style={{
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        x: sx,
-        y: sy,
-        translateX: '-50%',
-        translateY: '-50%',
-        pointerEvents: 'none',
-        zIndex: 9999,
-        willChange: 'transform',
-        // Critical for sharpness:
-        transformStyle: 'preserve-3d',
-        WebkitBackfaceVisibility: 'hidden',
-        display: window.innerWidth < 768 ? 'none' : 'block',
-      }}
-    >
+    <>
+      {/* 1. THE MAIN AURA (The part that expands) */}
       <motion.div
-        animate={{
-          width: isHovering ? 50 : 12,
-          height: isHovering ? 50 : 12,
-          backgroundColor: isHovering ? 'rgba(14, 165, 233, 0.15)' : '#0ea5e9',
-          border: isHovering ? '2px solid #0ea5e9' : '0px solid transparent',
-        }}
-        transition={{ type: 'spring', damping: 25, stiffness: 500 }}
         style={{
-          borderRadius: '50%',
-          // Reduced blur slightly to keep it sharp
-          backdropFilter: isHovering ? 'blur(2px)' : 'none', 
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          x: cursorX,
+          y: cursorY,
+          translateX: '-50%',
+          translateY: '-50%',
+          pointerEvents: 'none',
+          zIndex: 9999,
+          // Mix-blend-mode: difference makes it invert colors over text/images
+          mixBlendMode: 'difference',
         }}
-      />
-    </motion.div>
+      >
+        <motion.div
+          animate={{
+            width: isHovering ? 80 : 40,
+            height: isHovering ? 80 : 40,
+            backgroundColor: isHovering ? 'white' : 'transparent',
+            border: isHovering ? 'none' : '1.5px solid white',
+          }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          style={{ borderRadius: '50%' }}
+        />
+      </motion.div>
+
+      {/* 2. THE PRECISION DOT (Stays small and sharp) */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          x: mouseX, // No spring here for 0 latency
+          y: mouseY,
+          translateX: '-50%',
+          translateY: '-50%',
+          pointerEvents: 'none',
+          zIndex: 10000,
+        }}
+      >
+        <motion.div
+          animate={{
+            scale: isClicking ? 0.5 : 1,
+          }}
+          style={{
+            width: '6px',
+            height: '6px',
+            backgroundColor: '#0ea5e9', // Your accent color
+            borderRadius: '50%',
+          }}
+        />
+      </motion.div>
+    </>
   );
 };
 

@@ -14,11 +14,29 @@
               box-shadow 0.8s ease !important;
 }
 
+/* FIX: Prevent transitions from affecting the custom cursor's position */
+.custom-cursor-container, .custom-cursor-dot, .custom-cursor-aura {
+  transition: none !important;
+}
+
 html {
-  /* THE CULPRIT FIXED: Changed from #7dd3fc to transparent */
   background: transparent; 
   scroll-behavior: smooth;
 }
+
+/* --- 7. HIDE DEFAULT CURSOR (ADD THIS) --- */
+@media (min-width: 850px) {
+  html, body {
+    cursor: none !important;
+  }
+
+  /* Ensures interactive elements don't show the 'hand' pointer */
+  a, button, input, textarea, [role="button"], .glass-card, .nav-link {
+    cursor: none !important;
+  }
+}
+
+/* --- THE REST OF YOUR CODE CONTINUES BELOW --- */
 
 html.dark-mode {
   background-color: var(--dark-bg);
@@ -28,15 +46,12 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  /* Ensure background remains transparent to see the Canvas/Birds */
   background: transparent !important; 
   color: #0f172a;
   overflow-x: hidden;
 }
 
-/* --- 2. ATMOSPHERIC LAYERS (THE BACKGROUND FIX) --- */
-
-/* Layer 1: The Film Grain / Noise */
+/* --- 2. ATMOSPHERIC LAYERS --- */
 body::before {
   content: "";
   position: fixed;
@@ -47,7 +62,6 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Layer 2: The Horizon Haze & Top Bloom */
 body::after {
   content: "";
   position: fixed;
@@ -77,7 +91,6 @@ body.dark-mode nav {
 }
 
 /* --- 4. COMPONENT STYLES --- */
-
 .glass-card {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -113,7 +126,6 @@ body.dark-mode .glass-card {
 .nav-link:hover::after { width: 100%; }
 
 /* --- 5. ANIMATIONS --- */
-
 .hero-float {
   will-change: transform;
   backface-visibility: hidden;
@@ -140,7 +152,6 @@ body.dark-mode .hero-name {
 }
 
 /* --- 6. UI UTILITIES --- */
-
 .custom-cursor-container {
   pointer-events: none;
   z-index: 9999;
