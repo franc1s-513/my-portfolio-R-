@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// 1. Receive state as props from App.jsx
 const Navbar = ({ isDark, setIsDark }) => {
 
   useEffect(() => {
-    // 2. Apply dark mode class to body for global CSS changes
+    // Apply global class for CSS transitions
     if (isDark) {
       document.body.classList.add('dark-mode');
     } else {
@@ -15,27 +15,55 @@ const Navbar = ({ isDark, setIsDark }) => {
   }, [isDark]);
 
   return (
-    <nav style={styles.nav}>
+    <nav style={{
+      ...styles.nav,
+      background: isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(255, 255, 255, 0.2)',
+      borderColor: isDark ? 'rgba(14, 165, 233, 0.3)' : 'rgba(255, 255, 255, 0.3)',
+    }}>
       <div style={styles.navContainer}>
         
         {/* LEFT SIDE: Name and Toggle */}
         <div style={styles.leftSection}>
           <span style={styles.logoText}>FRANCIS</span>
-          <button 
-            onClick={() => setIsDark(!isDark)} // 3. Use the passed function
-            style={styles.toggleBtn}
+          
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsDark(!isDark)} 
+            style={{
+              ...styles.toggleBtn,
+              background: isDark ? 'rgba(14, 165, 233, 0.2)' : 'rgba(255, 255, 255, 0.2)',
+            }}
           >
-            {isDark ? <Sun size={18} color="#fbbf24" /> : <Moon size={18} color="#0ea5e9" />}
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isDark ? 'sun' : 'moon'}
+                initial={{ y: 10, opacity: 0, rotate: -90 }}
+                animate={{ y: 0, opacity: 1, rotate: 0 }}
+                exit={{ y: -10, opacity: 0, rotate: 90 }}
+                transition={{ duration: 0.2 }}
+                style={{ display: 'flex' }}
+              >
+                {isDark ? 
+                  <Sun size={18} color="#fbbf24" fill="#fbbf24" /> : 
+                  <Moon size={18} color="#0ea5e9" fill="#0ea5e9" />
+                }
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
         </div>
 
         {/* RIGHT SIDE: Text Links */}
         <div style={styles.links}>
-          <Link to="/" style={styles.linkText}>Home</Link>
-          <Link to="/about" style={styles.linkText}>About</Link>
-          <Link to="/projects" style={styles.linkText}>Projects</Link>
-          <Link to="/certificates" style={styles.linkText}>Certificates</Link>
-          <Link to="/contact" style={styles.linkText}>Contact</Link>
+          {['Home', 'About', 'Projects', 'Certificates', 'Contact'].map((item) => (
+            <Link 
+              key={item}
+              to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} 
+              style={styles.linkText}
+            >
+              <motion.span whileHover={{ color: '#0ea5e9' }}>{item}</motion.span>
+            </Link>
+          ))}
         </div>
 
       </div>
@@ -53,15 +81,15 @@ const styles = {
     maxWidth: '800px', 
     padding: '0 20px',
     height: '60px',
-    background: 'rgba(255, 255, 255, 0.2)', 
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     borderRadius: '50px', 
-    border: '1px solid rgba(255, 255, 255, 0.3)',
+    border: '1px solid',
     zIndex: 1000,
     display: 'flex',
     alignItems: 'center',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
+    transition: 'all 0.8s ease', // Smoothly changes the bar color
   },
   navContainer: {
     width: '100%',
@@ -82,7 +110,6 @@ const styles = {
     letterSpacing: '1px'
   },
   toggleBtn: {
-    background: 'rgba(255, 255, 255, 0.2)',
     border: 'none',
     borderRadius: '50%',
     width: '36px',
@@ -91,7 +118,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'transform 0.3s ease'
+    overflow: 'hidden',
   },
   links: {
     display: 'flex',
@@ -101,7 +128,7 @@ const styles = {
     color: 'white',
     textDecoration: 'none',
     fontSize: '0.9rem',
-    fontWeight: '500'
+    fontWeight: '500',
   }
 };
 

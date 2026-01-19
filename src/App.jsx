@@ -18,7 +18,7 @@ function App() {
       <div style={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
         
         {/* Layer 1: Backgrounds (Fixed and behind everything) */}
-        <WindParticles isDark={isDark} />
+        
         <SkyAndBirds isDark={isDark} />
         
         {/* Layer 2: UI (Fixed on top) */}
