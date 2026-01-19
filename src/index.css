@@ -7,7 +7,6 @@
 }
 
 /* GLOBAL TRANSITION ENGINE */
-/* This makes the "Sunset" effect smooth across all elements */
 * {
   transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
               color 0.5s ease, 
@@ -16,38 +15,68 @@
 }
 
 html {
-  background-color: #7dd3fc; /* Fallback light sky */
+  background-color: #7dd3fc;
+  scroll-behavior: smooth;
 }
 
 html.dark-mode {
-  background-color: var(--dark-bg); /* Fallback dark ocean */
+  background-color: var(--dark-bg);
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  /* CRITICAL: Keep background transparent to see the Canvas Birds/Particles */
-  background: transparent; 
+  background: transparent; /* Keep transparent to see the Canvas */
   color: #0f172a;
   overflow-x: hidden;
 }
 
-/* --- 2. DARK MODE OVERRIDES --- */
+/* --- 2. ATMOSPHERIC LAYERS (THE BACKGROUND FIX) --- */
+
+/* Layer 1: The Film Grain / Noise */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Layer 2: The Horizon Haze & Top Bloom */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  /* Creates a subtle glow at the top and mist at the bottom */
+  background: 
+    radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.15), transparent 50%),
+    linear-gradient(to top, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
+}
+
+body.dark-mode::after {
+  background: 
+    radial-gradient(circle at 50% -20%, rgba(14, 165, 233, 0.1), transparent 50%),
+    linear-gradient(to top, rgba(2, 6, 23, 0.8) 0%, transparent 20%);
+}
+
+/* --- 3. DARK MODE OVERRIDES --- */
 body.dark-mode {
   color: #f1f5f9 !important;
 }
 
-/* Target the main navigation bar in dark mode */
 body.dark-mode nav {
   background: rgba(15, 23, 42, 0.4) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* --- 3. COMPONENT STYLES --- */
+/* --- 4. COMPONENT STYLES --- */
 
-/* Glassmorphism Cards (Projects & Certificates) */
 .glass-card {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -60,7 +89,6 @@ body.dark-mode .glass-card {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Nav Links */
 .nav-link {
   text-decoration: none;
   color: #FFFFFF;
@@ -68,11 +96,6 @@ body.dark-mode .glass-card {
   font-size: 0.9rem;
   position: relative;
   opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.nav-link:hover {
-  opacity: 1;
 }
 
 .nav-link::after {
@@ -86,76 +109,45 @@ body.dark-mode .glass-card {
   transition: width 0.3s ease;
 }
 
-.nav-link:hover::after {
-  width: 100%;
-}
+.nav-link:hover::after { width: 100%; }
 
-/* --- 4. ANIMATIONS & INTERACTION --- */
+/* --- 5. ANIMATIONS --- */
 
-/* Button Hover Effects */
-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
-
-/* Certificate & Project Hover */
-.card-hover:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2);
-  border-color: var(--accent-blue) !important;
-}
-
-/* Social Icons Glow */
-a svg {
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-a svg:hover {
-  color: var(--accent-blue);
-  transform: translateY(-5px) scale(1.1);
-  filter: drop-shadow(0 4px 8px rgba(14, 165, 233, 0.4));
-}
-
-/* --- 5. UI UTILITIES --- */
-
-/* Custom Cursor Stacking */
-.custom-cursor-container {
-  pointer-events: none;
+.hero-float {
+  will-change: transform;
   backface-visibility: hidden;
   transform: translateZ(0);
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+body.dark-mode .hero-name {
+  text-shadow: 0 0 25px rgba(14, 165, 233, 0.6);
+  color: #ffffff;
+}
+
+.fade-in-up {
+  animation: fadeInUp 1.2s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 6. UI UTILITIES --- */
+
+.custom-cursor-container {
+  pointer-events: none;
   z-index: 9999;
 }
 
-/* Smooth Scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Hide scrollbar but keep functionality (optional) */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(14, 165, 233, 0.3);
   border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 165, 233, 0.5);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 50; /* Sits above background, below text */
-  opacity: 0.04; /* Keep it almost invisible */
-  /* This is a standard SVG noise pattern */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

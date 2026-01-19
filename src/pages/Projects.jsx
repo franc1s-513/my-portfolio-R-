@@ -1,103 +1,94 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+
+const ProjectCard = ({ project, isDark }) => {
+  const cardRef = useRef(null);
+
+  // Elite 3D Tilt (Same physics as we discussed)
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const handleMouseMove = (e) => {
+    const rect = cardRef.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      // Added whileHover scale to match your certificate logic
+      whileHover={{ scale: 1.05, rotate: 1 }}
+      style={{
+        ...styles.projectCard,
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        // EXACT GLASS FILL FROM CERTIFICATES
+        background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.2)',
+      }}
+    >
+      <div style={{ transform: "translateZ(30px)" }}>
+        <div style={styles.imageBox}>
+          <img src={project.image} alt={project.title} style={styles.image} />
+        </div>
+        
+        <div style={styles.info}>
+          <h3 style={styles.projectTitle}>{project.title}</h3>
+          <p style={styles.projectDesc}>{project.description}</p>
+          
+          <div style={styles.tagGroup}>
+            {project.tags.map(tag => (
+              <span key={tag} style={styles.tag}>{tag}</span>
+            ))}
+          </div>
+
+          <motion.a 
+            href={project.link} 
+            style={styles.viewLink}
+            whileHover={{ x: 5 }}
+          >
+            View Project →
+          </motion.a>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const Projects = ({ isDark }) => {
-  // Replace these URLs with your actual project screenshots later
   const projectList = [
-    {
-      id: 1,
-      title: "E-Commerce App",
-      description: "A full-stack store built with React and Node.js. Features a custom glassmorphism UI and seamless checkout.",
-      tags: ["React", "Redux", "Express"],
-      image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
-    },
-    {
-      id: 2,
-      title: "Weather Dashboard",
-      description: "Real-time weather tracking using OpenWeather API. Features dynamic backgrounds that change with the weather.",
-      tags: ["API", "Chart.js", "Framer"],
-      image: "https://images.unsplash.com/photo-1592210633469-a257757462d4?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
-    },
-    {
-      id: 3,
-      title: "Portfolio 1.0",
-      description: "My first creative coding experiment focusing on immersive design and fluid animations.",
-      tags: ["Three.js", "GSAP", "React"],
-      image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
-    }
+    { id: 1, title: "E-Commerce App", description: "Full-stack store with custom glassmorphism UI.", tags: ["React", "Redux"], image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800", link: "#" },
+    { id: 2, title: "Weather Dashboard", description: "Real-time tracking with dynamic backgrounds.", tags: ["API", "Framer"], image: "https://images.unsplash.com/photo-1592210633469-a257757462d4?w=800", link: "#" },
+    { id: 3, title: "Portfolio 1.0", description: "Creative coding focusing on immersive design.", tags: ["Three.js", "GSAP"], image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800", link: "#" }
   ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
-  };
 
   return (
     <div style={styles.section}>
       <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         style={styles.container}
       >
-        {/* Page Header */}
-        <motion.div variants={cardVariants} style={styles.header}>
-          <h2 style={styles.subtitle}>MY RECENT WORK</h2>
+        <div style={styles.header}>
           <h1 style={styles.title}>Creative <span style={styles.highlight}>Projects</span></h1>
-        </motion.div>
+          <p style={styles.subtitle}>Recent immersive web experiences</p>
+        </div>
 
-        {/* Project Grid */}
         <div style={styles.grid}>
-          {projectList.map((project) => (
-            <motion.div 
-              key={project.id}
-              variants={cardVariants}
-              whileHover={{ y: -12, scale: 1.02 }}
-              style={{
-                ...styles.projectCard,
-                background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.12)',
-                boxShadow: isDark 
-                  ? '0 20px 40px rgba(0, 0, 0, 0.5)' 
-                  : '0 15px 35px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              {/* Image Container */}
-              <div style={styles.imageWrapper}>
-                <img src={project.image} alt={project.title} style={styles.image} />
-                <div style={styles.imageOverlay} />
-              </div>
-
-              <h3 style={styles.projectTitle}>{project.title}</h3>
-              <p style={styles.projectDesc}>{project.description}</p>
-              
-              <div style={styles.tagGroup}>
-                {project.tags.map(tag => (
-                  <span key={tag} style={styles.tag}>{tag}</span>
-                ))}
-              </div>
-
-              <motion.a 
-                href={project.link} 
-                style={styles.viewLink}
-                whileHover={{ x: 5 }}
-              >
-                View Project 
-                <span style={{ marginLeft: '8px' }}>→</span>
-              </motion.a>
-            </motion.div>
-          ))}
+          {projectList.map(p => <ProjectCard key={p.id} project={p} isDark={isDark} />)}
         </div>
       </motion.div>
     </div>
@@ -107,107 +98,58 @@ const Projects = ({ isDark }) => {
 const styles = {
   section: {
     minHeight: '100vh',
-    padding: '120px 10% 80px',
-    display: 'flex',
-    justifyContent: 'center',
-    position: 'relative',
+    padding: '120px 10% 60px',
     zIndex: 10,
+    position: 'relative',
+    perspective: '1200px'
   },
-  container: {
-    maxWidth: '1200px',
-    width: '100%',
-  },
-  header: {
-    marginBottom: '60px',
-  },
-  subtitle: {
-    fontSize: '0.9rem',
-    letterSpacing: '4px',
-    color: 'rgba(255, 255, 255, 0.6)',
-    margin: 0,
-  },
-  title: {
-    fontSize: '3.5rem',
-    fontWeight: '900',
-    color: '#fff',
-    margin: '10px 0',
-  },
-  highlight: {
-    color: '#0ea5e9',
-  },
+  container: { maxWidth: '1200px', margin: '0 auto' },
+  header: { textAlign: 'center', marginBottom: '60px' },
+  title: { fontSize: '3rem', color: '#fff', fontWeight: '800' },
+  highlight: { color: '#0ea5e9' },
+  subtitle: { color: 'rgba(255,255,255,0.6)', letterSpacing: '2px', fontSize: '0.9rem' },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: '30px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '40px'
   },
   projectCard: {
-    padding: '25px',
-    borderRadius: '35px',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-    display: 'flex',
-    flexDirection: 'column',
+    borderRadius: '20px',
+    padding: '15px',
+    // MATCHING CERTIFICATE GLASS:
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255,255,255,0.2)',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer',
+    // REMOVED THE HEAVY SHADOW
   },
-  imageWrapper: {
+  imageBox: {
     width: '100%',
-    height: '200px',
-    borderRadius: '24px',
+    height: '220px',
+    borderRadius: '12px',
     overflow: 'hidden',
-    marginBottom: '20px',
-    position: 'relative',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    marginBottom: '15px'
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  imageOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.2))',
-  },
-  projectTitle: {
-    color: '#fff',
-    fontSize: '1.6rem',
-    fontWeight: '700',
-    margin: '10px 0',
-  },
-  projectDesc: {
-    color: 'rgba(255, 255, 255, 0.75)',
-    lineHeight: '1.6',
-    fontSize: '0.95rem',
-    marginBottom: '20px',
-    flexGrow: 1,
-  },
-  tagGroup: {
-    display: 'flex',
-    gap: '8px',
-    flexWrap: 'wrap',
-    marginBottom: '25px',
-  },
+  image: { width: '100%', height: '100%', objectFit: 'cover' },
+  info: { textAlign: 'left', padding: '0 10px' },
+  projectTitle: { color: '#fff', fontSize: '1.4rem', fontWeight: '800', margin: '5px 0' },
+  projectDesc: { color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', marginBottom: '15px', lineHeight: '1.5' },
+  tagGroup: { display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' },
   tag: {
-    background: 'rgba(14, 165, 233, 0.15)',
-    color: '#7dd3fc',
-    padding: '5px 14px',
+    padding: '4px 12px',
+    background: 'rgba(255, 255, 255, 0.1)',
     borderRadius: '50px',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    border: '1px solid rgba(14, 165, 233, 0.3)',
+    fontSize: '0.7rem',
+    color: '#0ea5e9',
+    border: '1px solid rgba(14, 165, 233, 0.2)'
   },
-  viewLink: {
-    color: '#fff',
-    textDecoration: 'none',
-    fontWeight: '600',
-    fontSize: '0.95rem',
-    display: 'flex',
-    alignItems: 'center',
-    width: 'fit-content',
+  viewLink: { 
+    color: '#fff', 
+    textDecoration: 'none', 
+    fontSize: '0.85rem', 
+    fontWeight: 'bold',
+    display: 'inline-block'
   }
 };
 
