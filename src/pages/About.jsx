@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const About = ({ isDark }) => { // 1. Added isDark prop
+const About = ({ isDark }) => {
+  // 1. Screen size detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 850);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 850);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -16,7 +25,10 @@ const About = ({ isDark }) => { // 1. Added isDark prop
   };
 
   return (
-    <div style={styles.section}>
+    <div style={{
+      ...styles.section,
+      padding: isMobile ? '100px 5% 60px' : '120px 10% 60px'
+    }}>
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -25,18 +37,31 @@ const About = ({ isDark }) => { // 1. Added isDark prop
         style={styles.container}
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} style={styles.header}>
+        <motion.div variants={itemVariants} style={{
+          ...styles.header,
+          textAlign: isMobile ? 'center' : 'left'
+        }}>
           <h2 style={styles.subtitle}>GET TO KNOW</h2>
-          <h1 style={styles.title}>About <span style={styles.highlight}>Me</span></h1>
+          <h1 style={{
+            ...styles.title,
+            fontSize: isMobile ? '2.5rem' : '3.5rem' // Scale down title for small screens
+          }}>
+            About <span style={styles.highlight}>Me</span>
+          </h1>
         </motion.div>
 
-        <div style={styles.grid}>
+        <div style={{
+          ...styles.grid,
+          // Collapse grid to 1 column on mobile
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+        }}>
+          
           {/* Main Bio - Glass Card */}
           <motion.div 
             variants={itemVariants} 
             style={{
               ...styles.mainCard,
-              // Dynamic glow based on theme
+              gridColumn: isMobile ? '1 / -1' : '1 / 3', // Full width on mobile
               boxShadow: isDark 
                 ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
                 : '0 20px 40px rgba(0, 0, 0, 0.1)',
@@ -70,11 +95,12 @@ const About = ({ isDark }) => { // 1. Added isDark prop
             </div>
           </motion.div>
 
-          {/* Education / Experience Box */}
+          {/* Education Box */}
           <motion.div 
             variants={itemVariants} 
             style={{
               ...styles.infoCard,
+              gridColumn: isMobile ? '1 / -1' : '3 / 4', // Full width on mobile
               background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.08)',
             }}
           >
@@ -90,44 +116,22 @@ const About = ({ isDark }) => { // 1. Added isDark prop
 const styles = {
   section: {
     minHeight: '100vh',
-    padding: '120px 10% 60px',
     display: 'flex',
     justifyContent: 'center',
-    // FIX: Ensure content is above the canvas
     position: 'relative',
     zIndex: 10, 
   },
-  container: {
-    maxWidth: '1100px',
-    width: '100%',
-  },
-  header: {
-    marginBottom: '50px',
-    textAlign: 'left',
-  },
-  subtitle: {
-    fontSize: '0.9rem',
-    letterSpacing: '4px',
-    color: 'rgba(255, 255, 255, 0.7)',
-    margin: 0,
-  },
-  title: {
-    fontSize: '3.5rem',
-    fontWeight: '900',
-    color: '#fff',
-    margin: '10px 0',
-  },
-  highlight: {
-    color: '#0ea5e9',
-  },
+  container: { maxWidth: '1100px', width: '100%' },
+  header: { marginBottom: '50px' },
+  subtitle: { fontSize: '0.9rem', letterSpacing: '4px', color: 'rgba(255, 255, 255, 0.7)', margin: 0 },
+  title: { fontWeight: '900', color: '#fff', margin: '10px 0' },
+  highlight: { color: '#0ea5e9' },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'auto',
     gap: '20px',
   },
   mainCard: {
-    gridColumn: '1 / 3',
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -147,7 +151,6 @@ const styles = {
     transition: 'all 0.5s ease',
   },
   infoCard: {
-    gridColumn: '3 / 4',
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -155,27 +158,10 @@ const styles = {
     padding: '30px',
     transition: 'all 0.5s ease',
   },
-  cardTitle: {
-    color: '#fff',
-    fontSize: '1.4rem',
-    marginBottom: '15px',
-    fontWeight: '700',
-  },
-  text: {
-    color: 'rgba(255, 255, 255, 0.9)',
-    lineHeight: '1.8',
-    fontSize: '1.1rem',
-  },
-  smallText: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: '1.6',
-    fontSize: '0.95rem',
-  },
-  skillGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
-  },
+  cardTitle: { color: '#fff', fontSize: '1.4rem', marginBottom: '15px', fontWeight: '700' },
+  text: { color: 'rgba(255, 255, 255, 0.9)', lineHeight: '1.8', fontSize: '1.1rem' },
+  smallText: { color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6', fontSize: '0.95rem' },
+  skillGrid: { display: 'flex', flexWrap: 'wrap', gap: '10px' },
   tag: {
     background: 'rgba(255, 255, 255, 0.2)',
     padding: '6px 14px',

@@ -1,13 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Instagram, Mail, User, MessageSquare, CheckCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import PageTransition from '../components/PageTransition'; // Ensure path is correct
+import PageTransition from '../components/PageTransition';
 
 const Contact = () => {
   const form = useRef();
   const [status, setStatus] = useState('idle');
   const [activeField, setActiveField] = useState(null);
+  
+  // 1. Dynamic screen size detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -37,27 +46,44 @@ const Contact = () => {
   ];
 
   return (
-    <div style={containerStyle}>
-      <div style={responsiveGridStyle}>
+    <div style={{
+      ...containerStyle,
+      padding: isMobile ? '100px 5% 40px' : '40px 5%'
+    }}>
+      <div style={{
+        ...responsiveGridStyle,
+        gridTemplateColumns: isMobile ? '1fr' : '0.8fr 1.2fr',
+      }}>
         
-        {/* LEFT PANE: Identity (Slides in from Left) */}
-        <PageTransition direction="right" delay={0.2}>
-          <div style={pillFrameStyle}>
+        {/* LEFT PANE: Identity */}
+        <PageTransition direction={isMobile ? "down" : "right"} delay={0.2}>
+          <div style={{
+            ...pillFrameStyle,
+            borderRadius: isMobile ? '40px' : '80px',
+            padding: isMobile ? '40px 20px' : '60px 40px',
+          }}>
             <div style={{ textAlign: 'center' }}>
-              <h1 style={{ fontSize: '3.5rem', fontWeight: '900', color: '#fff', margin: 0, lineHeight: '0.8', letterSpacing: '-2px' }}>
+              <h1 style={{ 
+                fontSize: isMobile ? '2.8rem' : '3.5rem', 
+                fontWeight: '900', 
+                color: '#fff', 
+                margin: 0, 
+                lineHeight: '0.9', 
+                letterSpacing: '-2px' 
+              }}>
                 FRANCIS<br/>MV
               </h1>
               <p style={technicalSubTextStyle}>CONNECT_PROTOCOLS // 2026</p>
             </div>
             
-            <div style={{ display: 'flex', gap: '20px', marginTop: '50px', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '20px', marginTop: isMobile ? '30px' : '50px', justifyContent: 'center' }}>
               {socials.map((soc, i) => (
                 <motion.a
                   key={i}
                   href={soc.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.25, color: '#fff', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.9))' }}
+                  whileHover={{ scale: 1.25, color: '#fff' }}
                   style={socialIconStyle}
                 >
                   {soc.icon}
@@ -67,9 +93,13 @@ const Contact = () => {
           </div>
         </PageTransition>
 
-        {/* RIGHT PANE: Contact Form (Slides in from Right) */}
-        <PageTransition direction="left" delay={0.4}>
-          <div style={{ ...pillFrameStyle, padding: '60px 50px' }}>
+        {/* RIGHT PANE: Contact Form */}
+        <PageTransition direction={isMobile ? "up" : "left"} delay={0.4}>
+          <div style={{ 
+            ...pillFrameStyle, 
+            borderRadius: isMobile ? '40px' : '80px',
+            padding: isMobile ? '40px 25px' : '60px 50px' 
+          }}>
             <AnimatePresence mode="wait">
               {status === 'success' ? (
                 <motion.div 
@@ -82,7 +112,7 @@ const Contact = () => {
                   <p style={{ opacity: 0.5, fontSize: '0.7rem', marginTop: '10px' }}>I'LL GET BACK TO YOU SHORTLY.</p>
                 </motion.div>
               ) : (
-                <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '25px', width: '100%' }}>
+                <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
                   
                   <div style={formGroupStyle}>
                     <label style={externalLabelStyle}>01. IDENTIFICATION</label>
@@ -115,12 +145,17 @@ const Contact = () => {
 
                   <div style={formGroupStyle}>
                     <label style={externalLabelStyle}>03. INQUIRY_BODY</label>
-                    <div style={{ ...getInputPillStyle(activeField === 'msg'), borderRadius: '30px', alignItems: 'flex-start', paddingTop: '15px' }}>
+                    <div style={{ 
+                      ...getInputPillStyle(activeField === 'msg'), 
+                      borderRadius: '25px', 
+                      alignItems: 'flex-start', 
+                      paddingTop: '15px' 
+                    }}>
                       <MessageSquare size={16} style={{marginTop: '4px'}} />
                       <textarea 
                         name="message" 
                         placeholder="TYPE YOUR MESSAGE..." 
-                        rows="4" 
+                        rows={isMobile ? "3" : "4"} 
                         onFocus={() => setActiveField('msg')}
                         onBlur={() => setActiveField(null)}
                         required style={innerInputStyle} 
@@ -129,7 +164,7 @@ const Contact = () => {
                   </div>
                   
                   <motion.button 
-                    whileHover={{ scale: 1.02, backgroundColor: '#fff', color: '#000', boxShadow: '0 0 20px rgba(255,255,255,0.4)' }}
+                    whileHover={{ scale: 1.02, backgroundColor: '#fff', color: '#000' }}
                     whileTap={{ scale: 0.98 }}
                     type="submit" 
                     disabled={status === 'sending'}
@@ -148,16 +183,16 @@ const Contact = () => {
   );
 };
 
-// ... (STYLING LOGIC REMAINS THE SAME AS YOUR PROVIDED CODE)
-const containerStyle = { minHeight: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 5%', background: 'transparent', boxSizing: 'border-box' };
-const responsiveGridStyle = { display: 'grid', gridTemplateColumns: window.innerWidth > 900 ? '0.8fr 1.2fr' : '1fr', gap: '40px', width: '100%', maxWidth: '1200px' };
-const pillFrameStyle = { padding: '60px 40px', borderRadius: '80px', border: '2px solid rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(255, 255, 255, 0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '0 0 60px rgba(255, 255, 255, 0.15), inset 0 0 30px rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(15px)', WebkitBackdropFilter: 'blur(15px)', height: '100%' };
-const technicalSubTextStyle = { fontFamily: 'monospace', color: 'rgba(255,255,255,0.4)', letterSpacing: '5px', fontSize: '0.65rem', marginTop: '25px', fontWeight: 'bold' };
-const externalLabelStyle = { fontFamily: 'monospace', color: 'rgba(255,255,255,0.6)', fontSize: '0.65rem', fontWeight: 'bold', letterSpacing: '3px', marginLeft: '25px', marginBottom: '5px' };
-const getInputPillStyle = (isActive) => ({ display: 'flex', alignItems: 'center', background: isActive ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.08)', border: isActive ? '1px solid rgba(255, 255, 255, 0.8)' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '999px', padding: '5px 25px', gap: '15px', color: isActive ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease', boxShadow: isActive ? '0 0 20px rgba(255,255,255,0.1)' : 'none' });
-const innerInputStyle = { background: 'transparent', border: 'none', color: '#fff', padding: '12px 0', outline: 'none', fontSize: '1rem', width: '100%', fontFamily: 'inherit' };
-const pillButtonStyle = { background: 'transparent', border: '1px solid #fff', color: '#fff', padding: '20px', borderRadius: '999px', fontWeight: '900', letterSpacing: '5px', fontSize: '0.8rem', cursor: 'pointer', marginTop: '10px', transition: 'all 0.4s ease' };
-const socialIconStyle = { color: 'rgba(255,255,255,0.4)', transition: '0.3s ease', cursor: 'pointer', display: 'flex', alignItems: 'center' };
-const formGroupStyle = { display: 'flex', flexDirection: 'column', gap: '5px' };
+// --- STYLES ---
+const containerStyle = { minHeight: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', boxSizing: 'border-box' };
+const responsiveGridStyle = { display: 'grid', gap: '30px', width: '100%', maxWidth: '1200px' };
+const pillFrameStyle = { border: '2px solid rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(255, 255, 255, 0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '0 0 60px rgba(255, 255, 255, 0.15), inset 0 0 30px rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(15px)', WebkitBackdropFilter: 'blur(15px)' };
+const technicalSubTextStyle = { fontFamily: 'monospace', color: 'rgba(255,255,255,0.4)', letterSpacing: '5px', fontSize: '0.65rem', marginTop: '20px', fontWeight: 'bold' };
+const externalLabelStyle = { fontFamily: 'monospace', color: 'rgba(255,255,255,0.6)', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '2px', marginLeft: '20px', marginBottom: '5px' };
+const getInputPillStyle = (isActive) => ({ display: 'flex', alignItems: 'center', background: isActive ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.08)', border: isActive ? '1px solid rgba(255, 255, 255, 0.8)' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '999px', padding: '2px 20px', gap: '12px', color: isActive ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease' });
+const innerInputStyle = { background: 'transparent', border: 'none', color: '#fff', padding: '12px 0', outline: 'none', fontSize: '0.95rem', width: '100%', fontFamily: 'inherit' };
+const pillButtonStyle = { background: 'transparent', border: '1px solid #fff', color: '#fff', padding: '18px', borderRadius: '999px', fontWeight: '900', letterSpacing: '5px', fontSize: '0.75rem', cursor: 'pointer', marginTop: '10px', transition: 'all 0.4s ease' };
+const socialIconStyle = { color: 'rgba(255,255,255,0.4)', transition: '0.3s ease', display: 'flex', alignItems: 'center' };
+const formGroupStyle = { display: 'flex', flexDirection: 'column', gap: '2px' };
 
 export default Contact;
