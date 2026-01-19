@@ -11,21 +11,29 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
     setStatus('sending');
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
+
+    // YOUR ACTUAL INTEGRATED CREDENTIALS
+    const SERVICE_ID = "service_dxpn5fs"; 
+    const TEMPLATE_ID = "template_45eaf39"; 
+    const PUBLIC_KEY = "Mb0nA1eh4ItwUR3EI"; 
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
       .then(() => {
         setStatus('success');
+        form.current.reset();
         setTimeout(() => setStatus('idle'), 5000);
       }, (error) => {
         console.error("EmailJS Error:", error);
+        alert("Transmission failed. Please check your connection.");
         setStatus('idle');
       });
   };
 
   const socials = [
-    { icon: <Github size={22} />, link: "#" },
-    { icon: <Linkedin size={22} />, link: "#" },
-    { icon: <Instagram size={22} />, link: "#" },
-    { icon: <Mail size={22} />, link: "mailto:your@email.com" }
+    { icon: <Github size={22} />, link: "https://github.com/yourusername" },
+    { icon: <Linkedin size={22} />, link: "https://linkedin.com/in/yourusername" },
+    { icon: <Instagram size={22} />, link: "https://instagram.com/yourusername" },
+    { icon: <Mail size={22} />, link: "mailto:francisfernandov07@gmail.com" }
   ];
 
   return (
@@ -61,9 +69,14 @@ const Contact = () => {
         <div style={{ ...pillFrameStyle, padding: '60px 50px' }}>
           <AnimatePresence mode="wait">
             {status === 'success' ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ textAlign: 'center', color: '#fff' }}>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                style={{ textAlign: 'center', color: '#fff' }}
+              >
                 <CheckCircle size={60} strokeWidth={1} style={{ marginBottom: '20px' }} />
-                <h3 style={{ letterSpacing: '5px' }}>TRANSMISSION_COMPLETE</h3>
+                <h3 style={{ letterSpacing: '5px', fontWeight: '200' }}>TRANSMISSION_COMPLETE</h3>
+                <p style={{ opacity: 0.5, fontSize: '0.7rem', marginTop: '10px' }}>I'LL GET BACK TO YOU SHORTLY.</p>
               </motion.div>
             ) : (
               <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '25px', width: '100%' }}>
@@ -116,7 +129,8 @@ const Contact = () => {
                   whileHover={{ scale: 1.02, backgroundColor: '#fff', color: '#000', boxShadow: '0 0 20px rgba(255,255,255,0.4)' }}
                   whileTap={{ scale: 0.98 }}
                   type="submit" 
-                  style={pillButtonStyle}
+                  disabled={status === 'sending'}
+                  style={{...pillButtonStyle, opacity: status === 'sending' ? 0.5 : 1}}
                 >
                   {status === 'sending' ? 'UPLOADING...' : 'SEND DISPATCH'}
                 </motion.button>
@@ -130,7 +144,7 @@ const Contact = () => {
   );
 };
 
-// --- STYLING LOGIC (STATIONARY) ---
+// --- STYLING LOGIC ---
 
 const containerStyle = {
   minHeight: '100vh',
