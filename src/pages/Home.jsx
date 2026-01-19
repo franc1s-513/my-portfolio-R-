@@ -13,7 +13,6 @@ const Home = ({ isDark }) => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           style={styles.textSide}
         >
-          {/* We wrap the text in a floating motion div */}
           <motion.div
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -32,17 +31,29 @@ const Home = ({ isDark }) => {
           </motion.div>
 
           <div style={styles.ctaGroup}>
-            <motion.button 
-              whileHover={{ scale: 1.05, y: -5, boxShadow: isDark ? '0 10px 20px rgba(14, 165, 233, 0.4)' : '0 10px 20px rgba(0,0,0,0.1)' }}
+            {/* REPLACED: Download Resume Button */}
+            <motion.a 
+              href="/Francis_MV_Resume.pdf" 
+              download="Francis_MV_Resume.pdf"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -5, 
+                boxShadow: isDark ? '0 10px 20px rgba(14, 165, 233, 0.4)' : '0 10px 20px rgba(0,0,0,0.1)' 
+              }}
               whileTap={{ scale: 0.95 }}
               style={{
                 ...styles.primaryBtn,
                 background: isDark ? '#0ea5e9' : '#fff',
-                color: isDark ? '#fff' : '#0ea5e9'
+                color: isDark ? '#fff' : '#0ea5e9',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
-              View Projects
-            </motion.button>
+              Download Resume
+            </motion.a>
+
             <motion.button 
               whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.1)' }}
               whileTap={{ scale: 0.95 }}
@@ -57,13 +68,13 @@ const Home = ({ isDark }) => {
         <motion.div
           animate={{ y: [0, -15, 0] }}
           transition={{ 
-          duration: 6, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-          times: [0, 0.5, 1] // Precisely maps the movement
-  }}
-  style={{ willChange: "transform" }} // Key for performance
->
+            duration: 6, 
+            repeat: Infinity, 
+            ease: "easeInOut",
+            times: [0, 0.5, 1]
+          }}
+          style={{ willChange: "transform" }}
+        >
           <motion.div 
             animate={{ 
               y: [0, -20, 0],
@@ -99,7 +110,6 @@ const Home = ({ isDark }) => {
   );
 };
 
-// ... (Your styles remain mostly the same, just a few dynamic additions above)
 const styles = {
   container: { height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 10%', position: 'relative', zIndex: 10 },
   wrapper: { display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '50px', alignItems: 'center', width: '100%', maxWidth: '1200px' },
