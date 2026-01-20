@@ -3,13 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Instagram, Mail, User, MessageSquare, CheckCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import PageTransition from '../components/PageTransition';
+import MagneticWrapper from '../components/MagneticWrapper'; // 1. Import the wrapper
 
 const Contact = () => {
   const form = useRef();
   const [status, setStatus] = useState('idle');
   const [activeField, setActiveField] = useState(null);
-  
-  // 1. Dynamic screen size detection
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
@@ -78,16 +77,18 @@ const Contact = () => {
             
             <div style={{ display: 'flex', gap: '20px', marginTop: isMobile ? '30px' : '50px', justifyContent: 'center' }}>
               {socials.map((soc, i) => (
-                <motion.a
-                  key={i}
-                  href={soc.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.25, color: '#fff' }}
-                  style={socialIconStyle}
-                >
-                  {soc.icon}
-                </motion.a>
+                /* 2. Wrap Social Icons */
+                <MagneticWrapper key={i} sensitivity={0.7}>
+                  <motion.a
+                    href={soc.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.3, color: '#fff' }}
+                    style={socialIconStyle}
+                  >
+                    {soc.icon}
+                  </motion.a>
+                </MagneticWrapper>
               ))}
             </div>
           </div>
@@ -114,17 +115,12 @@ const Contact = () => {
               ) : (
                 <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
                   
+                  {/* ... Inputs (Keep as you have them) ... */}
                   <div style={formGroupStyle}>
                     <label style={externalLabelStyle}>01. IDENTIFICATION</label>
                     <div style={getInputPillStyle(activeField === 'name')}>
                       <User size={16} />
-                      <input 
-                        name="user_name" 
-                        placeholder="FULL NAME" 
-                        onFocus={() => setActiveField('name')}
-                        onBlur={() => setActiveField(null)}
-                        required style={innerInputStyle} 
-                      />
+                      <input name="user_name" placeholder="FULL NAME" onFocus={() => setActiveField('name')} onBlur={() => setActiveField(null)} required style={innerInputStyle} />
                     </div>
                   </div>
 
@@ -132,46 +128,36 @@ const Contact = () => {
                     <label style={externalLabelStyle}>02. DIGITAL_ADDR</label>
                     <div style={getInputPillStyle(activeField === 'email')}>
                       <Mail size={16} />
-                      <input 
-                        name="user_email" 
-                        type="email" 
-                        placeholder="EMAIL@DOMAIN.COM" 
-                        onFocus={() => setActiveField('email')}
-                        onBlur={() => setActiveField(null)}
-                        required style={innerInputStyle} 
-                      />
+                      <input name="user_email" type="email" placeholder="EMAIL@DOMAIN.COM" onFocus={() => setActiveField('email')} onBlur={() => setActiveField(null)} required style={innerInputStyle} />
                     </div>
                   </div>
 
                   <div style={formGroupStyle}>
                     <label style={externalLabelStyle}>03. INQUIRY_BODY</label>
-                    <div style={{ 
-                      ...getInputPillStyle(activeField === 'msg'), 
-                      borderRadius: '25px', 
-                      alignItems: 'flex-start', 
-                      paddingTop: '15px' 
-                    }}>
+                    <div style={{ ...getInputPillStyle(activeField === 'msg'), borderRadius: '25px', alignItems: 'flex-start', paddingTop: '15px' }}>
                       <MessageSquare size={16} style={{marginTop: '4px'}} />
-                      <textarea 
-                        name="message" 
-                        placeholder="TYPE YOUR MESSAGE..." 
-                        rows={isMobile ? "3" : "4"} 
-                        onFocus={() => setActiveField('msg')}
-                        onBlur={() => setActiveField(null)}
-                        required style={innerInputStyle} 
-                      />
+                      <textarea name="message" placeholder="TYPE YOUR MESSAGE..." rows={isMobile ? "3" : "4"} onFocus={() => setActiveField('msg')} onBlur={() => setActiveField(null)} required style={innerInputStyle} />
                     </div>
                   </div>
                   
-                  <motion.button 
-                    whileHover={{ scale: 1.02, backgroundColor: '#fff', color: '#000' }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit" 
-                    disabled={status === 'sending'}
-                    style={{...pillButtonStyle, opacity: status === 'sending' ? 0.5 : 1}}
-                  >
-                    {status === 'sending' ? 'UPLOADING...' : 'SEND DISPATCH'}
-                  </motion.button>
+                  {/* 3. Wrap the Submit Button */}
+                  <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <MagneticWrapper sensitivity={0.3}>
+                        <motion.button 
+                        whileHover={{ backgroundColor: '#fff', color: '#000' }}
+                        whileTap={{ scale: 0.95 }}
+                        type="submit" 
+                        disabled={status === 'sending'}
+                        style={{
+                            ...pillButtonStyle, 
+                            opacity: status === 'sending' ? 0.5 : 1,
+                            width: isMobile ? '250px' : '300px' // Set a width so magnetic center is stable
+                        }}
+                        >
+                        {status === 'sending' ? 'UPLOADING...' : 'SEND DISPATCH'}
+                        </motion.button>
+                    </MagneticWrapper>
+                  </div>
                 </form>
               )}
             </AnimatePresence>
@@ -195,4 +181,5 @@ const pillButtonStyle = { background: 'transparent', border: '1px solid #fff', c
 const socialIconStyle = { color: 'rgba(255,255,255,0.4)', transition: '0.3s ease', display: 'flex', alignItems: 'center' };
 const formGroupStyle = { display: 'flex', flexDirection: 'column', gap: '2px' };
 
+// ADD THIS LINE AT THE VERY BOTTOM:
 export default Contact;

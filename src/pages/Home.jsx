@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
+import MagneticWrapper from '../components/MagneticWrapper'; 
+import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa6';
+import { IoMail } from 'react-icons/io5'; // New icon
 
 const Home = ({ isDark }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 968);
@@ -11,6 +14,14 @@ const Home = ({ isDark }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Defined the social links here for cleaner code
+  const socialLinks = [
+  { Icon: FaGithub, url: "https://github.com/yourusername" },
+  { Icon: FaLinkedin, url: "https://linkedin.com/in/yourusername" },
+  { Icon: FaInstagram, url: "https://instagram.com/yourusername" },
+  { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com" } // Quick contact
+];
+
   return (
     <div style={{
       ...styles.container,
@@ -19,12 +30,10 @@ const Home = ({ isDark }) => {
     }}>
       <div style={{
         ...styles.wrapper,
-        // Desktop: Column 1 (Text) is 1.2fr, Column 2 (Photo) is 1fr
         gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
         textAlign: isMobile ? 'center' : 'left',
       }}>
         
-        {/* --- THIS BOX IS NOW FIRST: IT WILL APPEAR ON THE LEFT --- */}
         <div style={{ 
           ...styles.textSide, 
           display: 'flex',
@@ -56,6 +65,7 @@ const Home = ({ isDark }) => {
             </p>
           </PageTransition>
 
+          {/* MAGNETIC CTA BUTTONS */}
           <PageTransition delay={0.8} direction="up">
             <div style={{
               ...styles.ctaGroup,
@@ -63,37 +73,69 @@ const Home = ({ isDark }) => {
               width: isMobile ? '100%' : 'auto',
               alignItems: 'center'
             }}>
-              <motion.a 
-                href="/Francis_MV_Resume.pdf" 
-                download
-                whileHover={{ scale: 1.05 }}
-                style={{
-                  ...styles.primaryBtn,
-                  width: isMobile ? '100%' : 'auto',
-                  background: isDark ? '#0ea5e9' : '#fff',
-                  color: isDark ? '#fff' : '#0ea5e9',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
-                Download Resume
-              </motion.a>
+              <MagneticWrapper>
+                <motion.a 
+                  href="/Francis_MV_Resume.pdf" 
+                  download
+                  whileHover={{ scale: 1.05 }}
+                  style={{
+                    ...styles.primaryBtn,
+                    width: isMobile ? '280px' : 'auto',
+                    background: isDark ? '#0ea5e9' : '#fff',
+                    color: isDark ? '#fff' : '#0ea5e9',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}
+                >
+                  Download Resume
+                </motion.a>
+              </MagneticWrapper>
 
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                style={{
-                  ...styles.secondaryBtn,
-                  width: isMobile ? '100%' : 'auto'
-                }}
-              >
-                Contact Me
-              </motion.button>
+              <MagneticWrapper>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  style={{
+                    ...styles.secondaryBtn,
+                    width: isMobile ? '280px' : 'auto'
+                  }}
+                >
+                  Contact Me
+                </motion.button>
+              </MagneticWrapper>
+            </div>
+
+            {/* MAGNETIC SOCIALS SECTION - UPDATED */}
+            <div style={{ 
+                display: 'flex', 
+                gap: '25px', 
+                marginTop: '40px',
+                justifyContent: isMobile ? 'center' : 'flex-start' 
+            }}>
+              {socialLinks.map((item, i) => (
+                <MagneticWrapper key={i} sensitivity={0.8}>
+                  <a 
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    style={{ 
+                        color: isDark ? '#fff' : '#333', 
+                        fontSize: '1.8rem',
+                        display: 'flex',
+                        transition: '0.3s ease'
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = '#0ea5e9'}
+                    onMouseLeave={(e) => e.target.style.color = isDark ? '#fff' : '#333'}
+                  >
+                    <item.Icon />
+                  </a>
+                </MagneticWrapper>
+              ))}
             </div>
           </PageTransition>
         </div>
 
-        {/* --- THIS BOX IS NOW SECOND: IT WILL APPEAR ON THE RIGHT --- */}
+        {/* IMAGE SECTION */}
         <PageTransition delay={1.0} direction={isMobile ? "up" : "left"}>
           <motion.div
             animate={{ y: [0, -15, 0] }}
@@ -104,31 +146,33 @@ const Home = ({ isDark }) => {
               marginTop: isMobile ? '50px' : '0'
             }}
           >
-            <motion.div 
-              animate={{ 
-                borderRadius: [
-                  '30% 70% 70% 30% / 30% 30% 70% 70%', 
-                  '50% 50% 33% 67% / 55% 27% 73% 45%', 
-                  '30% 70% 70% 30% / 30% 30% 70% 70%'
-                ]
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                ...styles.imageFrame,
-                width: isMobile ? '280px' : '380px', 
-                height: isMobile ? '320px' : '450px',
-                borderColor: isDark ? 'rgba(14, 165, 233, 0.5)' : 'rgba(255, 255, 255, 0.4)',
-                boxShadow: isDark 
-                  ? '0 30px 60px rgba(14, 165, 233, 0.4)' 
-                  : '0 30px 60px rgba(0, 74, 124, 0.1)',
-              }}
-            >
-              <img 
-                src="YOUR_IMAGE_URL_HERE" 
-                alt="Francis" 
-                style={styles.image} 
-              />
-            </motion.div>
+            <MagneticWrapper sensitivity={0.2}>
+              <motion.div 
+                animate={{ 
+                  borderRadius: [
+                    '30% 70% 70% 30% / 30% 30% 70% 70%', 
+                    '50% 50% 33% 67% / 55% 27% 73% 45%', 
+                    '30% 70% 70% 30% / 30% 30% 70% 70%'
+                  ]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  ...styles.imageFrame,
+                  width: isMobile ? '280px' : '380px', 
+                  height: isMobile ? '320px' : '450px',
+                  borderColor: isDark ? 'rgba(14, 165, 233, 0.5)' : 'rgba(255, 255, 255, 0.4)',
+                  boxShadow: isDark 
+                    ? '0 30px 60px rgba(14, 165, 233, 0.4)' 
+                    : '0 30px 60px rgba(0, 74, 124, 0.1)',
+                }}
+              >
+                <img 
+                  src="YOUR_IMAGE_URL_HERE" 
+                  alt="Francis" 
+                  style={styles.image} 
+                />
+              </motion.div>
+            </MagneticWrapper>
           </motion.div>
         </PageTransition>
 
