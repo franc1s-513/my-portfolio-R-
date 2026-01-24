@@ -10,7 +10,7 @@ const Navbar = ({ isDark, setIsDark }) => {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 850);
-      if (window.innerWidth >= 850) setIsOpen(false); // Close menu if scaling up
+      if (window.innerWidth >= 850) setIsOpen(false);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -22,7 +22,7 @@ const Navbar = ({ isDark, setIsDark }) => {
 
   const navLinks = ['Home', 'About', 'Projects', 'Certificates', 'Contact'];
 
-  // Theme-aware colors for text and icons
+  // FIXED: Explicitly force white in dark mode and dark slate in light mode
   const textColor = isDark ? '#FFFFFF' : '#0f172a';
   const iconColor = isDark ? '#FFFFFF' : '#0f172a';
 
@@ -30,20 +30,26 @@ const Navbar = ({ isDark, setIsDark }) => {
     <>
       <nav style={{
         ...styles.nav,
-        background: isDark ? 'rgba(15, 23, 42, 0.6)' : 'rgba(255, 255, 255, 0.6)',
-        borderColor: isDark ? 'rgba(14, 165, 233, 0.3)' : 'rgba(14, 165, 233, 0.2)',
+        background: isDark ? 'rgba(15, 23, 42, 0.75)' : 'rgba(255, 255, 255, 0.75)',
+        borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.2)',
       }}>
         <div style={styles.navContainer}>
           
           <div style={styles.leftSection}>
-            <span style={{ ...styles.logoText, color: textColor }}>FRANCIS</span>
+            <span style={{ 
+              ...styles.logoText, 
+              color: textColor,
+              textShadow: isDark ? '0 0 10px rgba(255,255,255,0.3)' : 'none' 
+            }}>
+              FRANCIS
+            </span>
             <motion.button 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsDark(!isDark)} 
               style={{
                 ...styles.toggleBtn,
-                background: isDark ? 'rgba(14, 165, 233, 0.15)' : 'rgba(14, 165, 233, 0.1)',
+                background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.1)',
               }}
             >
               <AnimatePresence mode="wait">
@@ -64,12 +70,24 @@ const Navbar = ({ isDark, setIsDark }) => {
             </motion.button>
           </div>
 
-          {/* DESKTOP LINKS */}
+          {/* DESKTOP LINKS - FIXED COLOR LOGIC */}
           {!isMobile && (
             <div style={styles.links}>
               {navLinks.map((item) => (
-                <Link key={item} to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} style={{...styles.linkText, color: textColor}}>
-                  <motion.span whileHover={{ color: '#0ea5e9' }}>{item}</motion.span>
+                <Link 
+                  key={item} 
+                  to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} 
+                  style={{
+                    ...styles.linkText, 
+                    color: textColor, // Forces color update on state change
+                  }}
+                >
+                  <motion.span 
+                    whileHover={{ color: '#0ea5e9', y: -2 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    {item}
+                  </motion.span>
                 </Link>
               ))}
             </div>
@@ -79,9 +97,12 @@ const Navbar = ({ isDark, setIsDark }) => {
           {isMobile && (
             <div 
               onClick={() => setIsOpen(!isOpen)} 
-              style={{ cursor: 'pointer', display: 'flex', zIndex: 1001 }} // Higher zIndex than overlay
+              style={{ cursor: 'pointer', display: 'flex', zIndex: 1001 }}
             >
-              {isOpen ? <X color={isOpen && !isDark ? '#0f172a' : iconColor} /> : <Menu color={iconColor} />}
+              {isOpen ? 
+                <X color={isDark ? '#FFFFFF' : '#0f172a'} /> : 
+                <Menu color={iconColor} />
+              }
             </div>
           )}
         </div>
@@ -96,7 +117,7 @@ const Navbar = ({ isDark, setIsDark }) => {
             exit={{ opacity: 0, clipPath: 'circle(0% at 90% 5%)' }}
             style={{
               ...styles.mobileOverlay,
-              background: isDark ? 'rgba(15, 23, 42, 0.98)' : 'rgba(255, 255, 255, 0.98)',
+              background: isDark ? '#0f172a' : '#ffffff',
             }}
           >
             {navLinks.map((item, i) => (
@@ -111,8 +132,7 @@ const Navbar = ({ isDark, setIsDark }) => {
                   onClick={() => setIsOpen(false)}
                   style={{ 
                     ...styles.mobileLink, 
-                    color: isDark ? 'white' : '#0f172a',
-                    borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'
+                    color: isDark ? '#FFFFFF' : '#0f172a', // Fixed mobile visibility
                   }}
                 >
                   {item}
@@ -134,7 +154,7 @@ const styles = {
     transform: 'translateX(-50%)',
     width: '90%',
     maxWidth: '800px', 
-    padding: '0 20px',
+    padding: '0 25px',
     height: '65px',
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
@@ -143,8 +163,8 @@ const styles = {
     zIndex: 1000,
     display: 'flex',
     alignItems: 'center',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-    transition: 'background 0.3s ease, border-color 0.3s ease',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
   },
   navContainer: {
     width: '100%',
@@ -153,10 +173,17 @@ const styles = {
     alignItems: 'center',
   },
   leftSection: { display: 'flex', alignItems: 'center', gap: '15px' },
-  logoText: { fontWeight: '900', fontSize: '1.2rem', letterSpacing: '1px' },
-  toggleBtn: { border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  links: { display: 'flex', gap: '25px' },
-  linkText: { textDecoration: 'none', fontSize: '0.9rem', fontWeight: '600', transition: '0.3s' },
+  logoText: { fontWeight: '900', fontSize: '1.2rem', letterSpacing: '2px', transition: 'color 0.3s' },
+  toggleBtn: { border: 'none', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: '0.3s' },
+  links: { display: 'flex', gap: '30px' },
+  linkText: { 
+    textDecoration: 'none', 
+    fontSize: '0.85rem', 
+    fontWeight: '700', 
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    transition: 'color 0.3s ease' 
+  },
   
   mobileOverlay: {
     position: 'fixed',
@@ -169,18 +196,16 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 999,
-    gap: '20px',
+    gap: '30px',
   },
   mobileLink: {
-    fontSize: '1.8rem',
-    fontWeight: '800',
+    fontSize: '2rem',
+    fontWeight: '900',
     textDecoration: 'none',
-    letterSpacing: '2px',
+    letterSpacing: '4px',
     textTransform: 'uppercase',
-    padding: '10px 20px',
-    display: 'block',
-    textAlign: 'center',
-    width: '200px'
+    padding: '10px',
+    transition: '0.3s'
   }
 };
 
