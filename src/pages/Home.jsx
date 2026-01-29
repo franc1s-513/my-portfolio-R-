@@ -1,13 +1,9 @@
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper'; 
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa6';
-import { IoMail } from 'react-icons/io5'; // New icon
+import { IoMail } from 'react-icons/io5';
 
 const Home = ({ isDark }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 968);
@@ -18,13 +14,12 @@ const Home = ({ isDark }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Defined the social links here for cleaner code
   const socialLinks = [
-  { Icon: FaGithub, url: "https://github.com/yourusername" },
-  { Icon: FaLinkedin, url: "https://linkedin.com/in/yourusername" },
-  { Icon: FaInstagram, url: "https://instagram.com/yourusername" },
-  { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com" } // Quick contact
-];
+    { Icon: FaGithub, url: "https://github.com/yourusername" },
+    { Icon: FaLinkedin, url: "https://linkedin.com/in/yourusername" },
+    { Icon: FaInstagram, url: "https://instagram.com/yourusername" },
+    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com" }
+  ];
 
   return (
     <div style={{
@@ -69,7 +64,6 @@ const Home = ({ isDark }) => {
             </p>
           </PageTransition>
 
-          {/* MAGNETIC CTA BUTTONS */}
           <PageTransition delay={0.8} direction="up">
             <div style={{
               ...styles.ctaGroup,
@@ -109,30 +103,29 @@ const Home = ({ isDark }) => {
               </MagneticWrapper>
             </div>
 
-            {/* MAGNETIC SOCIALS SECTION - UPDATED */}
+            {/* FIXED SOCIALS SECTION: MATCHES CONTACT PAGE GLASS STYLE */}
             <div style={{ 
                 display: 'flex', 
-                gap: '25px', 
-                marginTop: '40px',
+                gap: '20px', 
+                marginTop: '45px',
                 justifyContent: isMobile ? 'center' : 'flex-start' 
             }}>
               {socialLinks.map((item, i) => (
-                <MagneticWrapper key={i} sensitivity={0.8}>
-                  <a 
+                <MagneticWrapper key={i} sensitivity={0.6}>
+                  <motion.a 
                     href={item.url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    style={{ 
-                        color: isDark ? '#fff' : '#333', 
-                        fontSize: '1.8rem',
-                        display: 'flex',
-                        transition: '0.3s ease'
+                    whileHover={{ 
+                        scale: 1.1, 
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        boxShadow: '0 0 25px rgba(255, 255, 255, 0.4)' 
                     }}
-                    onMouseEnter={(e) => e.target.style.color = '#0ea5e9'}
-                    onMouseLeave={(e) => e.target.style.color = isDark ? '#fff' : '#333'}
+                    style={styles.socialCircle}
                   >
-                    <item.Icon />
-                  </a>
+                    {/* Explicitly forcing color to white (#fff) */}
+                    <item.Icon size={24} color="#fff" />
+                  </motion.a>
                 </MagneticWrapper>
               ))}
             </div>
@@ -179,26 +172,85 @@ const Home = ({ isDark }) => {
             </MagneticWrapper>
           </motion.div>
         </PageTransition>
-
       </div>
     </div>
   );
 };
-
 const styles = {
-  container: { display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 10, overflowX: 'hidden' },
-  wrapper: { display: 'grid', gap: '50px', alignItems: 'center', width: '100%', maxWidth: '1200px' },
+  container: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    position: 'relative', 
+    zIndex: 10, 
+    overflowX: 'hidden',
+    minHeight: '100vh', 
+    padding: '0 10%'
+  },
+  wrapper: { 
+    display: 'grid', 
+    gap: '50px', 
+    alignItems: 'center', 
+    width: '100%', 
+    maxWidth: '1200px',
+    marginTop: '-20px' 
+  },
   textSide: { textAlign: 'inherit' },
-  imageFrame: { background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(15px)', WebkitBackdropFilter: 'blur(15px)', border: '3px solid', overflow: 'hidden', cursor: 'pointer' },
+  imageFrame: { 
+    background: 'rgba(255, 255, 255, 0.1)', 
+    backdropFilter: 'blur(15px)', 
+    WebkitBackdropFilter: 'blur(15px)', 
+    border: '3px solid', 
+    overflow: 'hidden', 
+    cursor: 'pointer' 
+  },
   image: { width: '110%', height: '110%', objectFit: 'cover', marginLeft: '-5%', marginTop: '-5%' },
-  greeting: { color: 'rgba(255, 255, 255, 0.8)', letterSpacing: '4px', fontSize: '0.9rem', fontWeight: '600', marginBottom: '10px' },
-  name: { fontWeight: '900', color: '#fff', margin: '5px 0', lineHeight: '1', letterSpacing: '-2px' },
+  greeting: { 
+    color: 'rgba(255, 255, 255, 0.8)', 
+    letterSpacing: '4px', 
+    fontSize: '0.9rem', 
+    fontWeight: '600', 
+    marginBottom: '10px' 
+  },
+  name: { 
+    fontWeight: '900', 
+    color: '#fff', 
+    margin: '5px 0', 
+    lineHeight: '1', 
+    letterSpacing: '-2px' 
+  },
   dot: { color: '#0ea5e9' },
-  tagline: { color: 'rgba(255, 255, 255, 0.9)', maxWidth: '500px', lineHeight: '1.6' },
-  highlight: { color: '#fff', fontWeight: '700', borderBottom: '2px solid #0ea5e9', paddingBottom: '2px' },
+  tagline: { 
+    color: 'rgba(255, 255, 255, 0.9)', 
+    maxWidth: '500px', 
+    lineHeight: '1.6' 
+  },
+  highlight: { 
+  color: '#fff', 
+  fontWeight: '800', 
+  borderBottom: 'none',    // This removes the line
+  textDecoration: 'none'   // Just in case it's coming from standard CSS
+},
   ctaGroup: { display: 'flex', gap: '20px', marginTop: '40px' },
-  primaryBtn: { padding: '15px 35px', borderRadius: '50px', border: 'none', fontWeight: '700', fontSize: '1rem', cursor: 'pointer', textAlign: 'center' },
-  secondaryBtn: { padding: '15px 35px', borderRadius: '50px', border: '2px solid #fff', background: 'transparent', color: '#fff', fontWeight: '700', fontSize: '1rem', cursor: 'pointer' },
-};
+  primaryBtn: { 
+    padding: '15px 35px', 
+    borderRadius: '50px', 
+    border: 'none', 
+    fontWeight: '700', 
+    fontSize: '1rem', 
+    cursor: 'pointer', 
+    textAlign: 'center' 
+  },
+  secondaryBtn: { 
+    padding: '15px 35px', 
+    borderRadius: '50px', 
+    border: '2px solid rgba(255, 255, 255, 0.7)', 
+    background: 'rgba(255, 255, 255, 0.1)', // Subtle fill for better visibility
+    color: '#fff', 
+    fontWeight: '700', 
+    fontSize: '1rem', 
+    cursor: 'pointer' 
+  },
+}; // <--- THIS WAS THE MISSING LINE CAUSING THE ERRORS
 
 export default Home;

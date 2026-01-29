@@ -22,7 +22,6 @@ const Navbar = ({ isDark, setIsDark }) => {
 
   const navLinks = ['Home', 'About', 'Projects', 'Certificates', 'Contact'];
 
-  // FIXED: Explicitly force white in dark mode and dark slate in light mode
   const textColor = isDark ? '#FFFFFF' : '#0f172a';
   const iconColor = isDark ? '#FFFFFF' : '#0f172a';
 
@@ -30,8 +29,13 @@ const Navbar = ({ isDark, setIsDark }) => {
     <>
       <nav style={{
         ...styles.nav,
-        background: isDark ? 'rgba(15, 23, 42, 0.75)' : 'rgba(255, 255, 255, 0.75)',
-        borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.2)',
+        // MODIFIED: Higher saturation blue tint for light mode to fight the sunlight
+        background: isDark 
+          ? 'rgba(15, 23, 42, 0.4)' 
+          : 'rgba(224, 242, 254, 0.4)', 
+        borderColor: isDark 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(14, 165, 233, 0.4)', // Stronger blue border
       }}>
         <div style={styles.navContainer}>
           
@@ -39,7 +43,7 @@ const Navbar = ({ isDark, setIsDark }) => {
             <span style={{ 
               ...styles.logoText, 
               color: textColor,
-              textShadow: isDark ? '0 0 10px rgba(255,255,255,0.3)' : 'none' 
+              textShadow: isDark ? '0 0 10px rgba(255,255,255,0.3)' : '0 1px 2px rgba(0,0,0,0.1)' 
             }}>
               FRANCIS
             </span>
@@ -49,7 +53,7 @@ const Navbar = ({ isDark, setIsDark }) => {
               onClick={() => setIsDark(!isDark)} 
               style={{
                 ...styles.toggleBtn,
-                background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.1)',
+                background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.15)',
               }}
             >
               <AnimatePresence mode="wait">
@@ -70,7 +74,6 @@ const Navbar = ({ isDark, setIsDark }) => {
             </motion.button>
           </div>
 
-          {/* DESKTOP LINKS - FIXED COLOR LOGIC */}
           {!isMobile && (
             <div style={styles.links}>
               {navLinks.map((item) => (
@@ -79,7 +82,7 @@ const Navbar = ({ isDark, setIsDark }) => {
                   to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} 
                   style={{
                     ...styles.linkText, 
-                    color: textColor, // Forces color update on state change
+                    color: textColor,
                   }}
                 >
                   <motion.span 
@@ -93,7 +96,6 @@ const Navbar = ({ isDark, setIsDark }) => {
             </div>
           )}
 
-          {/* MOBILE HAMBURGER ICON */}
           {isMobile && (
             <div 
               onClick={() => setIsOpen(!isOpen)} 
@@ -132,7 +134,7 @@ const Navbar = ({ isDark, setIsDark }) => {
                   onClick={() => setIsOpen(false)}
                   style={{ 
                     ...styles.mobileLink, 
-                    color: isDark ? '#FFFFFF' : '#0f172a', // Fixed mobile visibility
+                    color: isDark ? '#FFFFFF' : '#0f172a',
                   }}
                 >
                   {item}
@@ -153,18 +155,22 @@ const styles = {
     left: '50%',
     transform: 'translateX(-50%)',
     width: '90%',
-    maxWidth: '800px', 
+    maxWidth: '850px', 
     padding: '0 25px',
     height: '65px',
-    backdropFilter: 'blur(15px)',
-    WebkitBackdropFilter: 'blur(15px)',
+    
+    /* THE GLASS FIX */
+    backdropFilter: 'blur(20px) saturate(180%)', // Fixed missing 'px'
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
     borderRadius: '50px', 
     border: '1px solid',
+    
     zIndex: 1000,
     display: 'flex',
     alignItems: 'center',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    // Stronger shadow to separate from the sunlight center
+    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12)', 
+    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
   },
   navContainer: {
     width: '100%',
@@ -182,9 +188,9 @@ const styles = {
     fontWeight: '700', 
     letterSpacing: '1px',
     textTransform: 'uppercase',
-    transition: 'color 0.3s ease' 
+    transition: 'color 0.3s ease',
+    textShadow: '0 1px 2px rgba(0,0,0,0.05)'
   },
-  
   mobileOverlay: {
     position: 'fixed',
     top: 0,
@@ -210,3 +216,4 @@ const styles = {
 };
 
 export default Navbar;
+

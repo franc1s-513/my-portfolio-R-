@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const PageTransition = ({ children, delay = 0, direction = "up" }) => {
-  // Define coordinates based on direction prop
   const directions = {
     up: { y: 20, x: 0 },
     down: { y: -20, x: 0 },
@@ -17,24 +16,26 @@ const PageTransition = ({ children, delay = 0, direction = "up" }) => {
       initial={{ 
         opacity: 0, 
         y: selectedDirection.y, 
-        x: selectedDirection.x, 
-        filter: "blur(10px)" 
+        x: selectedDirection.x 
       }}
       animate={{ 
         opacity: 1, 
         y: 0, 
-        x: 0, 
-        filter: "blur(0px)" 
+        x: 0 
       }}
       exit={{ 
         opacity: 0, 
-        y: -selectedDirection.y, 
-        filter: "blur(10px)" 
+        y: -selectedDirection.y,
+        transition: { duration: 0.3 } // Exit faster to reduce lag feel
       }}
-      style={{ willChange: "transform, opacity, filter" }}
+      style={{ 
+        willChange: "transform, opacity",
+        width: "100%",
+        position: "relative" 
+      }}
       transition={{ 
-        duration: 0.6, 
-        delay: delay, // This allows for staggering
+        duration: 0.5, 
+        delay: delay,
         ease: [0.22, 1, 0.36, 1] 
       }}
     >

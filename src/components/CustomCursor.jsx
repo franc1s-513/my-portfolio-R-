@@ -1,33 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useSpring } from 'framer-motion';
 
 const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  
+  // Springs kept for smooth, weightless movement
+  const mouseX = useSpring(0, { stiffness: 450, damping: 30 });
+  const mouseY = useSpring(0, { stiffness: 450, damping: 30 });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
 
-    // Listening for the signals from MagneticWrapper.jsx
+    const handleMouseDown = () => setIsClicked(true);
+    const handleMouseUp = () => setIsClicked(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('cursorEnter', handleMouseEnter);
     window.addEventListener('cursorLeave', handleMouseLeave);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('cursorEnter', handleMouseEnter);
       window.removeEventListener('cursorLeave', handleMouseLeave);
     };
-  }, []);
-
-  // CONFIGURATION: Adjust these for size
-  const normalSize = 20;
-  const zoomSize = 40; // Reduced from 60 for a smaller ring
+  }, [mouseX, mouseY]);
 
   return (
     <motion.div
@@ -35,27 +41,32 @@ const CustomCursor = () => {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: isHovered ? zoomSize : normalSize,
-        height: isHovered ? zoomSize : normalSize,
-        backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.15)' : '#0ea5e9',
-        border: isHovered ? '1.5px solid #fff' : 'none',
+        // Centering a medium-sized 25px ball
+        translateX: '-50%',
+        translateY: '-50%',
+        width: 25,
+        height: 25,
         borderRadius: '50%',
         pointerEvents: 'none',
         zIndex: 9999,
-        mixBlendMode: 'difference',
+        
+        /* PURE WHITE DESIGN */
+        backgroundColor: '#ffffff',
+        // White glow that stands out against the blue sky
+        boxShadow: '0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.3)',
+        
+        x: mouseX,
+        y: mouseY,
       }}
       animate={{
-        // We subtract half the size to keep the cursor centered on the mouse tip
-        x: mousePosition.x - (isHovered ? zoomSize / 2 : normalSize / 2),
-        y: mousePosition.y - (isHovered ? zoomSize / 2 : normalSize / 2),
-        scale: isHovered ? 1.2 : 1, // Reduced scale from 1.5 to 1.2
+        // Medium size that grows significantly on hover
+        scale: isClicked ? 0.8 : (isHovered ? 2.5 : 1),
+        // Glow gets more intense when clicking
+        boxShadow: isClicked 
+          ? '0 0 40px rgba(255, 255, 255, 0.9)' 
+          : '0 0 15px rgba(255, 255, 255, 0.6)',
       }}
-      transition={{ 
-        type: 'spring', 
-        stiffness: 300, // Higher stiffness for a snappier feel
-        damping: 25, 
-        mass: 0.5 
-      }}
+      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
     />
   );
 };

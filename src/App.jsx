@@ -6,8 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import SkyAndBirds from './components/SkyAndBirds';
 import CustomCursor from './components/CustomCursor';
 import Navbar from './components/navbar';
-import PageTransition from './components/PageTransition'; // Imported new component
-
+import WindParticles from './components/WindParticles'; // Fixed spelling
 // Pages
 import Home from './pages/Home';
 import About from './pages/About';
@@ -22,16 +21,18 @@ function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       
-      {/* Layer 1: Backgrounds */}
+      {/* Layer 1: Background Elements (Stay mounted during transitions) */}
       <SkyAndBirds isDark={isDark} />
+    
       
-      {/* Layer 2: UI Elements */}
+      {/* Layer 2: Interactive UI */}
       <CustomCursor /> 
       <Navbar isDark={isDark} setIsDark={setIsDark} />
       
-      {/* Layer 3: Routing Content */}
+      {/* Layer 3: Main Content with Smooth Transitions */}
       <main style={{ position: 'relative', zIndex: 10, background: 'transparent' }}>
         <AnimatePresence mode="wait">
+          {/* location and key are essential for Framer Motion to detect page changes */}
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home isDark={isDark} />} />
             <Route path="/about" element={<About isDark={isDark} />} />
