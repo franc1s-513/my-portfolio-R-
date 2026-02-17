@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ExternalLink, X, Download, ChevronLeft, ChevronRight } from 'lucide-react';
-import PageTransition from '../components/PageTransition';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Maximize2, Download, ShieldCheck } from 'lucide-react';
 
 // IMPORT YOUR IMAGES
 import IotCert from '../assets/certificates/iot.png';
@@ -10,147 +9,76 @@ import LlmCert from '../assets/certificates/nxt.png';
 import CloudCert from '../assets/certificates/cloud.png';
 import PsgCert from '../assets/certificates/psg.png';
 
-// --- 3D TILT COMPONENT ---
-const TiltCard = ({ children, isDark }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-        ...styles.certCard,
-        background: isDark ? 'rgba(15, 23, 42, 0.4)' : 'rgba(255, 255, 255, 0.3)',
-        borderColor: isDark ? 'rgba(14, 165, 233, 0.2)' : 'rgba(14, 165, 233, 0.1)',
-        boxShadow: isDark ? '0 20px 40px rgba(0, 0, 0, 0.4)' : '0 20px 40px rgba(0, 0, 0, 0.1)'
-      }}
-    >
-      <div style={{ transform: "translateZ(50px)" }}>{children}</div>
-    </motion.div>
-  );
-};
-
 const Certificates = ({ isDark }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [selectedIndex, setSelectedIndex] = useState(null); // Track index instead of image
+  const [selectedCert, setSelectedCert] = useState(null);
 
   const certs = [
-    { id: 1, title: "Introduction To Internet Of Things", issuer: "NPTEL (IIT Kharagpur)", date: "Jan-Apr 2026", status: "Elite", score: "75%", image: IotCert },
-    { id: 2, title: "GDG Solution Challenge", issuer: "Google Developer Groups", date: "2026", status: "Participant", score: null, image: GdgCert },
-    { id: 3, title: "LLM in Generative AI", issuer: "VIT Vellore (SCOPE)", date: "Oct 2026", status: "Workshop", score: "Research Focused", image: LlmCert },
-    { id: 4, title: "Cloud Computing", issuer: "NPTEL (IIT Kharagpur)", date: "Jul-Oct 2026", status: "Certified", score: "54%", image: CloudCert },
-    { id: 5, title: "Paper Presentation", issuer: "PSG Institute of Technology", date: "March 2026", status: "Award", score: "Participation", image: PsgCert }
+    { id: 1, title: "IoT Specialist", size: "large", issuer: "NPTEL (IIT-K)", status: "Elite", image: IotCert, color: "#fbbf24" },
+    { id: 2, title: "GDG Global", size: "small", issuer: "Google", status: "Participant", image: GdgCert, color: "#0ea5e9" },
+    { id: 3, title: "GenAI Expert", size: "tall", issuer: "VIT SCOPE", status: "Workshop", image: LlmCert, color: "#a855f7" },
+    { id: 4, title: "Cloud Architect", size: "small", issuer: "NPTEL", status: "Certified", image: CloudCert, color: "#10b981" },
+    { id: 5, title: "Research Lead", size: "large", issuer: "PSG Tech", status: "Award", image: PsgCert, color: "#f43f5e" }
   ];
 
-  useEffect(() => {
-    document.body.style.overflow = selectedIndex !== null ? 'hidden' : 'unset';
-  }, [selectedIndex]);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const nextImage = () => setSelectedIndex((prev) => (prev + 1) % certs.length);
-  const prevImage = () => setSelectedIndex((prev) => (prev - 1 + certs.length) % certs.length);
+  const doubledRow1 = [...certs, ...certs];
+  const doubledRow2 = [...certs].reverse().concat([...certs].reverse());
 
   return (
-    <div style={{ ...styles.section, padding: isMobile ? '100px 5% 60px' : '140px 10% 60px' }}>
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <PageTransition direction="down" delay={0.2}>
-            <h1 style={{ ...styles.title, fontSize: isMobile ? '2.4rem' : '3.5rem' }}>
-              Official <span style={styles.highlight}>Certifications</span>
-            </h1>
-          </PageTransition>
-          <p style={styles.subtitle}>Verified Technical Expertise & Research</p>
-        </div>
+    <div style={styles.section}>
+      <div style={styles.header}>
+        <motion.h1 initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} style={styles.title}>
+           <span style={styles.highlight}>Achievements</span>
+        </motion.h1>
+       </div>
 
-        <div style={{ ...styles.grid, gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(350px, 1fr))', gap: isMobile ? '35px' : '50px' }}>
-          {certs.map((cert, index) => (
-            <PageTransition key={cert.id} delay={0.5 + (index * 0.1)} direction="up">
-              <TiltCard isDark={isDark}>
-                <div style={styles.imageBox}>
-                  <img src={cert.image} alt={cert.title} style={styles.image} />
-                  {cert.status && (
-                    <div style={{ ...styles.badge, background: cert.status === "Elite" ? "#fbbf24" : "#0ea5e9" }}>{cert.status}</div>
-                  )}
-                </div>
-                <div style={styles.info}>
-                  <h3 style={styles.certTitle}>{cert.title}</h3>
-                  <p style={styles.issuer}>{cert.issuer}</p>
-                  <div style={styles.footer}>
-                    <div style={styles.details}>
-                      <span style={styles.date}>{cert.date}</span>
-                      {cert.score && <span style={styles.score}>Score: {cert.score}</span>}
-                    </div>
-                    <motion.button
-                      onClick={() => setSelectedIndex(index)}
-                      whileHover={{ scale: 1.05, backgroundColor: '#0ea5e9', color: '#fff' }}
-                      style={styles.viewBtn}
-                    >
-                      View <ExternalLink size={14} style={{ marginLeft: '6px' }} />
-                    </motion.button>
-                  </div>
-                </div>
-              </TiltCard>
-            </PageTransition>
-          ))}
+      <div style={styles.maskContainer}>
+        <div style={styles.bentoContainer}>
+          {/* ROW 1: LEFT */}
+          <div style={styles.marqueeRow}>
+            <motion.div 
+              style={styles.track}
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, duration: 55, ease: "linear" }}
+            >
+              {doubledRow1.map((cert, i) => (
+                <EnhancedBentoCard key={`r1-${i}`} cert={cert} onOpen={() => setSelectedCert(cert)} />
+              ))}
+            </motion.div>
+          </div>
+
+          {/* ROW 2: RIGHT */}
+          <div style={styles.marqueeRow}>
+            <motion.div 
+              style={styles.track}
+              animate={{ x: ["-50%", "0%"] }}
+              transition={{ repeat: Infinity, duration: 65, ease: "linear" }}
+            >
+              {doubledRow2.map((cert, i) => (
+                <EnhancedBentoCard key={`r2-${i}`} cert={cert} onOpen={() => setSelectedCert(cert)} />
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* --- GALLERY MODAL --- */}
       <AnimatePresence>
-        {selectedIndex !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={styles.overlay} onClick={() => setSelectedIndex(null)}>
-            
-            {/* Left Arrow */}
-            <button style={{ ...styles.navBtn, left: '20px' }} onClick={(e) => { e.stopPropagation(); prevImage(); }}>
-              <ChevronLeft size={40} />
-            </button>
-
-            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }} style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-              <div style={styles.modalActions}>
-                <a href={certs[selectedIndex].image} download style={styles.downloadBtn}><Download size={20} /></a>
-                <button style={styles.closeBtn} onClick={() => setSelectedIndex(null)}><X size={24} /></button>
-              </div>
-              <img src={certs[selectedIndex].image} alt="Full View" style={styles.fullImage} />
-              <p style={{ color: 'white', marginTop: '15px', textAlign: 'center' }}>{certs[selectedIndex].title}</p>
+        {selectedCert && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={styles.overlay} onClick={() => setSelectedCert(null)}>
+            <motion.div initial={{ scale: 0.9, y: 30 }} animate={{ scale: 1, y: 0 }} style={styles.modalContent} onClick={e => e.stopPropagation()}>
+               <div style={styles.modalHeader}>
+                  <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                    <ShieldCheck color={selectedCert.color} size={24}/>
+                    <h2 style={{color: '#fff', margin: 0, fontSize: '1.2rem'}}>{selectedCert.title}</h2>
+                  </div>
+                  <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}><X size={24}/></button>
+               </div>
+               <img src={selectedCert.image} style={styles.fullImage} alt="Certificate"/>
+               <div style={styles.modalFooter}>
+                  <a href={selectedCert.image} download style={styles.downloadBtn}>
+                    <Download size={18} style={{marginRight: '8px'}}/> Download Verified PDF
+                  </a>
+               </div>
             </motion.div>
-
-            {/* Right Arrow */}
-            <button style={{ ...styles.navBtn, right: '20px' }} onClick={(e) => { e.stopPropagation(); nextImage(); }}>
-              <ChevronRight size={40} />
-            </button>
-
           </motion.div>
         )}
       </AnimatePresence>
@@ -158,34 +86,99 @@ const Certificates = ({ isDark }) => {
   );
 };
 
+const EnhancedBentoCard = ({ cert, onOpen }) => {
+  const cardWidth = cert.size === "large" ? "380px" : cert.size === "tall" ? "260px" : "310px";
+
+  return (
+    <div style={{ padding: '15px' }}>
+      <motion.div
+        whileHover={{ y: -8, boxShadow: `0 10px 30px rgba(0,0,0,0.3)` }}
+        style={{
+          ...styles.bentoCard,
+          width: cardWidth,
+          border: `1px solid rgba(255,255,255,0.08)`,
+          // Subtle static shadow that doesn't "trail"
+          boxShadow: '0 4px 15px rgba(0,0,0,0.15)'
+        }}
+      >
+        <div style={{...styles.imageWrapper, border: `1.5px solid ${cert.color}44`}}>
+          <img src={cert.image} style={styles.bentoImg} alt="" />
+          <div style={{ ...styles.badge, background: cert.color }}>{cert.status}</div>
+        </div>
+        
+        <div style={styles.cardContent}>
+          <div style={{flex: 1}}>
+            <h3 style={styles.bentoTitle}>{cert.title}</h3>
+            <p style={styles.bentoIssuer}>{cert.issuer}</p>
+          </div>
+          
+          <button 
+            style={{...styles.viewBtn, border: `1px solid ${cert.color}66`, color: '#fff'}}
+            onClick={onOpen}
+          >
+            <Maximize2 size={12} style={{marginRight: '6px'}}/> View
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const styles = {
-  // Keeping your existing styles + adding new ones
-  section: { minHeight: '100vh', zIndex: 10, position: 'relative', perspective: '1000px' },
-  container: { maxWidth: '1200px', margin: '0 auto' },
-  header: { textAlign: 'center', marginBottom: '70px' },
-  title: { color: '#fff', fontWeight: '900' },
+  section: { padding: '80px 0', overflow: 'hidden', minHeight: '100vh', position: 'relative', background: 'transparent' },
+  header: { textAlign: 'center', marginBottom: '60px', position: 'relative', zIndex: 1 },
+  title: { color: '#fff', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '900' },
   highlight: { color: '#0ea5e9' },
-  subtitle: { color: 'rgba(255,255,255,0.5)', letterSpacing: '3px', marginTop: '15px', textTransform: 'uppercase', fontSize: '0.75rem' },
-  grid: { display: 'grid' },
-  certCard: { borderRadius: '30px', padding: '24px', backdropFilter: 'blur(20px)', border: '1px solid', cursor: 'pointer' },
-  imageBox: { width: '100%', borderRadius: '20px', overflow: 'hidden', marginBottom: '22px', height: '220px' },
-  image: { width: '100%', height: '100%', objectFit: 'cover' },
-  badge: { position: 'absolute', top: '15px', right: '15px', padding: '6px 14px', borderRadius: '30px', color: '#000', fontSize: '0.65rem', fontWeight: '900' },
-  info: { textAlign: 'left' },
-  certTitle: { color: '#fff', fontSize: '1.2rem', marginBottom: '6px', fontWeight: '800' },
-  issuer: { color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '20px' },
-  footer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '18px' },
-  details: { display: 'flex', flexDirection: 'column' },
-  date: { color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' },
-  score: { color: '#0ea5e9', fontSize: '0.85rem', fontWeight: '800' },
-  viewBtn: { display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '8px 18px', borderRadius: '15px', color: '#0ea5e9', border: '1px solid #0ea5e9', background: 'transparent' },
-  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, backdropFilter: 'blur(10px)' },
-  modalContent: { position: 'relative', maxWidth: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center' },
-  fullImage: { maxWidth: '100%', maxHeight: '75vh', borderRadius: '15px', boxShadow: '0 0 50px rgba(14,165,233,0.3)' },
-  modalActions: { position: 'absolute', top: '-50px', right: 0, display: 'flex', gap: '15px' },
-  downloadBtn: { color: '#fff', background: '#0ea5e9', padding: '8px', borderRadius: '50%', display: 'flex' },
-  closeBtn: { background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer' },
-  navBtn: { position: 'absolute', background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', transition: '0.3s' }
+  subtitle: { color: 'rgba(255,255,255,0.4)', letterSpacing: '4px', textTransform: 'uppercase', fontSize: '0.7rem' },
+  
+  maskContainer: {
+    WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+    maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+  },
+  bentoContainer: { display: 'flex', flexDirection: 'column', gap: '20px' },
+  marqueeRow: { display: 'flex', width: '100vw', overflow: 'hidden' },
+  track: { display: 'flex', flexShrink: 0 },
+
+  bentoCard: {
+    height: '220px',
+    borderRadius: '28px',
+    background: 'rgba(255, 255, 255, 0.05)', 
+    backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    zIndex: 1,
+    overflow: 'hidden',
+    padding: '18px',
+    gap: '12px',
+    transition: 'box-shadow 0.3s ease'
+  },
+  imageWrapper: { 
+    width: '100%', 
+    height: '110px', 
+    borderRadius: '16px', 
+    overflow: 'hidden', 
+    position: 'relative', 
+    background: 'rgba(0,0,0,0.2)',
+    // The "Outline" you asked for
+    boxSizing: 'border-box'
+  },
+  bentoImg: { width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 },
+  badge: { position: 'absolute', top: '10px', right: '10px', padding: '5px 12px', borderRadius: '10px', color: '#000', fontSize: '0.6rem', fontWeight: '900' },
+  
+  cardContent: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexGrow: 1 },
+  bentoTitle: { color: '#fff', fontSize: '1.05rem', margin: 0, fontWeight: '800' },
+  bentoIssuer: { color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' },
+  viewBtn: { display: 'flex', alignItems: 'center', padding: '8px 16px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' },
+
+  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(10px)' },
+  modalContent: { background: 'rgba(30, 30, 30, 0.8)', padding: '24px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)', maxWidth: '90%', width: '750px', backdropFilter: 'blur(20px)' },
+  modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
+  fullImage: { width: '100%', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' },
+  modalFooter: { marginTop: '20px', display: 'flex', justifyContent: 'center' },
+  downloadBtn: { background: '#0ea5e9', color: '#fff', padding: '12px 30px', borderRadius: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', fontWeight: '700' },
+  closeBtn: { background: 'rgba(255,255,255,0.05)', border: 'none', color: '#fff', padding: '10px', borderRadius: '50%', cursor: 'pointer' }
 };
 
 export default Certificates;

@@ -15,9 +15,9 @@ const Home = ({ isDark }) => {
   }, []);
 
   const socialLinks = [
-    { Icon: FaGithub, url: "https://github.com/yourusername" },
-    { Icon: FaLinkedin, url: "https://linkedin.com/in/yourusername" },
-    { Icon: FaInstagram, url: "https://instagram.com/yourusername" },
+    { Icon: FaGithub, url: "https://github.com/franc1s-513" },
+    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a" },
+    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt" },
     { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com" }
   ];
 

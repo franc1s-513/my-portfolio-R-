@@ -127,22 +127,22 @@ const Projects = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
+// WHILE ENTERING THE NEW PROJECTS DO IT HERE!!!!
   const projectList = [
     { id: "KS", title: "Krishi Sakhi", description: "AI-driven agricultural assistant for farmers. Real-time soil and crop intelligence.", image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800", link: "https://krishisakhi.streamlit.app/", isFeatured: true, status: 'active' },
-    { id: "02", title: "Node_Beta", description: "Expansion unit reserved for future deployment.", status: 'empty' },
-    { id: "03", title: "Node_Gamma", description: "Expansion unit reserved for future deployment.", status: 'empty' },
-    { id: "04", title: "Node_Delta", description: "Expansion unit reserved for future deployment.", status: 'empty' },
-    { id: "05", title: "Node_Epsilon", description: "Expansion unit reserved for future deployment.", status: 'empty' },
-    { id: "06", title: "Node_Zeta", description: "Expansion unit reserved for future deployment.", status: 'empty' },
+    { id: "02", title: "", description: "", status: 'empty' },
+    { id: "03", title: "", description: "", status: 'empty' },
+    { id: "04", title: "", description: "", status: 'empty' },
+    { id: "05", title: "", description: "", status: 'empty' },
+    { id: "06", title: "", description: "", status: 'empty' },
   ];
 
   return (
     <div style={styles.pageWrapper}>
       <div style={styles.container}>
         <div style={styles.mainTitleBox}>
-          <h2 style={styles.mainTitle}>PROJECT_<span style={{color: '#fff'}}>ARCHIVE</span></h2>
-          <p style={styles.subtitle}>// STATUS: OPTIMIZED // LATENCY: 0MS</p>
+          <h2 style={styles.mainTitle}>PROJECT_<span style={{color: '#fff'}}>VALLEY</span></h2>
+         
         </div>
 
         <div style={{

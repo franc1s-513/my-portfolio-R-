@@ -142,7 +142,7 @@ const FinalPortfolioPage = () => {
         <div className="transparent-form-container">
           <div style={formHeader}>
             <ShieldCheck size={16} color="rgba(255,255,255,0.6)" /> 
-            <span>{status === 'SUCCESS' ? 'UPLINK_SUCCESSFUL' : 'ENCRYPTED_CHANNEL'}</span>
+            <span>{status === 'SUCCESS' ? 'UPLINK_SUCCESSFUL' : ''}</span>
           </div>
 
           <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
@@ -155,12 +155,14 @@ const FinalPortfolioPage = () => {
             
 
             <div>
-              <label style={fieldLabel}>EMAIL_UPLINK</label>
+              <label style={fieldLabel}>PUT YOUR MAIL
+                
+                </label>
               <input type="email" name="user_email" className="glow-pill" placeholder="ENTER_EMAIL..." required />
             </div>
 
             <div>
-              <label style={fieldLabel}>MESSAGE_DATA</label>
+              <label style={fieldLabel}>DROP YOUR FEEDBACK</label>
               <textarea name="message" className="glow-pill textarea-glow" rows="5" placeholder="ENTER_MESSAGE..." required />
             </div>
 
