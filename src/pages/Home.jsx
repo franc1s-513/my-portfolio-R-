@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; // Import for navigation
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper'; 
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa6';
@@ -7,6 +8,7 @@ import { IoMail } from 'react-icons/io5';
 
 const Home = ({ isDark }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 968);
+  const navigate = useNavigate(); // Navigation hook
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 968);
@@ -15,22 +17,21 @@ const Home = ({ isDark }) => {
   }, []);
 
   const socialLinks = [
-    { Icon: FaGithub, url: "https://github.com/franc1s-513" },
-    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a" },
-    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt" },
-    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com" }
+    { Icon: FaGithub, url: "https://github.com/franc1s-513", label: "GITHUB" },
+    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a", label: "LINKEDIN" },
+    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt", label: "INSTA" },
+    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com", label: "EMAIL" }
   ];
 
   return (
     <div style={{
       ...styles.container,
-      padding: isMobile ? '120px 5% 60px' : '0 10%',
+      padding: isMobile ? '120px 5% 100px' : '0 10%',
       height: isMobile ? 'auto' : '100vh',
     }}>
       <div style={{
         ...styles.wrapper,
         gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
-        textAlign: isMobile ? 'center' : 'left',
       }}>
         
         <div style={{ 
@@ -40,94 +41,54 @@ const Home = ({ isDark }) => {
           alignItems: isMobile ? 'center' : 'flex-start',
         }}>
           <PageTransition delay={0.2} direction="up">
-            <h2 style={styles.greeting}>HELLO, I'M</h2>
+            
           </PageTransition>
 
           <PageTransition delay={0.4} direction="up">
             <h1 style={{
               ...styles.name,
-              fontSize: isMobile ? '3.5rem' : '6.5rem',
-              textShadow: isDark ? '0 0 30px rgba(14, 165, 233, 0.5)' : 'none'
+              fontSize: isMobile ? '3.5rem' : '6rem',
+              textShadow: isDark ? '0 0 30px rgba(14, 165, 233, 0.4)' : 'none',
             }}>
-              FRANCIS<span style={styles.dot}>.</span>
+              FRANCIS FERNANDO<span style={styles.dot}>.</span>
             </h1>
           </PageTransition>
 
           <PageTransition delay={0.6} direction="up">
             <p style={{
               ...styles.tagline,
-              fontSize: isMobile ? '1.1rem' : '1.25rem',
-              margin: isMobile ? '20px auto 0' : '20px 0 0'
+              fontSize: isMobile ? '1.5rem' : '2.1rem', 
+              color: '#fff'
             }}>
-              Building <span style={styles.highlight}>digital experiences</span> that 
-              blend logic with creative design.
+              Engineering the Solution <br/> 
+              <span style={{fontWeight: '800'}}>behind an interface.</span>
             </p>
           </PageTransition>
 
           <PageTransition delay={0.8} direction="up">
-            <div style={{
-              ...styles.ctaGroup,
-              flexDirection: isMobile ? 'column' : 'row',
-              width: isMobile ? '100%' : 'auto',
-              alignItems: 'center'
-            }}>
+            <div style={styles.ctaGroup}>
+              {/* DOWNLOAD RESUME BUTTON */}
               <MagneticWrapper>
                 <motion.a 
-                  href="/Francis_MV_Resume.pdf" 
-                  download
-                  whileHover={{ scale: 1.05 }}
-                  style={{
-                    ...styles.primaryBtn,
-                    width: isMobile ? '280px' : 'auto',
-                    background: isDark ? '#0ea5e9' : '#fff',
-                    color: isDark ? '#fff' : '#0ea5e9',
-                    textDecoration: 'none',
-                    display: 'flex',
-                    justifyContent: 'center'
-                  }}
+                  href="/Francis_Resume.pdf" // Put your pdf in public folder
+                  download="Francis_Fernando_CV.pdf"
+                  whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(14, 165, 233, 0.6)' }}
+                  style={styles.primaryBtn}
                 >
-                  Download Resume
+                  DOWNLOAD_CV.EXE
                 </motion.a>
               </MagneticWrapper>
 
+              {/* CONTACT ME BUTTON */}
               <MagneticWrapper>
                 <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  style={{
-                    ...styles.secondaryBtn,
-                    width: isMobile ? '280px' : 'auto'
-                  }}
+                  onClick={() => navigate('/contact')} // Go to contact page
+                  whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.1)' }}
+                  style={styles.secondaryBtn}
                 >
-                  Contact Me
+                  CONTACT_ME
                 </motion.button>
               </MagneticWrapper>
-            </div>
-
-            {/* FIXED SOCIALS SECTION: MATCHES CONTACT PAGE GLASS STYLE */}
-            <div style={{ 
-                display: 'flex', 
-                gap: '20px', 
-                marginTop: '45px',
-                justifyContent: isMobile ? 'center' : 'flex-start' 
-            }}>
-              {socialLinks.map((item, i) => (
-                <MagneticWrapper key={i} sensitivity={0.6}>
-                  <motion.a 
-                    href={item.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    whileHover={{ 
-                        scale: 1.1, 
-                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                        boxShadow: '0 0 25px rgba(255, 255, 255, 0.4)' 
-                    }}
-                    style={styles.socialCircle}
-                  >
-                    {/* Explicitly forcing color to white (#fff) */}
-                    <item.Icon size={24} color="#fff" />
-                  </motion.a>
-                </MagneticWrapper>
-              ))}
             </div>
           </PageTransition>
         </div>
@@ -137,11 +98,7 @@ const Home = ({ isDark }) => {
           <motion.div
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            style={{ 
-              display: 'flex', 
-              justifyContent: isMobile ? 'center' : 'flex-end',
-              marginTop: isMobile ? '50px' : '0'
-            }}
+            style={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-end' }}
           >
             <MagneticWrapper sensitivity={0.2}>
               <motion.div 
@@ -153,104 +110,78 @@ const Home = ({ isDark }) => {
                   ]
                 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                style={{
-                  ...styles.imageFrame,
-                  width: isMobile ? '280px' : '380px', 
-                  height: isMobile ? '320px' : '450px',
-                  borderColor: isDark ? 'rgba(14, 165, 233, 0.5)' : 'rgba(255, 255, 255, 0.4)',
-                  boxShadow: isDark 
-                    ? '0 30px 60px rgba(14, 165, 233, 0.4)' 
-                    : '0 30px 60px rgba(0, 74, 124, 0.1)',
-                }}
+                style={styles.imageFrame}
               >
-                <img 
-                  src="YOUR_IMAGE_URL_HERE" 
-                  alt="Francis" 
-                  style={styles.image} 
-                />
+                <img src="/your-photo.jpg" alt="Francis" style={styles.image} />
               </motion.div>
             </MagneticWrapper>
           </motion.div>
         </PageTransition>
       </div>
+
+      {/* FOOTER */}
+      {!isMobile && (
+        <div style={styles.statusBar}>
+           <div style={styles.statusLeft}>
+              <div style={styles.blink} /> 
+              
+           </div>
+           <div style={styles.socialStrip}>
+              {socialLinks.map((item, i) => (
+                <a key={i} href={item.url} target="_blank" rel="noreferrer" style={styles.statusLink}>
+                  <item.Icon size={16} /> {item.label}
+                </a>
+              ))}
+           </div>
+        </div>
+      )}
     </div>
   );
 };
+
 const styles = {
-  container: { 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    position: 'relative', 
-    zIndex: 10, 
-    overflowX: 'hidden',
-    minHeight: '100vh', 
-    padding: '0 10%'
-  },
-  wrapper: { 
-    display: 'grid', 
-    gap: '50px', 
-    alignItems: 'center', 
-    width: '100%', 
-    maxWidth: '1200px',
-    marginTop: '-20px' 
-  },
+  container: { display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflowX: 'hidden', minHeight: '100vh' },
+  wrapper: { display: 'grid', gap: '50px', alignItems: 'center', width: '100%', maxWidth: '1200px', zIndex: 2 },
   textSide: { textAlign: 'inherit' },
   imageFrame: { 
-    background: 'rgba(255, 255, 255, 0.1)', 
-    backdropFilter: 'blur(15px)', 
-    WebkitBackdropFilter: 'blur(15px)', 
-    border: '3px solid', 
-    overflow: 'hidden', 
-    cursor: 'pointer' 
+    width: '420px', height: '480px', overflow: 'hidden',
+    background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(14, 165, 233, 0.15)'
   },
-  image: { width: '110%', height: '110%', objectFit: 'cover', marginLeft: '-5%', marginTop: '-5%' },
-  greeting: { 
-    color: 'rgba(255, 255, 255, 0.8)', 
-    letterSpacing: '4px', 
-    fontSize: '0.9rem', 
-    fontWeight: '600', 
-    marginBottom: '10px' 
-  },
-  name: { 
-    fontWeight: '900', 
-    color: '#fff', 
-    margin: '5px 0', 
-    lineHeight: '1', 
-    letterSpacing: '-2px' 
-  },
+  image: { width: '100%', height: '100%', objectFit: 'cover' },
+  greeting: { color: '#0ea5e9', letterSpacing: '4px', fontSize: '0.75rem', fontWeight: '800', fontFamily: 'monospace' },
+  name: { fontWeight: '900', color: '#fff', margin: '5px 0', lineHeight: '0.9', letterSpacing: '-3px' },
   dot: { color: '#0ea5e9' },
-  tagline: { 
-    color: 'rgba(255, 255, 255, 0.9)', 
-    maxWidth: '500px', 
-    lineHeight: '1.6' 
-  },
-  highlight: { 
-  color: '#fff', 
-  fontWeight: '800', 
-  borderBottom: 'none',    // This removes the line
-  textDecoration: 'none'   // Just in case it's coming from standard CSS
-},
+  tagline: { margin: '25px 0 0', fontWeight: '300', lineHeight: '1.2', letterSpacing: '-1px' },
   ctaGroup: { display: 'flex', gap: '20px', marginTop: '40px' },
+  
+  // PILL SHAPED LIGHT BLUE BUTTON
   primaryBtn: { 
-    padding: '15px 35px', 
-    borderRadius: '50px', 
-    border: 'none', 
-    fontWeight: '700', 
-    fontSize: '1rem', 
-    cursor: 'pointer', 
-    textAlign: 'center' 
+    padding: '16px 35px', borderRadius: '50px', border: 'none', 
+    fontWeight: '900', fontSize: '0.85rem', cursor: 'pointer', 
+    fontFamily: 'monospace', textDecoration: 'none',
+    background: '#0ea5e9', color: '#fff' // Blue with White text
   },
+  
+  // PILL SHAPED OUTLINE BUTTON
   secondaryBtn: { 
-    padding: '15px 35px', 
-    borderRadius: '50px', 
-    border: '2px solid rgba(255, 255, 255, 0.7)', 
-    background: 'rgba(255, 255, 255, 0.1)', // Subtle fill for better visibility
-    color: '#fff', 
-    fontWeight: '700', 
-    fontSize: '1rem', 
-    cursor: 'pointer' 
+    padding: '16px 35px', borderRadius: '50px', 
+    border: '2px solid rgba(255, 255, 255, 0.3)', 
+    background: 'transparent', color: '#fff', 
+    fontWeight: '900', fontSize: '0.85rem', 
+    cursor: 'pointer', fontFamily: 'monospace' 
   },
-}; // <--- THIS WAS THE MISSING LINE CAUSING THE ERRORS
+
+  statusBar: {
+    position: 'absolute', bottom: '25px', left: '5%', right: '5%', display: 'flex', justifyContent: 'space-between',
+    alignItems: 'center', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)', 
+    fontFamily: 'monospace', fontSize: '0.65rem', color: '#fff'
+  },
+  statusLeft: { display: 'flex', alignItems: 'center', gap: '15px', opacity: 0.6 },
+  blink: { width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 10px #22c55e' },
+  socialStrip: { display: 'flex', gap: '25px' },
+  statusLink: { color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '600' }
+};
 
 export default Home;

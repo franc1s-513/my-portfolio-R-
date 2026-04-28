@@ -2,72 +2,115 @@ import React, { useState, useEffect } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
 const CustomCursor = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  
-  // Springs kept for smooth, weightless movement
-  const mouseX = useSpring(0, { stiffness: 450, damping: 30 });
-  const mouseY = useSpring(0, { stiffness: 450, damping: 30 });
+
+  // Smooth "lag" configuration for the outer ring
+  const springConfig = { damping: 28, stiffness: 150 };
+  const cursorX = useSpring(0, springConfig);
+  const cursorY = useSpring(0, springConfig);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+    const moveMouse = (e) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    const handleMouseDown = () => setIsClicked(true);
-    const handleMouseUp = () => setIsClicked(false);
-    const handleMouseEnter = () => setIsHovered(true);
-    const handleMouseLeave = () => setIsHovered(false);
+    const handleMouseOver = (e) => {
+      // Expand when hovering over interactive elements
+      if (
+        e.target.tagName === 'BUTTON' || 
+        e.target.tagName === 'A' || 
+        e.target.closest('.bento-card') ||
+        e.target.closest('.glow-pill')
+      ) {
+        setIsHovered(true);
+      } else {
+        setIsHovered(false);
+      }
+    };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('cursorEnter', handleMouseEnter);
-    window.addEventListener('cursorLeave', handleMouseLeave);
+    window.addEventListener("mousemove", moveMouse);
+    window.addEventListener("mouseover", handleMouseOver);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('cursorEnter', handleMouseEnter);
-      window.removeEventListener('cursorLeave', handleMouseLeave);
+      window.removeEventListener("mousemove", moveMouse);
+      window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [mouseX, mouseY]);
+  }, [cursorX, cursorY]);
 
   return (
-    <motion.div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        // Centering a medium-sized 25px ball
-        translateX: '-50%',
-        translateY: '-50%',
-        width: 25,
-        height: 25,
-        borderRadius: '50%',
-        pointerEvents: 'none',
-        zIndex: 9999,
+    <>
+      <style>{`
+        body, a, button {
+          cursor: none !important;
+        }
+        @media (max-width: 768px) {
+          .cursor-container { display: none; }
+          body { cursor: auto !important; }
+        }
+      `}</style>
+
+      <div className="cursor-container" style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 99999 }}>
         
-        /* PURE WHITE DESIGN */
-        backgroundColor: '#ffffff',
-        // White glow that stands out against the blue sky
-        boxShadow: '0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.3)',
-        
-        x: mouseX,
-        y: mouseY,
-      }}
-      animate={{
-        // Medium size that grows significantly on hover
-        scale: isClicked ? 0.8 : (isHovered ? 2.5 : 1),
-        // Glow gets more intense when clicking
-        boxShadow: isClicked 
-          ? '0 0 40px rgba(255, 255, 255, 0.9)' 
-          : '0 0 15px rgba(255, 255, 255, 0.6)',
-      }}
-      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-    />
+        {/* THE OUTER SOFT RING */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            width: isHovered ? 80 : 40,
+            height: isHovered ? 80 : 40,
+            borderRadius: '50%',
+            border: '1px solid rgba(14, 165, 233, 0.3)',
+            x: cursorX,
+            y: cursorY,
+            translateX: '-50%',
+            translateY: '-50%',
+            background: isHovered ? 'rgba(14, 165, 233, 0.05)' : 'transparent',
+            transition: 'width 0.3s, height 0.3s, background 0.3s',
+          }}
+        />
+
+        {/* THE GLOWING INNER DOT */}
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.5 : 1,
+          }}
+          style={{
+            position: 'absolute',
+            width: 8,
+            height: 8,
+            left: mousePosition.x,
+            top: mousePosition.y,
+            translateX: '-50%',
+            translateY: '-50%',
+            backgroundColor: '#0ea5e9',
+            borderRadius: '50%',
+            // This creates the "Neon" glow effect
+            boxShadow: `
+              0 0 10px #0ea5e9,
+              0 0 20px #0ea5e9,
+              0 0 30px rgba(14, 165, 233, 0.6)
+            `,
+          }}
+        />
+
+        {/* EXTRA AMBIENT FLARE (Optional: follow the dot for a soft light leak) */}
+        <div 
+          style={{
+            position: 'absolute',
+            width: '100px',
+            height: '100px',
+            left: mousePosition.x,
+            top: mousePosition.y,
+            translateX: '-50%',
+            translateY: '-50%',
+            background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%)',
+            borderRadius: '50%',
+          }}
+        />
+      </div>
+    </>
   );
 };
 
