@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- COMPONENTS ---
 import SkyAndBirds from './components/SkyAndBirds';
-import CustomCursor from './components/CustomCursor';
-import Navbar from './components/navbar';
 import WindParticles from './components/WindParticles';
-import FloatingAI from './components/FloatingAI'; // The AI we built to connect to Render
+import SplashCursor from './components/SplashCursor';
+import CustomCursor from './components/CustomCursor';
+import LightTunnel from './components/LightTunnel';
 
 // --- PAGES ---
 import Home from './pages/Home';
@@ -18,17 +17,34 @@ import Contact from './pages/Contact';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
-  const location = useLocation();
+  const [activeModal, setActiveModal] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleOpenModal = (modalName) => {
+    setIsTransitioning(true);
+    // Play transition for 2 seconds, then open the modal
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setActiveModal(modalName);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    if (activeModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [activeModal]);
 
   // --- RENDER BACKEND WAKE-UP ---
   useEffect(() => {
-    // This pings your Render URL immediately when the site loads.
-    // It prevents the 30-second delay when the user first tries to chat.
     const wakeServer = async () => {
       try {
         await fetch("https://my-ai-backend-vdxv.onrender.com/");
         console.log("Uplink Established: Render Backend is Awake.");
-      } catch (error) {
+      } catch {
         console.warn("Backend is still spinning up...");
       }
     };
@@ -37,63 +53,123 @@ function App() {
   }, []);
 
   return (
-   <div style={{ 
-  position: 'relative', 
-  minHeight: '100vh', 
-  width: '100%', 
-  overflowX: 'hidden',
-  // CHANGE THIS LINE:
-  background: 'transparent', 
-  transition: 'background-color 0.5s ease'
-}}>
-      {/* LAYER 1: BACKGROUND (Environmental elements) */}
-      <SkyAndBirds isDark={isDark} />
+    <div style={{ 
+      position: 'relative', 
+      minHeight: '100vh', 
+      width: '100%', 
+      overflowX: 'hidden',
+      background: 'transparent', 
+      transition: 'background-color 0.5s ease'
+    }}>
+      <SplashCursor key="rose-cursor" COLOR="#f43f5e" RAINBOW_MODE={false} />
+      
+      {/* LAYER 1: BACKGROUND (Main 3D Sky World + Castles) */}
+      <SkyAndBirds isDark={isDark} onOpenModal={handleOpenModal} activeModal={activeModal} />
       <WindParticles isDark={isDark} />
-      
-      {/* LAYER 2: INTERACTIVE OVERLAYS (Cursor & AI toggle) */}
-      <CustomCursor /> 
-      <FloatingAI /> 
-      
-      {/* LAYER 3: NAVIGATION */}
-      <Navbar isDark={isDark} setIsDark={setIsDark} />
-      
-      {/* LAYER 4: MAIN CONTENT (Page Transitions) */}
-      <main style={{ position: 'relative', zIndex: 10, background: 'transparent' }}>
-        <AnimatePresence mode="wait">
-          {/* 'location' and 'key' are vital. 
-            They tell Framer Motion exactly when a page changes 
-            so it can trigger the exit and enter animations. 
-          */}
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home isDark={isDark} />} />
-            <Route path="/about" element={<About isDark={isDark} />} />
-            <Route path="/projects" element={<Projects isDark={isDark} />} />
-            <Route path="/certificates" element={<Certificates isDark={isDark} />} />
-            <Route path="/contact" element={<Contact isDark={isDark} />} />
-          </Routes>
-        </AnimatePresence>
+
+      {/* LAYER 2: MAIN CONTENT (Scroll Track & Modals) */}
+      <main style={{ position: 'relative', zIndex: 10, background: 'transparent', pointerEvents: 'none' }}>
+        <div id="home" style={{ pointerEvents: 'auto' }}><Home isDark={isDark} /></div>
+        
+        {/* Invisible scroll track to allow diving down the 3D scene */}
+        <div style={{ height: '350vh' }}></div>
       </main>
 
-      {/* OPTIONAL: GLOBAL FOOTER OR SECURITY BADGE */}
-      <footer style={footerStyle}>
-        <span style={{ opacity: 0.4, fontSize: '0.7rem', letterSpacing: '2px' }}>
-          SYSTEM_STATUS: {isDark ? 'NIGHT_MODE_ACTIVE' : 'DAY_LIGHT_ACTIVE'}
-        </span>
-      </footer>
+      {/* LAYER 3: 3D PAGE MODALS (Using fantasy_sky_background.glb as 3D background) */}
+      <AnimatePresence>
+        {activeModal && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              background: isDark ? 'rgba(10, 15, 30, 0.35)' : 'rgba(240, 248, 255, 0.35)',
+              overflowY: 'auto',
+            }}
+          >
+            {/* FANTASY SKY BACKGROUND IS HANDLED IN AnimeSkybox.jsx DIRECTLY */}
 
+            <button
+              onClick={() => setActiveModal(null)}
+              style={{
+                position: 'fixed',
+                top: '25px',
+                right: '25px',
+                zIndex: 10000,
+                background: 'rgba(255,255,255,0.2)',
+                border: '1.5px solid rgba(14, 165, 233, 0.6)',
+                color: isDark ? '#fff' : '#0f172a',
+                padding: '12px 28px',
+                borderRadius: '50px',
+                cursor: 'pointer',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                backdropFilter: 'blur(12px)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(14, 165, 233, 0.9)';
+                e.currentTarget.style.color = '#fff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                e.currentTarget.style.color = isDark ? '#fff' : '#0f172a';
+              }}
+            >
+              CLOSE [X]
+            </button>
+            
+            <div style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '40px' }}>
+              {activeModal === 'about' && <About isDark={isDark} />}
+              {activeModal === 'projects' && <Projects isDark={isDark} />}
+              {activeModal === 'certificates' && <Certificates isDark={isDark} />}
+              {activeModal === 'contact' && <Contact isDark={isDark} />}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* HYPER-SPEED TRANSITION LAYER */}
+      <AnimatePresence>
+        {isTransitioning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 10000,
+              background: '#0a0f1e', // Dark cosmic background
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <LightTunnel
+              cableColor="#0ea5e9"
+              pulseColor="#38bdf8"
+              tunnelColor="#0284c7"
+              tunnelOpacity={0.2}
+              speed={0.3}
+              flowDirection="outward"
+              pulseSpeed={3}
+              pulseLength={0.4}
+              cableCount={30}
+              size={1.2}
+              glow={2}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-// --- MINIMAL GLOBAL STYLES ---
-const footerStyle = {
-  position: 'fixed',
-  bottom: '10px',
-  left: '20px',
-  zIndex: 5,
-  color: 'white',
-  fontFamily: 'monospace',
-  pointerEvents: 'none'
-};
 
 export default App;

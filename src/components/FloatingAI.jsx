@@ -32,7 +32,7 @@ const FloatingAI = () => {
       const res = await fetch(`${BACKEND_URL}/chat?message=${encodeURIComponent(userText)}`);
       const data = await res.json();
       setMessages(prev => [...prev, { text: data.reply, isBot: true }]);
-    } catch (err) {
+    } catch {
       setMessages(prev => [...prev, { text: "Connection lost. Is the backend awake?", isBot: true }]);
     } finally {
       setLoading(false);

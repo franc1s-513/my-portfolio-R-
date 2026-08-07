@@ -1,86 +1,125 @@
-/* --- 1. VARIABLES & CORE SETUP --- */
 :root {
   --sky-blue: #38bdf8;
   --soft-white: #f8fafc;
-  --dark-bg: #020617; 
+  --dark-bg: #020617;
   --accent-blue: #0ea5e9;
+
+  /* Theme tokens - Light mode defaults */
+  --text-main: #0f172a;
+  --text-sub: rgba(15, 23, 42, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(14, 165, 233, 0.25);
+  --card-hover-border: rgba(14, 165, 233, 0.6);
+
+  /* Spacing rhythm */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* Easing curves */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* GLOBAL TRANSITION ENGINE */
+/* --- GLOBAL TRANSITION ENGINE --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove box-shadow and !important from universal selector to allow custom durations & spring transitions */
 * {
-  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.5s ease, 
-              border-color 0.8s ease,
-              box-shadow 0.8s ease !important;
+  transition:
+    background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.4s ease,
+    border-color 0.5s ease;
 }
 
-/* FIX: Prevent transitions from affecting the custom cursor's position */
-.custom-cursor-container, .custom-cursor-dot, .custom-cursor-aura {
+/* --- TYPEWRITER CURSOR BLINK --- */
+.typewriter-cursor::after {
+  content: '_';
+  margin-left: 2px;
+  color: var(--sky-blue);
+  animation: cursor-blink 1.1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  from, to { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* --- CLIP-PATH IMAGE REVEAL --- */
+.image-reveal-clip {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.image-reveal-clip.visible {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+
+/* Prevent transitions from affecting cursor position */
+.custom-cursor-container,
+.custom-cursor-dot,
+.custom-cursor-aura,
+.cursor-container,
+.cursor-container * {
   transition: none !important;
 }
 
+/* --- SMOOTH SCROLL --- */
 html {
-  background: transparent; 
+  background: transparent;
   scroll-behavior: smooth;
 }
 
-/* --- 7. HIDE DEFAULT CURSOR (ADD THIS) --- */
+/* --- HIDE DEFAULT CURSOR ON DESKTOP --- */
 @media (min-width: 850px) {
-  html, body {
+  html,
+  body {
     cursor: none !important;
   }
-
-  /* Ensures interactive elements don't show the 'hand' pointer */
-  a, button, input, textarea, [role="button"], .glass-card, .nav-link {
+  a,
+  button,
+  input,
+  textarea,
+  [role="button"],
+  .glass-card,
+  .nav-link {
     cursor: none !important;
   }
 }
 
-/* --- THE REST OF YOUR CODE CONTINUES BELOW --- */
-
+/* --- DARK MODE HTML --- */
 html.dark-mode {
   background-color: var(--dark-bg);
 }
 
+/* --- BODY --- */
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: transparent !important; 
+  background: transparent !important;
   color: #0f172a;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- 2. ATMOSPHERIC LAYERS --- */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background: 
-    radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.15), transparent 50%),
-    linear-gradient(to top, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
-}
-
-body.dark-mode::after {
-  background: 
-    radial-gradient(circle at 50% -20%, rgba(14, 165, 233, 0.1), transparent 50%),
-    linear-gradient(to top, rgba(2, 6, 23, 0.8) 0%, transparent 20%);
-}
+/* --- 2. ATMOSPHERIC LAYERS REMOVED (Legacy White Fog) --- */
 
 /* --- 3. DARK MODE OVERRIDES --- */
 body.dark-mode {
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-hover-border: rgba(14, 165, 233, 0.4);
   color: #f1f5f9 !important;
 }
 
@@ -105,7 +144,7 @@ body.dark-mode .glass-card {
 
 .nav-link {
   text-decoration: none;
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 500;
   font-size: 0.9rem;
   position: relative;
@@ -120,10 +159,12 @@ body.dark-mode .glass-card {
   bottom: -4px;
   left: 0;
   background-color: var(--accent-blue);
-  transition: width 0.3s ease;
+  transition: width 0.3s ease !important;
 }
 
-.nav-link:hover::after { width: 100%; }
+.nav-link:hover::after {
+  width: 100%;
+}
 
 /* --- 5. ANIMATIONS --- */
 .hero-float {
@@ -151,15 +192,240 @@ body.dark-mode .hero-name {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 6. UI UTILITIES --- */
+/* --- 6. SCROLL REVEAL SYSTEM --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo) !important;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo) !important;
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition:
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo) !important;
+}
+
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delays for child elements */
+.stagger-1 { transition-delay: 0.05s !important; }
+.stagger-2 { transition-delay: 0.12s !important; }
+.stagger-3 { transition-delay: 0.19s !important; }
+.stagger-4 { transition-delay: 0.26s !important; }
+.stagger-5 { transition-delay: 0.33s !important; }
+.stagger-6 { transition-delay: 0.40s !important; }
+
+/* --- 7. SKELETON LOADER --- */
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.6s infinite linear;
+  border-radius: 8px;
+}
+
+/* --- 8. FOCUS & ACCESSIBILITY --- */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Remove outline for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High-contrast focus for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2) !important;
+}
+
+/* --- 9. REDUCED MOTION SUPPORT --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* --- 10. UI UTILITIES --- */
 .custom-cursor-container {
   pointer-events: none;
   z-index: 9999;
 }
 
-::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(14, 165, 233, 0.3);
   border-radius: 10px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(14, 165, 233, 0.55);
+}
+
+/* --- 11. HOVER MICRO-INTERACTIONS --- */
+
+/* Underline slide-in for text links */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--accent-blue);
+  transition: width 0.3s var(--ease-out-expo) !important;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Glow pulse for accent elements */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(14, 165, 233, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.8), 0 0 40px rgba(14, 165, 233, 0.3); }
+}
+
+.glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* Status blink */
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px #22c55e; }
+  50% { opacity: 0.4; box-shadow: 0 0 4px #22c55e; }
+}
+
+.blink-dot {
+  animation: blink-dot 2s ease-in-out infinite;
+}
+
+/* --- 12. PAGE TRANSITION OVERLAY --- */
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--dark-bg);
+  z-index: 9000;
+  pointer-events: none;
+}
+
+/* --- 13. MARQUEE PAUSE ON HOVER --- */
+.marquee-wrapper:hover .marquee-track-inner,
+.marquee-row:hover > div {
+  animation-play-state: paused !important;
+}
+
+/* --- 14. CARD HOVER LIFT --- */
+.card-lift {
+  transition:
+    transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s var(--ease-out-expo) !important;
+}
+
+.card-lift:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(14, 165, 233, 0.2) !important;
+}
+
+/* --- 15. BUTTON PRESS EFFECT --- */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.btn-press:active {
+  transform: scale(0.96) !important;
+}
+
+/* --- 16. IMAGE ZOOM ON HOVER --- */
+.img-zoom-container {
+  overflow: hidden;
+}
+
+.img-zoom-container img {
+  transition: transform 0.6s var(--ease-out-expo) !important;
+}
+
+.img-zoom-container:hover img {
+  transform: scale(1.06) !important;
+}
+
+/* --- 17. TYPOGRAPHY RHYTHM --- */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+p {
+  line-height: 1.7;
+}
+
+/* --- 18. SELECTION STYLE --- */
+::selection {
+  background: rgba(14, 165, 233, 0.3);
+  color: inherit;
+}
+
+/* --- 19. ABOUT STORY LOG HOVER --- */
+.story-block:hover {
+  border-left-color: #0ea5e9 !important;
+}
+

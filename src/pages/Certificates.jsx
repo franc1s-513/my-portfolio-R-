@@ -9,7 +9,7 @@ import LlmCert from '../assets/certificates/nxt.png';
 import CloudCert from '../assets/certificates/cloud.png';
 import PsgCert from '../assets/certificates/psg.png';
 
-const Certificates = ({ isDark }) => {
+const Certificates = () => {
   const [selectedCert, setSelectedCert] = useState(null);
 
   const certs = [

@@ -27,9 +27,10 @@ const FinalPortfolioPage = () => {
         .page-wrapper {
           min-height: 100vh;
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 40px 20px;
+          padding: 80px 20px 40px;
           background: transparent;
           color: white;
           font-family: system-ui, -apple-system, sans-serif;
@@ -173,18 +174,6 @@ const FinalPortfolioPage = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {[<Github />, <Linkedin />, <Instagram />, <Mail />].map((icon, i) => (
-              <motion.div 
-                key={i} 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                style={socialCircle}
-              >
-                {React.cloneElement(icon, { size: 22, color: '#fff' })}
-              </motion.div>
-            ))}
-          </div>
         </div>
 
         {/* RIGHT PART: FORM */}
@@ -210,12 +199,37 @@ const FinalPortfolioPage = () => {
               <textarea name="message" className="glow-pill textarea-glow" rows="4" placeholder="ENTER_MESSAGE..." required />
             </div>
 
-            <button type="submit" disabled={status === 'SENDING'} className="glow-btn">
+            <button id="contact-submit-btn" type="submit" disabled={status === 'SENDING'} className="glow-btn">
               {status === 'SENDING' ? 'SENDING...' : 'TRANSMIT'} <Send size={18} />
             </button>
           </form>
         </div>
 
+      </div>
+
+      {/* FOOTER SOCIAL LINKS */}
+      <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', marginTop: '80px', paddingBottom: '40px' }}>
+        <motion.a 
+          href="https://github.com/franc1s-513" target="_blank" rel="noreferrer"
+          whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
+          style={{ color: '#fff', transition: 'color 0.3s' }}
+        >
+          <Github size={28} />
+        </motion.a>
+        <motion.a 
+          href="https://instagram.com/franc1s._txt" target="_blank" rel="noreferrer"
+          whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
+          style={{ color: '#fff', transition: 'color 0.3s' }}
+        >
+          <Instagram size={28} />
+        </motion.a>
+        <motion.a 
+          href="mailto:francisfernandov07@gmail.com"
+          whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
+          style={{ color: '#fff', transition: 'color 0.3s' }}
+        >
+          <Mail size={28} />
+        </motion.a>
       </div>
     </div>
   );

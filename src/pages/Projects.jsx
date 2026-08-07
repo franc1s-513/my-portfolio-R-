@@ -1,8 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import PageTransition from '../components/PageTransition';
 
-// Add this CSS to your global styles or inside a <style> tag in your component
+import { projectsData } from '../data/projectsData';
+import PageTransition from '../components/PageTransition';
+import { FaGithub } from 'react-icons/fa6';
+import { FiExternalLink, FiArrowLeft, FiSearch } from 'react-icons/fi';
+
 const shimmerStyle = `
   @keyframes shimmer {
     0% { transform: translateX(-150%) skewX(-20deg); }
@@ -26,6 +29,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
       <style>{shimmerStyle}</style>
       <motion.div
         ref={cardRef}
+        id={`project-card-${index}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => { setIsHovered(false); x.set(0); y.set(0); }}
         onMouseMove={(e) => {
@@ -34,7 +38,6 @@ const ProjectCard = ({ project, index, isMobile }) => {
           x.set((e.clientX - rect.left) / rect.width - 0.5);
           y.set((e.clientY - rect.top) / rect.height - 0.5);
         }}
-        // THE 10/10 UPGRADE: Scaling and specialized shadow
         whileHover={{ scale: isMobile ? 1 : 1.02 }}
         animate={{ 
           y: [0, -12, 0],
@@ -49,15 +52,14 @@ const ProjectCard = ({ project, index, isMobile }) => {
         }}
         style={{
           ...styles.projectCard,
-          gridColumn: !isMobile && project.isFeatured ? "span 1" : "span 1",
-          gridRow: !isMobile && project.isFeatured ? "span 2" : "span 1",
+          gridColumn: !isMobile && project.featured ? "span 1" : "span 1",
+          gridRow: !isMobile && project.featured ? "span 2" : "span 1",
           rotateX: isMobile ? 0 : rotateX,
           rotateY: isMobile ? 0 : rotateY,
           transformStyle: "preserve-3d",
           border: isHovered ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
         }}
       >
-        {/* THE GLINT: A light sweep that appears on hover */}
         {isHovered && !isMobile && (
           <div style={{
             position: 'absolute',
@@ -79,14 +81,14 @@ const ProjectCard = ({ project, index, isMobile }) => {
             </span>
             <div style={{
               ...styles.statusDot, 
-              backgroundColor: project.status === 'empty' ? 'rgba(255,255,255,0.2)' : '#fff',
-              boxShadow: project.status === 'empty' ? 'none' : '0 0 12px #fff'
+              backgroundColor: project.status === 'empty' ? 'rgba(255,255,255,0.2)' : '#22c55e',
+              boxShadow: project.status === 'empty' ? 'none' : '0 0 12px #22c55e'
             }} />
           </div>
 
           <div style={{
             ...styles.imageContainer,
-            height: project.isFeatured ? '300px' : '150px',
+            height: project.featured ? '280px' : '180px',
             opacity: project.status === 'empty' ? 0.3 : 1,
             border: '1px solid rgba(255,255,255,0.1)'
           }}>
@@ -100,17 +102,41 @@ const ProjectCard = ({ project, index, isMobile }) => {
           </div>
           
           <div style={styles.contentBox}>
-            <h3 style={styles.titleText}>{project.title.toUpperCase()}</h3>
-            <p style={styles.descText}>{project.description}</p>
+            <div>
+              <h3 style={styles.titleText}>{project.title.toUpperCase()}</h3>
+              <p style={styles.descText}>{project.fullDescription || project.description}</p>
+              {project.tags && (
+                <div style={styles.tagRow}>
+                  {project.tags.map((t, idx) => (
+                    <span key={idx} style={styles.tag}>{t}</span>
+                  ))}
+                </div>
+              )}
+            </div>
             {project.status !== 'empty' && (
-              <motion.a 
-                href={project.link} 
-                target="_blank"
-                style={styles.actionBtn}
-                whileHover={{ backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 20px #fff' }}
-              >
-                INITIALIZE_CORE →
-              </motion.a>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: 'auto' }}>
+                <motion.a 
+                  id={index === 0 ? "first-live-demo-btn" : undefined}
+                  href={project.link} 
+                  target="_blank"
+                  rel="noreferrer"
+                  style={styles.actionBtn}
+                  whileHover={{ backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 20px #fff' }}
+                >
+                  LIVE_DEMO <FiExternalLink size={14} />
+                </motion.a>
+                {project.github && (
+                  <motion.a 
+                    href={project.github} 
+                    target="_blank"
+                    rel="noreferrer"
+                    style={styles.githubBtn}
+                    whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#fff' }}
+                  >
+                    <FaGithub size={15} /> CODE
+                  </motion.a>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -120,41 +146,136 @@ const ProjectCard = ({ project, index, isMobile }) => {
 };
 
 const Projects = () => {
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-// WHILE ENTERING THE NEW PROJECTS DO IT HERE!!!!
-  const projectList = [
-    { id: "KS", title: "Krishi Sakhi", description: "AI-driven agricultural assistant for farmers. Real-time soil and crop intelligence.", image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800", link: "https://krishisakhi.streamlit.app/", isFeatured: true, status: 'active' },
-    { id: "02", title: "", description: "", status: 'empty' },
-    { id: "03", title: "", description: "", status: 'empty' },
-    { id: "04", title: "", description: "", status: 'empty' },
-    { id: "05", title: "", description: "", status: 'empty' },
-    { id: "06", title: "", description: "", status: 'empty' },
-  ];
+
+  const categories = ['All', 'AI / ML', 'Web Dev', 'DevOps / Cloud'];
+  const filteredProjects = projectsData.filter((p) => {
+    const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch = !q || (
+      p.title.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q) ||
+      (p.fullDescription && p.fullDescription.toLowerCase().includes(q)) ||
+      (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
+    );
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div style={styles.pageWrapper}>
       <div style={styles.container}>
-        <div style={styles.mainTitleBox}>
-          <h2 style={styles.mainTitle}>PROJECT_<span style={{color: '#fff'}}>VALLEY</span></h2>
-         
+        {/* Back to Home & Title */}
+        <div style={styles.topBar}>
+          <motion.button
+            onClick={() => {
+              const el = document.getElementById('home');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            style={styles.backBtn}
+            whileHover={{ scale: 1.05, x: -5, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FiArrowLeft size={18} /> BACK TO HOME
+          </motion.button>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-          gridAutoRows: 'minmax(280px, auto)', 
-          gap: '30px',
-          gridAutoFlow: 'dense'
-        }}>
-          {projectList.map((p, index) => (
-            <ProjectCard key={p.id} project={p} index={index} isMobile={isMobile} />
-          ))}
+        <div style={styles.mainTitleBox}>
+          <h2 style={styles.mainTitle}>ALL_<span style={{color: '#fff'}}>PROJECTS</span></h2>
+          <p style={styles.subtitle}>COMPLETE DIRECTORY OF DEVELOPED SYSTEMS AND ARCHITECTURES</p>
+        </div>
+
+        {/* Filter Controls (Search + Category Buttons) */}
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'stretch' : 'center', gap: '20px', marginBottom: '40px' }}>
+          {/* Category Filter Buttons */}
+          <div style={styles.filterRow}>
+            {categories.map((cat, i) => (
+              <motion.button
+                key={i}
+                onClick={() => setActiveCategory(cat)}
+                style={{
+                  ...styles.filterBtn,
+                  backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
+                  borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.2)',
+                  color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.7)',
+                  boxShadow: activeCategory === cat ? '0 0 20px rgba(14,165,233,0.4)' : 'none',
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {cat.toUpperCase()}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Search Bar */}
+          <div style={{ position: 'relative', minWidth: isMobile ? '100%' : '280px' }}>
+            <FiSearch size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }} />
+            <input
+              type="text"
+              placeholder="SEARCH MODULES..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 16px 10px 42px',
+                borderRadius: '50px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: '#fff',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                outline: 'none',
+                backdropFilter: 'blur(10px)',
+                boxShadow: searchQuery ? '0 0 15px rgba(14,165,233,0.3)' : 'none',
+                transition: 'all 0.3s ease'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Grid of Projects */}
+        {filteredProjects.length > 0 ? (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gridAutoRows: 'minmax(280px, auto)', 
+            gap: '30px',
+            gridAutoFlow: 'dense'
+          }}>
+            {filteredProjects.map((p, index) => (
+              <ProjectCard key={p.id} project={p} index={index} isMobile={isMobile} />
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace', fontSize: '1rem', margin: 0 }}>
+              NO MODULES FOUND MATCHING "{searchQuery.toUpperCase()}"
+            </p>
+          </div>
+        )}
+
+        {/* Bottom Back to Home */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '80px' }}>
+          <motion.button
+            onClick={() => {
+              const el = document.getElementById('home');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            style={styles.backBtnBottom}
+            whileHover={{ scale: 1.05, backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 25px rgba(255,255,255,0.5)' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            ← RETURN TO SYSTEM HOME
+          </motion.button>
         </div>
       </div>
     </div>
@@ -162,11 +283,16 @@ const Projects = () => {
 };
 
 const styles = {
-  pageWrapper: { minHeight: '100vh', padding: '100px 5%', position: 'relative' },
+  pageWrapper: { minHeight: '100vh', padding: '100px 5% 80px', position: 'relative' },
   container: { maxWidth: '1400px', margin: '0 auto' },
-  mainTitleBox: { marginBottom: '60px', borderLeft: '5px solid #fff', paddingLeft: '25px' },
+  topBar: { marginBottom: '30px' },
+  backBtn: { padding: '10px 20px', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', transition: '0.3s' },
+  backBtnBottom: { padding: '14px 32px', borderRadius: '50px', border: '2px solid #fff', background: 'rgba(255,255,255,0.08)', color: '#fff', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', transition: '0.3s' },
+  mainTitleBox: { marginBottom: '40px', borderLeft: '5px solid #fff', paddingLeft: '25px' },
   mainTitle: { color: '#fff', fontSize: '2.8rem', fontWeight: '900', fontFamily: 'monospace', letterSpacing: '2px' },
   subtitle: { color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', fontFamily: 'monospace', marginTop: '5px' },
+  filterRow: { display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' },
+  filterBtn: { padding: '10px 22px', borderRadius: '50px', border: '1px solid', fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s' },
   
   projectCard: { 
     background: 'rgba(255, 255, 255, 0.08)', 
@@ -179,7 +305,7 @@ const styles = {
     position: 'relative',
     overflow: 'hidden'
   },
-  cardHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '20px' },
+  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
   systemId: { color: '#fff', fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold', letterSpacing: '1px' },
   statusDot: { width: '10px', height: '10px', borderRadius: '50%' },
   
@@ -191,19 +317,40 @@ const styles = {
   
   contentBox: { textAlign: 'left', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' },
   titleText: { color: '#fff', fontSize: '1.6rem', fontWeight: '900', marginBottom: '12px', letterSpacing: '1px' },
-  descText: { color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '25px' },
+  descText: { color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '16px' },
+  tagRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' },
+  tag: { padding: '5px 14px', borderRadius: '50px', background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.35)', color: '#38bdf8', fontSize: '0.7rem', fontFamily: 'monospace', fontWeight: '700' },
   
   actionBtn: { 
     alignSelf: 'flex-start', 
-    padding: '14px 28px', 
-    border: '2.5px solid #fff', 
+    padding: '12px 22px', 
+    border: '2px solid #fff', 
     color: '#fff', 
     borderRadius: '15px', 
-    fontSize: '12px', 
+    fontSize: '11px', 
     fontFamily: 'monospace', 
     fontWeight: 'bold', 
     textDecoration: 'none', 
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
     transition: '0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+  },
+  githubBtn: {
+    alignSelf: 'flex-start', 
+    padding: '12px 20px', 
+    border: '1px solid rgba(255,255,255,0.3)', 
+    background: 'rgba(255,255,255,0.06)',
+    color: '#fff', 
+    borderRadius: '15px', 
+    fontSize: '11px', 
+    fontFamily: 'monospace', 
+    fontWeight: 'bold', 
+    textDecoration: 'none', 
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    transition: '0.3s'
   }
 };
 

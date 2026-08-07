@@ -1,0 +1,80 @@
+export const projectsData = [
+  { 
+    id: "KS", 
+    title: "Krishi Sakhi", 
+    description: "AI-driven agricultural assistant for farmers. Real-time soil and crop intelligence.", 
+    fullDescription: "An AI-driven agricultural assistant created for farmers to provide real-time soil analysis, crop recommendation, and disease detection using machine learning models and modern web interfaces.",
+    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800", 
+    link: "https://krishisakhi.streamlit.app/", 
+    github: "https://github.com/franc1s-513",
+    featured: true, 
+    status: 'active',
+    category: "AI / ML",
+    tags: ["Python", "Streamlit", "AI", "ML"] 
+  },
+  { 
+    id: "PT", 
+    title: "Placemate Tracker", 
+    description: "Website designed for students to help them work on skills based on their resume and add value to references.", 
+    fullDescription: "A comprehensive placement tracking and skill development platform designed for engineering students. Analyzes student resumes, tracks interview readiness, and connects skill gaps with targeted industry resources.",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800", 
+    link: "https://team-1-placemate.vercel.app/", 
+    github: "https://github.com/franc1s-513",
+    featured: true, 
+    status: 'active',
+    category: "Web Dev",
+    tags: ["React", "Node.js", "Vite", "MongoDB"] 
+  },
+  { 
+    id: "DAI", 
+    title: "Detective AI", 
+    description: "Enterprise-grade deepfake and synthetic media detection developed by our team against AI misinformation.", 
+    fullDescription: "Enterprise-grade deepfake and synthetic media detection developed by our team. Analyzes facial geometry, pulse patterns, and temporal inconsistencies to authenticate digital evidence against modern AI misinformation.",
+    image: "/detective-ai.png", 
+    link: "https://deep-detection.vercel.app/", 
+    github: "https://github.com/franc1s-513",
+    featured: true, 
+    status: 'active',
+    category: "AI / ML",
+    tags: ["TypeScript", "Python", "HTML", "AI Forensics"] 
+  },
+  { 
+    id: "CS", 
+    title: "Cloud Sentinel", 
+    description: "Automated cloud infrastructure monitor and security auditing toolkit with real-time alerting.", 
+    fullDescription: "A proactive cloud monitoring engine that audits AWS/GCP resource configurations, detects anomalous traffic patterns, and automatically applies remediation rules to maintain zero-trust cloud security posture.",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800", 
+    link: "https://github.com/franc1s-513", 
+    github: "https://github.com/franc1s-513",
+    featured: false, 
+    status: 'active',
+    category: "DevOps / Cloud",
+    tags: ["Docker", "Python", "AWS", "Grafana"] 
+  },
+  { 
+    id: "NC", 
+    title: "NeuroChat AI", 
+    description: "Context-aware LLM workspace assistant tailored for developer documentation and code refactoring.", 
+    fullDescription: "An advanced natural language processing interface powered by custom retrieval-augmented generation (RAG) pipelines. Enables developers to query entire repositories and generate architecture documentation effortlessly.",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800", 
+    link: "https://github.com/franc1s-513", 
+    github: "https://github.com/franc1s-513",
+    featured: false, 
+    status: 'active',
+    category: "AI / ML",
+    tags: ["React", "FastAPI", "LangChain", "OpenAI"] 
+  },
+  { 
+    id: "ES", 
+    title: "EcoSync Smart Grid", 
+    description: "IoT data visualization dashboard for real-time campus energy consumption and solar grid optimization.", 
+    fullDescription: "A full-stack IoT telemetry application that collects real-time sensor metrics from smart meters across college buildings. Visualizes energy draw and predicts peak load times using time-series forecasting.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800", 
+    link: "https://github.com/franc1s-513", 
+    github: "https://github.com/franc1s-513",
+    featured: false, 
+    status: 'active',
+    category: "Web Dev",
+    tags: ["Node.js", "Express", "React", "Chart.js"] 
+  }
+];

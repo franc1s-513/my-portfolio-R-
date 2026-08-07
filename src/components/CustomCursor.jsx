@@ -1,117 +1,141 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
-const CustomCursor = () => {
+export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
 
-  // Smooth "lag" configuration for the outer ring
-  const springConfig = { damping: 28, stiffness: 150 };
+  // Smooth springs for the outer ring for that buttery lag effect
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
 
   useEffect(() => {
-    const moveMouse = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    // Only enable on desktop/non-touch devices
+    const checkDevice = () => {
+      setIsDesktop(window.innerWidth >= 768 && !window.matchMedia("(pointer: coarse)").matches);
     };
 
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+      cursorX.set(e.clientX - 16); // Center the 32px ring
+      cursorY.set(e.clientY - 16);
+      if (!isVisible) setIsVisible(true);
+    };
+
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
+
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
+
+    // Track hovering over interactive elements
     const handleMouseOver = (e) => {
-      // Expand when hovering over interactive elements
+      const target = e.target;
       if (
-        e.target.tagName === 'BUTTON' || 
-        e.target.tagName === 'A' || 
-        e.target.closest('.bento-card') ||
-        e.target.closest('.glow-pill')
+        target.tagName === 'A' ||
+        target.tagName === 'BUTTON' ||
+        target.closest('a') ||
+        target.closest('button') ||
+        target.classList.contains('interactive') ||
+        target.classList.contains('btn-press') ||
+        target.getAttribute('role') === 'button'
       ) {
-        setIsHovered(true);
+        setIsHovering(true);
       } else {
-        setIsHovered(false);
+        setIsHovering(false);
       }
     };
 
-    window.addEventListener("mousemove", moveMouse);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('mouseenter', handleMouseEnter);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
-      window.removeEventListener("mousemove", moveMouse);
-      window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('mouseenter', handleMouseEnter);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, [cursorX, cursorY]);
+  }, [isDesktop, cursorX, cursorY, isVisible]);
+
+  if (!isDesktop) return null;
 
   return (
     <>
-      <style>{`
-        body, a, button {
-          cursor: none !important;
-        }
-        @media (max-width: 768px) {
-          .cursor-container { display: none; }
-          body { cursor: auto !important; }
-        }
-      `}</style>
+      <style>
+        {`
+          /* Hide native cursor globally on desktop */
+          @media (min-width: 768px) and (pointer: fine) {
+            * {
+              cursor: none !important;
+            }
+          }
+        `}
+      </style>
 
-      <div className="cursor-container" style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 99999 }}>
-        
-        {/* THE OUTER SOFT RING */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            width: isHovered ? 80 : 40,
-            height: isHovered ? 80 : 40,
-            borderRadius: '50%',
-            border: '1px solid rgba(14, 165, 233, 0.3)',
-            x: cursorX,
-            y: cursorY,
-            translateX: '-50%',
-            translateY: '-50%',
-            background: isHovered ? 'rgba(14, 165, 233, 0.05)' : 'transparent',
-            transition: 'width 0.3s, height 0.3s, background 0.3s',
-          }}
-        />
+      {/* Inner Dot */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '6px',
+          height: '6px',
+          backgroundColor: '#f43f5e',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          zIndex: 99999,
+          translateX: mousePosition.x - 3,
+          translateY: mousePosition.y - 3,
+          opacity: isVisible ? 1 : 0,
+        }}
+        animate={{
+          scale: isClicking ? 0.5 : 1,
+        }}
+        transition={{ duration: 0.15 }}
+      />
 
-        {/* THE GLOWING INNER DOT */}
-        <motion.div
-          animate={{
-            scale: isHovered ? 1.5 : 1,
-          }}
-          style={{
-            position: 'absolute',
-            width: 8,
-            height: 8,
-            left: mousePosition.x,
-            top: mousePosition.y,
-            translateX: '-50%',
-            translateY: '-50%',
-            backgroundColor: '#0ea5e9',
-            borderRadius: '50%',
-            // This creates the "Neon" glow effect
-            boxShadow: `
-              0 0 10px #0ea5e9,
-              0 0 20px #0ea5e9,
-              0 0 30px rgba(14, 165, 233, 0.6)
-            `,
-          }}
-        />
-
-        {/* EXTRA AMBIENT FLARE (Optional: follow the dot for a soft light leak) */}
-        <div 
-          style={{
-            position: 'absolute',
-            width: '100px',
-            height: '100px',
-            left: mousePosition.x,
-            top: mousePosition.y,
-            translateX: '-50%',
-            translateY: '-50%',
-            background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%)',
-            borderRadius: '50%',
-          }}
-        />
-      </div>
+      {/* Outer Ring */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '32px',
+          height: '32px',
+          border: '1.5px solid #f43f5e',
+          boxShadow: '0 0 12px rgba(244, 63, 94, 0.5)',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          zIndex: 99998,
+          x: cursorX,
+          y: cursorY,
+          opacity: isVisible ? 1 : 0,
+        }}
+        animate={{
+          scale: isClicking ? 0.8 : (isHovering ? 1.5 : 1),
+          backgroundColor: isHovering ? 'rgba(244, 63, 94, 0.15)' : 'rgba(244, 63, 94, 0)',
+        }}
+        transition={{ duration: 0.2 }}
+      />
     </>
   );
-};
-
-export default CustomCursor;
+}
