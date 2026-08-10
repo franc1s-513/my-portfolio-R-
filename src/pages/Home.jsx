@@ -203,60 +203,7 @@ const Home = ({ isDark }) => {
                 <span style={{ fontWeight: '800' }}>behind an interface.</span>
               </motion.p>
 
-              {/* CTA Buttons */}
-              <motion.div
-                variants={itemVariants}
-                style={{
-                  ...styles.ctaGroup,
-                  justifyContent: isMobile ? 'center' : 'flex-start',
-                }}
-              >
-                <MagneticWrapper>
-                  <GlareHover borderRadius="50px">
-                    <motion.button
-                      id="view-projects-btn"
-                      onClick={() => {
-                        const el = document.getElementById('featured-projects');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="btn-press"
-                      whileHover={{
-                        scale: 1.06,
-                        boxShadow: '0 0 28px rgba(14, 165, 233, 0.7), 0 0 60px rgba(14, 165, 233, 0.2)',
-                      }}
-                      whileTap={{ scale: 0.96 }}
-                      style={styles.primaryBtn}
-                      aria-label="View Projects"
-                    >
-                      VIEW_PROJECTS →
-                    </motion.button>
-                  </GlareHover>
-                </MagneticWrapper>
 
-
-                <MagneticWrapper>
-                  <GlareHover borderRadius="50px">
-                    <motion.button
-                      id="contact-btn"
-                      onClick={() => {
-                        const el = document.getElementById('contact');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="btn-press"
-                      whileHover={{
-                        scale: 1.06,
-                        background: 'rgba(255,255,255,0.12)',
-                        borderColor: 'rgba(255,255,255,0.6)',
-                      }}
-                      whileTap={{ scale: 0.96 }}
-                      style={styles.secondaryBtn}
-                      aria-label="Go to contact page"
-                    >
-                      CONTACT_ME
-                    </motion.button>
-                  </GlareHover>
-                </MagneticWrapper>
-              </motion.div>
             </motion.div>
 
             {/* ── IMAGE SIDE ── */}

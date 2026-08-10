@@ -271,22 +271,7 @@ const Projects = () => {
           </div>
         )}
 
-        {/* Bottom Back to Home */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '60px' }}>
-          <GlareHover borderRadius="50px">
-            <motion.button
-              onClick={() => {
-                const el = document.getElementById('home');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              style={styles.backBtnBottom}
-              whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FiArrowLeft size={18} /> RETURN TO INDEX
-            </motion.button>
-          </GlareHover>
-        </div>
+
       </div>
     </div>
   );
