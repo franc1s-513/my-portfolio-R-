@@ -4,7 +4,8 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { projectsData } from '../data/projectsData';
 import PageTransition from '../components/PageTransition';
 import { FaGithub } from 'react-icons/fa6';
-import { FiExternalLink, FiArrowLeft, FiSearch } from 'react-icons/fi';
+import { FiExternalLink, FiSearch, FiArrowLeft } from 'react-icons/fi';
+import GlareHover from '../components/GlareHover';
 
 const shimmerStyle = `
   @keyframes shimmer {
@@ -115,26 +116,30 @@ const ProjectCard = ({ project, index, isMobile }) => {
             </div>
             {project.status !== 'empty' && (
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: 'auto' }}>
-                <motion.a 
-                  id={index === 0 ? "first-live-demo-btn" : undefined}
-                  href={project.link} 
-                  target="_blank"
-                  rel="noreferrer"
-                  style={styles.actionBtn}
-                  whileHover={{ backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 20px #fff' }}
-                >
-                  LIVE_DEMO <FiExternalLink size={14} />
-                </motion.a>
-                {project.github && (
+                <GlareHover borderRadius="6px">
                   <motion.a 
-                    href={project.github} 
+                    id={index === 0 ? "first-live-demo-btn" : undefined}
+                    href={project.link} 
                     target="_blank"
                     rel="noreferrer"
-                    style={styles.githubBtn}
-                    whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#fff' }}
+                    style={styles.actionBtn}
+                    whileHover={{ backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 20px #fff' }}
                   >
-                    <FaGithub size={15} /> CODE
+                    LIVE_DEMO <FiExternalLink size={14} />
                   </motion.a>
+                </GlareHover>
+                {project.github && (
+                  <GlareHover borderRadius="6px">
+                    <motion.a 
+                      href={project.github} 
+                      target="_blank"
+                      rel="noreferrer"
+                      style={styles.githubBtn}
+                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#fff' }}
+                    >
+                      <FaGithub size={15} /> CODE
+                    </motion.a>
+                  </GlareHover>
                 )}
               </div>
             )}
@@ -175,17 +180,19 @@ const Projects = () => {
       <div style={styles.container}>
         {/* Back to Home & Title */}
         <div style={styles.topBar}>
-          <motion.button
-            onClick={() => {
-              const el = document.getElementById('home');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={styles.backBtn}
-            whileHover={{ scale: 1.05, x: -5, backgroundColor: 'rgba(255,255,255,0.1)' }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FiArrowLeft size={18} /> BACK TO HOME
-          </motion.button>
+          <GlareHover borderRadius="50px">
+            <motion.button
+              onClick={() => {
+                const el = document.getElementById('home');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={styles.backBtn}
+              whileHover={{ scale: 1.05, x: -5, backgroundColor: 'rgba(255,255,255,0.1)' }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FiArrowLeft size={18} /> BACK TO HOME
+            </motion.button>
+          </GlareHover>
         </div>
 
         <div style={styles.mainTitleBox}>
@@ -198,21 +205,22 @@ const Projects = () => {
           {/* Category Filter Buttons */}
           <div style={styles.filterRow}>
             {categories.map((cat, i) => (
-              <motion.button
-                key={i}
-                onClick={() => setActiveCategory(cat)}
-                style={{
-                  ...styles.filterBtn,
-                  backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
-                  borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.2)',
-                  color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.7)',
-                  boxShadow: activeCategory === cat ? '0 0 20px rgba(14,165,233,0.4)' : 'none',
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {cat.toUpperCase()}
-              </motion.button>
+              <GlareHover key={i} borderRadius="50px">
+                <motion.button
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    ...styles.filterBtn,
+                    backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
+                    borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.2)',
+                    color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.7)',
+                    boxShadow: activeCategory === cat ? '0 0 20px rgba(14,165,233,0.4)' : 'none',
+                  }}
+                  whileHover={{ scale: 1.05, borderColor: '#fff' }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {cat.toUpperCase()}
+                </motion.button>
+              </GlareHover>
             ))}
           </div>
 
@@ -264,18 +272,20 @@ const Projects = () => {
         )}
 
         {/* Bottom Back to Home */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '80px' }}>
-          <motion.button
-            onClick={() => {
-              const el = document.getElementById('home');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={styles.backBtnBottom}
-            whileHover={{ scale: 1.05, backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 25px rgba(255,255,255,0.5)' }}
-            whileTap={{ scale: 0.95 }}
-          >
-            ← RETURN TO SYSTEM HOME
-          </motion.button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '60px' }}>
+          <GlareHover borderRadius="50px">
+            <motion.button
+              onClick={() => {
+                const el = document.getElementById('home');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={styles.backBtnBottom}
+              whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FiArrowLeft size={18} /> RETURN TO INDEX
+            </motion.button>
+          </GlareHover>
         </div>
       </div>
     </div>

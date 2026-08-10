@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Instagram, Mail, ShieldCheck, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import GlareHover from '../components/GlareHover';
 
 const FinalPortfolioPage = () => {
   const form = useRef();
@@ -199,9 +200,11 @@ const FinalPortfolioPage = () => {
               <textarea name="message" className="glow-pill textarea-glow" rows="4" placeholder="ENTER_MESSAGE..." required />
             </div>
 
-            <button id="contact-submit-btn" type="submit" disabled={status === 'SENDING'} className="glow-btn">
-              {status === 'SENDING' ? 'SENDING...' : 'TRANSMIT'} <Send size={18} />
-            </button>
+            <GlareHover borderRadius="50px">
+              <button id="contact-submit-btn" type="submit" disabled={status === 'SENDING'} className="glow-btn">
+                {status === 'SENDING' ? 'SENDING...' : 'TRANSMIT'} <Send size={18} />
+              </button>
+            </GlareHover>
           </form>
         </div>
 

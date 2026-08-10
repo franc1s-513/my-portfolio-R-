@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, X, Send, Bot } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, Sparkles } from 'lucide-react';
+import GlareHover from './GlareHover';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FloatingAI = () => {
@@ -62,14 +63,18 @@ const FloatingAI = () => {
             </div>
             <div style={inputArea}>
               <input style={chatInput} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && askAI()} placeholder="Message AI..." />
-              <button onClick={askAI} style={sendBtn}><Send size={16} /></button>
+              <GlareHover borderRadius="50%">
+                <button onClick={askAI} style={sendBtn}><Send size={16} /></button>
+              </GlareHover>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <button onClick={() => setIsOpen(!isOpen)} style={toggleBtn}>
-        {isOpen ? <X /> : <MessageSquare />}
-      </button>
+      <GlareHover borderRadius="50%">
+        <button onClick={() => setIsOpen(!isOpen)} style={toggleBtn}>
+          {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+        </button>
+      </GlareHover>
     </div>
   );
 };

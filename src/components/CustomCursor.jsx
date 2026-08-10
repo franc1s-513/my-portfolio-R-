@@ -30,8 +30,8 @@ export default function CustomCursor() {
 
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
-      cursorX.set(e.clientX - 16); // Center the 32px ring
-      cursorY.set(e.clientY - 16);
+      cursorX.set(e.clientX - 18); // Center the 36px ring
+      cursorY.set(e.clientY - 18);
       if (!isVisible) setIsVisible(true);
     };
 
@@ -97,15 +97,16 @@ export default function CustomCursor() {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '6px',
-          height: '6px',
-          backgroundColor: '#f43f5e',
+          width: '5px',
+          height: '5px',
+          backgroundColor: '#0ea5e9',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 99999,
-          translateX: mousePosition.x - 3,
-          translateY: mousePosition.y - 3,
+          translateX: mousePosition.x - 2.5,
+          translateY: mousePosition.y - 2.5,
           opacity: isVisible ? 1 : 0,
+          mixBlendMode: 'difference'
         }}
         animate={{
           scale: isClicking ? 0.5 : 1,
@@ -119,20 +120,21 @@ export default function CustomCursor() {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '32px',
-          height: '32px',
-          border: '1.5px solid #f43f5e',
-          boxShadow: '0 0 12px rgba(244, 63, 94, 0.5)',
+          width: '36px',
+          height: '36px',
+          border: '1px solid rgba(14, 165, 233, 0.8)',
+          boxShadow: '0 0 10px rgba(14, 165, 233, 0.4)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 99998,
           x: cursorX,
           y: cursorY,
           opacity: isVisible ? 1 : 0,
+          mixBlendMode: 'difference'
         }}
         animate={{
-          scale: isClicking ? 0.8 : (isHovering ? 1.5 : 1),
-          backgroundColor: isHovering ? 'rgba(244, 63, 94, 0.15)' : 'rgba(244, 63, 94, 0)',
+          scale: isClicking ? 0.75 : (isHovering ? 1.6 : 1),
+          backgroundColor: isHovering ? 'rgba(14, 165, 233, 0.15)' : 'rgba(14, 165, 233, 0)',
         }}
         transition={{ duration: 0.2 }}
       />

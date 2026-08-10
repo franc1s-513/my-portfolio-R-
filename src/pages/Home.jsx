@@ -4,6 +4,7 @@ import { projectsData } from '../data/projectsData';
 import profilePhoto from '../assets/photos/profile.jpg';
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper';
+import GlareHover from '../components/GlareHover';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa6';
 import { IoMail } from 'react-icons/io5';
 import useScrollReveal from '../components/useScrollReveal';
@@ -211,61 +212,49 @@ const Home = ({ isDark }) => {
                 }}
               >
                 <MagneticWrapper>
-                  <motion.button
-                    id="view-projects-btn"
-                    onClick={() => {
-                      const el = document.getElementById('featured-projects');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="btn-press"
-                    whileHover={{
-                      scale: 1.06,
-                      boxShadow: '0 0 28px rgba(14, 165, 233, 0.7), 0 0 60px rgba(14, 165, 233, 0.2)',
-                    }}
-                    whileTap={{ scale: 0.96 }}
-                    style={styles.primaryBtn}
-                    aria-label="View Projects"
-                  >
-                    VIEW_PROJECTS →
-                  </motion.button>
+                  <GlareHover borderRadius="50px">
+                    <motion.button
+                      id="view-projects-btn"
+                      onClick={() => {
+                        const el = document.getElementById('featured-projects');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="btn-press"
+                      whileHover={{
+                        scale: 1.06,
+                        boxShadow: '0 0 28px rgba(14, 165, 233, 0.7), 0 0 60px rgba(14, 165, 233, 0.2)',
+                      }}
+                      whileTap={{ scale: 0.96 }}
+                      style={styles.primaryBtn}
+                      aria-label="View Projects"
+                    >
+                      VIEW_PROJECTS →
+                    </motion.button>
+                  </GlareHover>
                 </MagneticWrapper>
 
-                <MagneticWrapper>
-                  <motion.a
-                    href="/Francis_Resume.pdf"
-                    download="Francis_Fernando_CV.pdf"
-                    className="btn-press"
-                    whileHover={{
-                      scale: 1.06,
-                      boxShadow: '0 0 28px rgba(14, 165, 233, 0.7), 0 0 60px rgba(14, 165, 233, 0.2)',
-                    }}
-                    whileTap={{ scale: 0.96 }}
-                    style={styles.primaryBtn}
-                    aria-label="Download CV"
-                  >
-                    DOWNLOAD_CV.EXE
-                  </motion.a>
-                </MagneticWrapper>
 
                 <MagneticWrapper>
-                  <motion.button
-                    id="contact-btn"
-                    onClick={() => {
-                      const el = document.getElementById('contact');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="btn-press"
-                    whileHover={{
-                      scale: 1.06,
-                      background: 'rgba(255,255,255,0.12)',
-                      borderColor: 'rgba(255,255,255,0.6)',
-                    }}
-                    whileTap={{ scale: 0.96 }}
-                    style={styles.secondaryBtn}
-                    aria-label="Go to contact page"
-                  >
-                    CONTACT_ME
-                  </motion.button>
+                  <GlareHover borderRadius="50px">
+                    <motion.button
+                      id="contact-btn"
+                      onClick={() => {
+                        const el = document.getElementById('contact');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="btn-press"
+                      whileHover={{
+                        scale: 1.06,
+                        background: 'rgba(255,255,255,0.12)',
+                        borderColor: 'rgba(255,255,255,0.6)',
+                      }}
+                      whileTap={{ scale: 0.96 }}
+                      style={styles.secondaryBtn}
+                      aria-label="Go to contact page"
+                    >
+                      CONTACT_ME
+                    </motion.button>
+                  </GlareHover>
                 </MagneticWrapper>
               </motion.div>
             </motion.div>

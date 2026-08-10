@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import GlareHover from '../components/GlareHover';
 import { SiReact, SiNodedotjs, SiTailwindcss, SiJavascript, SiPython, SiMongodb, SiGit, SiCplusplus, SiFramer } from 'react-icons/si';
 import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaCoffee } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
@@ -17,6 +19,7 @@ import CloudCert from '../assets/certificates/cloud.png';
 import PsgCert from '../assets/certificates/psg.png';
 
 const About = () => {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
 
   const [selectedCert, setSelectedCert] = useState(null);
@@ -243,19 +246,20 @@ const About = () => {
 
             <div className="filter-group-responsive" style={styles.filterGroup}>
               {['All', 'Certifications', 'Academic'].map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  style={{
-                    ...styles.filterBtn,
-                    background: activeFilter === filter ? '#0ea5e9' : 'rgba(255, 255, 255, 0.04)',
-                    color: activeFilter === filter ? '#fff' : 'rgba(255, 255, 255, 0.65)',
-                    borderColor: activeFilter === filter ? '#0ea5e9' : 'rgba(255, 255, 255, 0.12)',
-                    boxShadow: activeFilter === filter ? '0 0 16px rgba(14, 165, 233, 0.4)' : 'none',
-                  }}
-                >
-                  {filter} ({filter === 'All' ? allCredentials.length : allCredentials.filter(c => c.category === filter).length})
-                </button>
+                <GlareHover key={filter} borderRadius="50px">
+                  <button
+                    onClick={() => setActiveFilter(filter)}
+                    style={{
+                      ...styles.filterBtn,
+                      background: activeFilter === filter ? '#0ea5e9' : 'rgba(255, 255, 255, 0.04)',
+                      color: activeFilter === filter ? '#fff' : 'rgba(255, 255, 255, 0.65)',
+                      borderColor: activeFilter === filter ? '#0ea5e9' : 'rgba(255, 255, 255, 0.12)',
+                      boxShadow: activeFilter === filter ? '0 0 16px rgba(14, 165, 233, 0.4)' : 'none',
+                    }}
+                  >
+                    {filter} ({filter === 'All' ? allCredentials.length : allCredentials.filter(c => c.category === filter).length})
+                  </button>
+                </GlareHover>
               ))}
             </div>
           </div>
@@ -442,9 +446,11 @@ const About = () => {
                       </span>
                     </div>
                   </div>
-                  <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}>
-                    <X size={20} />
-                  </button>
+                  <GlareHover borderRadius="50%">
+                    <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}>
+                      <X size={20} />
+                    </button>
+                  </GlareHover>
                 </div>
 
                 <div style={styles.modalImageContainer}>

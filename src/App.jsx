@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 // --- COMPONENTS ---
 import SkyAndBirds from './components/SkyAndBirds';
 import WindParticles from './components/WindParticles';
-import SplashCursor from './components/SplashCursor';
+
 import CustomCursor from './components/CustomCursor';
 import LightTunnel from './components/LightTunnel';
+import GlareHover from './components/GlareHover';
 
 // --- PAGES ---
 import Home from './pages/Home';
@@ -61,7 +62,7 @@ function App() {
       background: 'transparent', 
       transition: 'background-color 0.5s ease'
     }}>
-      <SplashCursor key="rose-cursor" COLOR="#f43f5e" RAINBOW_MODE={false} />
+      <CustomCursor />
       
       {/* LAYER 1: BACKGROUND (Main 3D Sky World + Castles) */}
       <SkyAndBirds isDark={isDark} onOpenModal={handleOpenModal} activeModal={activeModal} />
@@ -93,13 +94,14 @@ function App() {
           >
             {/* FANTASY SKY BACKGROUND IS HANDLED IN AnimeSkybox.jsx DIRECTLY */}
 
-            <button
-              onClick={() => setActiveModal(null)}
-              style={{
-                position: 'fixed',
-                top: '25px',
-                right: '25px',
-                zIndex: 10000,
+            <GlareHover borderRadius="50px">
+              <button
+                onClick={() => setActiveModal(null)}
+                style={{
+                  position: 'fixed',
+                  top: '25px',
+                  right: '25px',
+                  zIndex: 10000,
                 background: 'rgba(255,255,255,0.2)',
                 border: '1.5px solid rgba(14, 165, 233, 0.6)',
                 color: isDark ? '#fff' : '#0f172a',
@@ -123,6 +125,7 @@ function App() {
             >
               CLOSE [X]
             </button>
+            </GlareHover>
             
             <div style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '40px' }}>
               {activeModal === 'about' && <About isDark={isDark} />}

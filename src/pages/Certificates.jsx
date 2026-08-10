@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Maximize2, Download, ShieldCheck } from 'lucide-react';
+import GlareHover from '../components/GlareHover';
 
 // IMPORT YOUR IMAGES (Keep your existing imports here)
 import IotCert from '../assets/certificates/iot.png';
@@ -95,7 +96,9 @@ const Certificates = () => {
                     <ShieldCheck color={selectedCert.color} size={20} style={{flexShrink:0}}/>
                     <h2 style={{color: '#fff', margin: 0, fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{selectedCert.title}</h2>
                   </div>
-                  <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}><X size={20}/></button>
+                  <GlareHover borderRadius="50%">
+                    <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}><X size={20}/></button>
+                  </GlareHover>
                </div>
                <img src={selectedCert.image} style={styles.fullImage} alt="Certificate"/>
                <div style={styles.modalFooter}>

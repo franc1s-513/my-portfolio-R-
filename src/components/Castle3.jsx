@@ -7,7 +7,7 @@ export function Castle3({ onClick, ...props }) {
   const { scene } = useGLTF('/Castle 3.glb');
   const groupRef = useRef();
 
-  const { clonedScene, tagY, modelScale } = useMemo(() => {
+  const { clonedScene, modelScale } = useMemo(() => {
     const clone = scene.clone(true);
 
     clone.traverse((child) => {
@@ -35,9 +35,8 @@ export function Castle3({ onClick, ...props }) {
 
     const maxDim = Math.max(size.x, size.y, size.z);
     const scaleFactor = maxDim > 0 ? 33 / maxDim : 1;
-    const computedTagY = size.y * scaleFactor + 6;
 
-    return { clonedScene: wrapper, tagY: computedTagY, modelScale: scaleFactor };
+    return { clonedScene: wrapper, modelScale: scaleFactor };
   }, [scene]);
 
   // Gentle floating animation

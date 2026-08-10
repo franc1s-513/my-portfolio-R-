@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Html, useProgress } from '@react-three/drei';
+import { useGLTF, Html, useProgress } from '@react-three/drei';
 
 import { Model as Castle } from './Castle';
 import Castle2 from './Castle2';
@@ -9,6 +9,7 @@ import Castle3 from './Castle3';
 import MysticStones from './MysticStones';
 import { ScrollCamera } from './ScrollCamera';
 import FlyingBirds from './FlyingBirds';
+import GlareHover from './GlareHover';
 
 function CanvasLoader() {
   const { progress, active } = useProgress();
@@ -45,9 +46,22 @@ function CanvasLoader() {
 
 function SkyboxModel({ activeModal }) {
   const { scene: animeScene } = useGLTF('/free_-_skybox_anime_sky.glb');
-  const fantasyTexture = useTexture('/fantasy_sky.jpg');
+  const { scene: fantasyScene } = useGLTF('/fantasy_sky_background.glb');
   const animeRef = useRef();
   const fantasyRef = useRef();
+
+  const clonedFantasy = useMemo(() => {
+    if (!fantasyScene) return null;
+    const clone = fantasyScene.clone(true);
+    clone.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone();
+        child.material.side = THREE.DoubleSide;
+        child.material.depthWrite = false;
+      }
+    });
+    return clone;
+  }, [fantasyScene]);
 
   useFrame(({ camera }, delta) => {
     if (animeRef.current) {
@@ -66,12 +80,9 @@ function SkyboxModel({ activeModal }) {
       {/* Show regular anime sky when NO modal is open */}
       {!activeModal && <primitive ref={animeRef} object={animeScene} />}
       
-      {/* Show 3D fantasy sky sphere when ANY modal IS open */}
-      {activeModal && (
-        <mesh ref={fantasyRef}>
-          <sphereGeometry args={[200, 60, 40]} />
-          <meshBasicMaterial map={fantasyTexture} side={THREE.BackSide} />
-        </mesh>
+      {/* Show 3D fantasy sky when ANY modal IS open */}
+      {activeModal && clonedFantasy && (
+        <primitive ref={fantasyRef} object={clonedFantasy} scale={[5, 5, 5]} />
       )}
     </>
   );
@@ -108,6 +119,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                 <pointLight position={[0, -5, -5]} intensity={6} color="#4ade80" distance={30} />
                 <Castle3 scale={1.0} rotation={[0, -Math.PI / 6, 0]} />
                 <Html position={[0, -18, 0]} center distanceFactor={120}>
+                  <GlareHover borderRadius="14px">
                   <div 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -142,6 +154,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                   >
                     ABOUT PAGE 👤
                   </div>
+                  </GlareHover>
                 </Html>
               </group>
 
@@ -151,6 +164,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                 <pointLight position={[0, -5, -5]} intensity={6} color="#38bdf8" distance={30} />
                 <Castle scale={1.0} rotation={[0, Math.PI / 4, 0]} />
                 <Html position={[0, -18, 0]} center distanceFactor={120}>
+                  <GlareHover borderRadius="14px">
                   <div 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -185,6 +199,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                   >
                     PROJECTS PAGE 🎯
                   </div>
+                  </GlareHover>
                 </Html>
               </group>
 
@@ -194,6 +209,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                 <pointLight position={[0, -5, -5]} intensity={6} color="#c084fc" distance={30} />
                 <Castle2 scale={1.0} rotation={[0, -Math.PI / 8, 0]} />
                 <Html position={[0, -18, 0]} center distanceFactor={120}>
+                  <GlareHover borderRadius="14px">
                   <div 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -228,6 +244,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                   >
                     CERTIFICATE PAGE 📜
                   </div>
+                  </GlareHover>
                 </Html>
               </group>
 
@@ -237,6 +254,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                 <pointLight position={[0, -5, -5]} intensity={6} color="#facc15" distance={30} />
                 <MysticStones scale={1.0} rotation={[0, Math.PI / 6, 0]} />
                 <Html position={[0, -18, 0]} center distanceFactor={120}>
+                  <GlareHover borderRadius="14px">
                   <div 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -271,6 +289,7 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                   >
                     CONTACT PAGE 📞
                   </div>
+                  </GlareHover>
                 </Html>
               </group>
             </>
@@ -283,6 +302,6 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
 };
 
 useGLTF.preload('/free_-_skybox_anime_sky.glb');
-useTexture.preload('/fantasy_sky.jpg');
+useGLTF.preload('/fantasy_sky_background.glb');
 
 export default AnimeSkybox;

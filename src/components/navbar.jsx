@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Moon, Sun, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlareHover from './GlareHover';
 
 const getMenuVariants = (isReduced) => ({
   hidden: {
@@ -45,7 +46,7 @@ const getLinkVariants = (isReduced) => ({
   }
 });
 
-const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
+const Navbar = ({ isDark, onOpenModal }) => {
   const isReduced = typeof window !== 'undefined'
     ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
     : false;
@@ -71,13 +72,27 @@ const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
           }
         }
       }
-      setActiveSection(current);
+      if (current !== activeSection) {
+        setActiveSection(current);
+      }
+    };
+    
+    // Throttle scroll spy
+    let isThrottled = false;
+    const throttledScrollSpy = () => {
+      if (!isThrottled) {
+        window.requestAnimationFrame(() => {
+          handleScrollSpy();
+          isThrottled = false;
+        });
+        isThrottled = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    window.addEventListener('scroll', throttledScrollSpy, { passive: true });
     handleScrollSpy();
     
-    return () => window.removeEventListener('scroll', handleScrollSpy);
+    return () => window.removeEventListener('scroll', throttledScrollSpy);
   }, []);
 
   const isActive = (item) => activeSection === item;
@@ -97,7 +112,14 @@ const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
   };
 
   const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 40);
+    let ticking = false;
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 40);
+        ticking = false;
+      });
+      ticking = true;
+    }
   }, []);
 
   useEffect(() => {
@@ -164,32 +186,7 @@ const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
               FRANCIS
             </a>
 
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsDark(!isDark)}
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              style={{
-                ...styles.toggleBtn,
-                background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(14, 165, 233, 0.15)',
-              }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={isDark ? 'sun' : 'moon'}
-                  initial={{ y: 10, opacity: 0, rotate: -90 }}
-                  animate={{ y: 0, opacity: 1, rotate: 0 }}
-                  exit={{ y: -10, opacity: 0, rotate: 90 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ display: 'flex' }}
-                >
-                  {isDark
-                    ? <Sun size={18} color="#fbbf24" fill="#fbbf24" />
-                    : <Moon size={18} color="#0ea5e9" fill="#0ea5e9" fillOpacity={0.2} />
-                  }
-                </motion.div>
-              </AnimatePresence>
-            </motion.button>
+
           </div>
 
           {!isMobile && (
@@ -237,25 +234,27 @@ const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
           )}
 
           {isMobile && (
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isOpen}
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: '4px',
-                display: 'flex',
-                cursor: 'pointer',
-                zIndex: 1001,
-                borderRadius: '6px',
-              }}
-            >
-              {isOpen
-                ? <X color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
-                : <Menu color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
-              }
-            </button>
+            <GlareHover borderRadius="6px">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isOpen}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: '4px',
+                  display: 'flex',
+                  cursor: 'pointer',
+                  zIndex: 1001,
+                  borderRadius: '6px',
+                }}
+              >
+                {isOpen
+                  ? <X color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
+                  : <Menu color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
+                }
+              </button>
+            </GlareHover>
           )}
         </div>
       </nav>
@@ -304,33 +303,7 @@ const Navbar = ({ isDark, setIsDark, onOpenModal }) => {
                 </motion.div>
               ))}
 
-              {/* Mode toggle inside mobile menu */}
-              <motion.div
-                variants={linkVariants}
-                style={{ marginTop: '20px' }}
-              >
-                <button
-                  onClick={() => setIsDark(!isDark)}
-                  style={{
-                    background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(14,165,233,0.1)',
-                    border: '1px solid rgba(14,165,233,0.3)',
-                    borderRadius: '50px',
-                    padding: '12px 28px',
-                    color: isDark ? '#fff' : '#0f172a',
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    letterSpacing: '2px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                  }}
-                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                >
-                  {isDark ? <Sun size={16} color="#fbbf24" /> : <Moon size={16} color="#0ea5e9" />}
-                  {isDark ? 'LIGHT_MODE' : 'DARK_MODE'}
-                </button>
-              </motion.div>
+
             </motion.div>
           </motion.div>
         )}
