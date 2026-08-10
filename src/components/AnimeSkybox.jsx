@@ -78,11 +78,11 @@ function SkyboxModel({ activeModal }) {
   return (
     <>
       {/* Show regular anime sky when NO modal is open */}
-      {!activeModal && <primitive ref={animeRef} object={animeScene} />}
+      {!activeModal && <primitive ref={animeRef} object={animeScene} raycast={() => null} />}
       
       {/* Show 3D fantasy sky when ANY modal IS open */}
       {activeModal && clonedFantasy && (
-        <primitive ref={fantasyRef} object={clonedFantasy} scale={[5, 5, 5]} />
+        <primitive ref={fantasyRef} object={clonedFantasy} scale={[5, 5, 5]} raycast={() => null} />
       )}
     </>
   );

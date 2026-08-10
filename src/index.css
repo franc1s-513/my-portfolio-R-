@@ -31,11 +31,16 @@
 }
 
 /* Remove box-shadow and !important from universal selector to allow custom durations & spring transitions */
-* {
+*:not(canvas):not(svg):not([data-r3f]):not(.r3f-html-container) {
   transition:
     background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.4s ease,
     border-color 0.5s ease;
+}
+
+canvas {
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* --- TYPEWRITER CURSOR BLINK --- */

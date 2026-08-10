@@ -12,11 +12,11 @@ export function MysticStones(props) {
 
     clone.traverse((child) => {
       if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+        child.castShadow = false;
+        child.receiveShadow = false;
+        child.raycast = () => null;
         if (child.material) {
-          child.material.side = THREE.DoubleSide;
-          child.material.needsUpdate = true;
+          child.material.side = THREE.FrontSide;
         }
       }
     });

@@ -5,6 +5,11 @@ import { MathUtils } from 'three';
 // Maximum horizontal rotation limit: 2 swipes left and 2 swipes right (~135 degrees = 0.75 * PI)
 const MAX_SWIPE_ROTATION = Math.PI * 0.75;
 
+const smoothstep = (min, max, value) => {
+  const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  return x * x * (3 - 2 * x);
+};
+
 export const ScrollCamera = () => {
   const { camera, gl } = useThree();
   const mouse = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
@@ -17,7 +22,7 @@ export const ScrollCamera = () => {
   const targetDragRotY = useRef(0);
   const currentDragRotY = useRef(0);
 
-  // Scroll state (optimized to avoid accessing DOM in useFrame)
+  // Scroll state (cached to eliminate DOM reflows on scroll)
   const scrollData = useRef({ scrollY: 0, maxScroll: 1 });
 
   // Initialize camera
@@ -34,7 +39,6 @@ export const ScrollCamera = () => {
     domElement.style.cursor = 'grab';
 
     const handlePointerDown = (e) => {
-      // Ignore if clicking on interactive HTML elements like buttons inside canvas
       if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
 
       isDragging.current = true;
@@ -44,21 +48,17 @@ export const ScrollCamera = () => {
     };
 
     const handlePointerMove = (e) => {
-      // 1. Mouse Parallax (subtle)
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
       const normY = -(e.clientY / window.innerHeight) * 2 + 1;
       mouse.current.targetX = normX * (Math.PI / 16);
       mouse.current.targetY = normY * (Math.PI / 16);
 
-      // 2. Drag / Swipe rotation
       if (!isDragging.current) return;
       const deltaX = e.clientX - startX.current;
       startX.current = e.clientX;
 
-      // Sensitivity factor: ~0.005 radians per pixel moved
       const rotationDelta = deltaX * 0.005;
       
-      // Update target drag rotation and clamp strictly to [-MAX_SWIPE_ROTATION, MAX_SWIPE_ROTATION]
       dragRotY.current = Math.min(
         Math.max(dragRotY.current + rotationDelta, -MAX_SWIPE_ROTATION),
         MAX_SWIPE_ROTATION
@@ -73,38 +73,42 @@ export const ScrollCamera = () => {
       }
     };
 
-    const updateScrollData = () => {
-      scrollData.current.scrollY = window.scrollY;
-      scrollData.current.maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+    // FAST SCROLL HANDLER - Only reads scrollY, ZERO DOM layout queries
+    const handleScroll = () => {
+      scrollData.current.scrollY = window.scrollY || window.pageYOffset;
     };
 
-    // Initial scroll setup
-    updateScrollData();
+    // RESIZE HANDLER - Recalculates maxScroll only when window resizes
+    const handleResize = () => {
+      scrollData.current.maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+      handleScroll();
+    };
+
+    // Initial setup
+    handleResize();
 
     domElement.addEventListener('pointerdown', handlePointerDown);
-    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('scroll', updateScrollData, { passive: true });
-    window.addEventListener('resize', updateScrollData, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
       domElement.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('scroll', updateScrollData);
-      window.removeEventListener('resize', updateScrollData);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
   }, [gl]);
 
-  useFrame((state, delta) => {
+  useFrame((state, rawDelta) => {
+    // Clamp delta to prevent camera jumping on frame spikes
+    const delta = Math.min(rawDelta, 0.05);
+
     // 1. Calculate Scroll Dive with Cinematic Buffer Zones
     const { scrollY, maxScroll } = scrollData.current;
     const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-    
-    const smoothstep = (min, max, value) => {
-      const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
-      return x * x * (3 - 2 * x);
-    };
 
     let targetY = 0;
     if (progress < 0.1) {

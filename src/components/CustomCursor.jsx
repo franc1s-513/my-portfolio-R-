@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useSpring } from 'framer-motion';
+import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 export default function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
 
-  // Smooth springs for the outer ring for that buttery lag effect
+  // Motion values for instant inner dot movement (zero React re-renders)
+  const dotX = useMotionValue(-100);
+  const dotY = useMotionValue(-100);
+
+  // Smooth springs for the outer ring
   const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
-  const cursorX = useSpring(0, springConfig);
-  const cursorY = useSpring(0, springConfig);
+  const cursorX = useSpring(-100, springConfig);
+  const cursorY = useSpring(-100, springConfig);
 
   useEffect(() => {
-    // Only enable on desktop/non-touch devices
     const checkDevice = () => {
       setIsDesktop(window.innerWidth >= 768 && !window.matchMedia("(pointer: coarse)").matches);
     };
 
     checkDevice();
-    window.addEventListener('resize', checkDevice);
+    window.addEventListener('resize', checkDevice, { passive: true });
 
     return () => window.removeEventListener('resize', checkDevice);
   }, []);
@@ -29,8 +31,9 @@ export default function CustomCursor() {
     if (!isDesktop) return;
 
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      cursorX.set(e.clientX - 18); // Center the 36px ring
+      dotX.set(e.clientX - 2.5);
+      dotY.set(e.clientY - 2.5);
+      cursorX.set(e.clientX - 18);
       cursorY.set(e.clientY - 18);
       if (!isVisible) setIsVisible(true);
     };
@@ -41,7 +44,6 @@ export default function CustomCursor() {
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
-    // Track hovering over interactive elements
     const handleMouseOver = (e) => {
       const target = e.target;
       if (
@@ -59,12 +61,12 @@ export default function CustomCursor() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('mouseenter', handleMouseEnter);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    window.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    window.addEventListener('mousedown', handleMouseDown, { passive: true });
+    window.addEventListener('mouseup', handleMouseUp, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -74,7 +76,7 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, [isDesktop, cursorX, cursorY, isVisible]);
+  }, [isDesktop, dotX, dotY, cursorX, cursorY, isVisible]);
 
   if (!isDesktop) return null;
 
@@ -82,7 +84,6 @@ export default function CustomCursor() {
     <>
       <style>
         {`
-          /* Hide native cursor globally on desktop */
           @media (min-width: 768px) and (pointer: fine) {
             * {
               cursor: none !important;
@@ -103,8 +104,8 @@ export default function CustomCursor() {
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 99999,
-          translateX: mousePosition.x - 2.5,
-          translateY: mousePosition.y - 2.5,
+          x: dotX,
+          y: dotY,
           opacity: isVisible ? 1 : 0,
           mixBlendMode: 'difference'
         }}

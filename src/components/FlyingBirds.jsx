@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
@@ -6,12 +6,23 @@ import * as THREE from 'three';
 
 function Bird({ initialPosition, scale, speed, offset, radius, verticalOffset }) {
   const { scene, animations } = useGLTF('/bird.glb');
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const clone = useMemo(() => {
+    const cloned = SkeletonUtils.clone(scene);
+    cloned.traverse((child) => {
+      if (child.isMesh) {
+        child.raycast = () => null; // Bypass raycasting for flock birds
+      }
+    });
+    return cloned;
+  }, [scene]);
+
   const { actions, mixer } = useAnimations(animations, clone);
   const birdRef = useRef();
   
-  // Keep track of previous position to calculate rotation naturally
-  const [prevPos] = useState(() => new THREE.Vector3(...initialPosition));
+  // Reusable vector refs to prevent per-frame garbage collection
+  const currentPos = useRef(new THREE.Vector3(...initialPosition));
+  const prevPos = useRef(new THREE.Vector3(...initialPosition));
+  const direction = useRef(new THREE.Vector3());
 
   useEffect(() => {
     if (actions && Object.keys(actions).length > 0) {
@@ -29,42 +40,31 @@ function Bird({ initialPosition, scale, speed, offset, radius, verticalOffset })
     
     const t = state.clock.getElapsedTime() * speed * 0.4 + offset;
     
-    // Smooth, organic figure-8 or complex orbital flight path
-    // Using sine and cosine waves ensures they never bounce off walls
     const newX = Math.cos(t) * radius + Math.sin(t * 0.5) * (radius * 0.3);
     const newZ = Math.sin(t) * radius + Math.cos(t * 0.8) * (radius * 0.3);
     const newY = verticalOffset + Math.sin(t * 1.5) * 4;
 
-    const currentPos = new THREE.Vector3(newX, newY, newZ);
-    
-    // Move the bird
-    birdRef.current.position.copy(currentPos);
+    currentPos.current.set(newX, newY, newZ);
+    birdRef.current.position.copy(currentPos.current);
 
-    // Calculate direction vector for rotation
-    const direction = new THREE.Vector3().subVectors(currentPos, prevPos).normalize();
+    direction.current.subVectors(currentPos.current, prevPos.current).normalize();
     
-    // Only update rotation if we actually moved
-    if (direction.lengthSq() > 0.0001) {
-      // Math.atan2 gives the yaw angle
-      const targetYaw = Math.atan2(direction.x, direction.z) + Math.PI / 2;
+    if (direction.current.lengthSq() > 0.0001) {
+      const targetYaw = Math.atan2(direction.current.x, direction.current.z) + Math.PI / 2;
       
-      // Smoothly rotate the bird towards the movement direction
       birdRef.current.rotation.y = THREE.MathUtils.lerp(birdRef.current.rotation.y, targetYaw, delta * 5);
       
-      // Add subtle banking (roll) based on how much the bird is turning left/right
-      // We can use the direction's x/z components relative to its current rotation
-      const bankAmount = Math.cos(t) * 0.3; // Simple banking effect
+      const bankAmount = Math.cos(t) * 0.3;
       birdRef.current.rotation.z = THREE.MathUtils.lerp(birdRef.current.rotation.z, bankAmount, delta * 2);
       
-      // Add subtle pitch (up/down)
-      const pitchAmount = direction.y * 2.0; 
+      const pitchAmount = direction.current.y * 2.0; 
       birdRef.current.rotation.x = THREE.MathUtils.lerp(birdRef.current.rotation.x, -pitchAmount, delta * 3);
     }
     
-    prevPos.copy(currentPos);
+    prevPos.current.copy(currentPos.current);
   });
 
-  return <primitive ref={birdRef} object={clone} scale={scale} />;
+  return <primitive ref={birdRef} object={clone} scale={scale} raycast={() => null} />;
 }
 
 export default function FlyingBirds({ count = 12 }) {

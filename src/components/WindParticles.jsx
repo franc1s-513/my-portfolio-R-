@@ -29,14 +29,11 @@ const WindParticles = ({ isDark }) => {
 
       // --- THE MAGIC MODE LOGIC ---
       if (isDark) {
-        // Glowing Sparks Mode
-        ctx.strokeStyle = 'rgba(14, 165, 233, 0.6)';
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = '#0ea5e9';
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+        ctx.shadowBlur = 0;
       } else {
-        // Soft Wind Mode
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.shadowBlur = 0; // No glow in daylight
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.shadowBlur = 0;
       }
 
       ctx.lineWidth = 1.5;
