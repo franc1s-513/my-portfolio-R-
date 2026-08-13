@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import StrokeText from './StrokeText';
 
 const MESSAGE = 'WELCOME TO MY SPACE';
 const TYPING_MS = 75;
@@ -70,13 +71,14 @@ const LoadingScreen = ({ onFinish }) => {
         position: 'fixed',
         inset: 0,
         zIndex: 100000,
-        background: 'radial-gradient(ellipse at center, #0b1220 0%, #020617 70%)',
+        // warm, light background that complements the gold strokeColor (#c8990b)
+        background: 'radial-gradient(ellipse at center, #fff9ec 0%, #fff1d6 45%, #fff7e8 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '36px',
-        color: '#fff',
+        color: '#030339', // use stroke fill color for readable contrast
         fontFamily: "'Outfit', 'Inter', monospace, sans-serif",
         padding: '20px',
         boxSizing: 'border-box',
@@ -87,27 +89,26 @@ const LoadingScreen = ({ onFinish }) => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        style={{
-          fontSize: 'clamp(1.4rem, 4.5vw, 2.4rem)',
-          fontWeight: 900,
-          letterSpacing: '4px',
-          textAlign: 'center',
-          textShadow: '0 0 30px rgba(14, 165, 233, 0.35)',
-        }}
+        transition={{ duration: 0.6 }}
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        {typed}
-        <span
-          style={{
-            color: '#0ea5e9',
-            display: 'inline-block',
-            width: '16px',
-            marginLeft: '2px',
-            animation: 'ld-blink 1s step-end infinite',
-          }}
-        >
-          _
-        </span>
+        <div style={{ width: 'min(90vw, 900px)' }}>
+          <StrokeText
+            text={"HEY THERE ,GREAT TO PULL YOUR EYE !"}
+            strokeColor="#c8990b"
+            fillColor="#030339"
+            strokeWidth={1.4}
+            drawDuration={1.6}
+            fillDelay={0.2}
+            stagger={0.05}
+            ease="power2.out"
+            trigger="mount"
+            fillMode="wipe"
+            fontSize={64}
+            fontWeight={800}
+            letterSpacing={-2}
+          />
+        </div>
       </motion.div>
 
       <div style={{ width: 'min(420px, 82vw)' }}>
