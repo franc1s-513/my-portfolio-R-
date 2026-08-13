@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 
-// --- COMPONENTS ---
-import SkyAndBirds from './components/SkyAndBirds';
+// --- COMPONENTS (3D scene is code-split into its own chunk) ---
 import WindParticles from './components/WindParticles';
 
 import CustomCursor from './components/CustomCursor';
 import LightTunnel from './components/LightTunnel';
 import GlareHover from './components/GlareHover';
+import LoadingScreen from './components/LoadingScreen';
 
-// --- PAGES ---
+const SkyAndBirds = lazy(() => import('./components/SkyAndBirds'));
+
+// --- PAGES (code-split, loaded on demand when their modal opens) ---
 import Home from './pages/Home';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Certificates from './pages/Certificates';
-import Contact from './pages/Contact';
+const About = lazy(() => import('./pages/About'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Certificates = lazy(() => import('./pages/Certificates'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = (modalName) => {
     setIsTransitioning(true);
@@ -36,8 +40,20 @@ function App() {
     } else {
       document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = ''; };
+    const handleKey = (e) => {
+      if (e.key === 'Escape' && activeModal) setActiveModal(null);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKey);
+    };
   }, [activeModal]);
+
+  useEffect(() => {
+    document.body.style.overflow = isLoading ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isLoading]);
 
   // --- RENDER BACKEND WAKE-UP ---
   useEffect(() => {
@@ -62,10 +78,16 @@ function App() {
       background: 'transparent', 
       transition: 'background-color 0.5s ease'
     }}>
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
+      </AnimatePresence>
+
       <CustomCursor />
       
       {/* LAYER 1: BACKGROUND (Main 3D Sky World + Castles) */}
-      <SkyAndBirds isDark={isDark} onOpenModal={handleOpenModal} activeModal={activeModal} />
+      <Suspense fallback={null}>
+        <SkyAndBirds onOpenModal={handleOpenModal} activeModal={activeModal} />
+      </Suspense>
       <WindParticles isDark={isDark} />
 
       {/* LAYER 2: MAIN CONTENT (Scroll Track & Modals) */}
@@ -84,54 +106,69 @@ function App() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            onClick={() => setActiveModal(null)}
             style={{
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: isDark ? 'rgba(10, 15, 30, 0.35)' : 'rgba(240, 248, 255, 0.35)',
+              background: isDark ? 'rgba(10, 15, 30, 0.55)' : 'rgba(240, 248, 255, 0.55)',
               overflowY: 'auto',
             }}
           >
             {/* FANTASY SKY BACKGROUND IS HANDLED IN AnimeSkybox.jsx DIRECTLY */}
 
-            <GlareHover borderRadius="50px">
-              <button
-                onClick={() => setActiveModal(null)}
-                style={{
-                  position: 'fixed',
-                  top: '25px',
-                  right: '25px',
-                  zIndex: 10000,
-                background: 'rgba(255,255,255,0.2)',
-                border: '1.5px solid rgba(14, 165, 233, 0.6)',
-                color: isDark ? '#fff' : '#0f172a',
-                padding: '12px 28px',
-                borderRadius: '50px',
+            {/* CLOSE BUTTON — circular, consistent, good affordance */}
+            <motion.button
+              aria-label="Close page"
+              title="Close (Esc)"
+              onClick={(e) => { e.stopPropagation(); setActiveModal(null); }}
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              style={{
+                position: 'fixed',
+                top: '25px',
+                right: '25px',
+                zIndex: 10000,
+                width: '48px',
+                height: '48px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(255,255,255,0.75)',
+                border: '1.5px solid rgba(0, 0, 0, 0.25)',
+                color: isDark ? '#fff' : '#000000',
+                borderRadius: '50%',
                 cursor: 'pointer',
-                fontWeight: '900',
-                letterSpacing: '1px',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
                 backdropFilter: 'blur(12px)',
-                transition: 'all 0.3s ease'
+                WebkitBackdropFilter: 'blur(12px)',
+                transition: 'background 0.3s ease, color 0.3s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(14, 165, 233, 0.9)';
                 e.currentTarget.style.color = '#fff';
+                e.currentTarget.style.borderColor = 'rgba(14, 165, 233, 0.9)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-                e.currentTarget.style.color = isDark ? '#fff' : '#0f172a';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.75)';
+                e.currentTarget.style.color = isDark ? '#fff' : '#000000';
+                e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.25)';
               }}
             >
-              CLOSE [X]
-            </button>
-            </GlareHover>
-            
-            <div style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '40px' }}>
-              {activeModal === 'about' && <About isDark={isDark} />}
-              {activeModal === 'projects' && <Projects isDark={isDark} />}
-              {activeModal === 'certificates' && <Certificates isDark={isDark} />}
-              {activeModal === 'contact' && <Contact isDark={isDark} />}
+              <X size={22} strokeWidth={2.5} />
+            </motion.button>
+
+            <div
+              style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '40px' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Suspense fallback={null}>
+                {activeModal === 'about' && <About isDark={isDark} />}
+                {activeModal === 'projects' && <Projects isDark={isDark} />}
+                {activeModal === 'certificates' && <Certificates isDark={isDark} />}
+                {activeModal === 'contact' && <Contact isDark={isDark} />}
+              </Suspense>
             </div>
           </motion.div>
         )}

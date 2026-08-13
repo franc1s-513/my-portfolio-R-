@@ -94,7 +94,7 @@ const Certificates = () => {
                <div style={styles.modalHeader}>
                   <div style={{display:'flex', alignItems:'center', gap:'12px', overflow:'hidden'}}>
                     <ShieldCheck color={selectedCert.color} size={20} style={{flexShrink:0}}/>
-                    <h2 style={{color: '#fff', margin: 0, fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{selectedCert.title}</h2>
+                    <h2 style={{color: '#000000', margin: 0, fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{selectedCert.title}</h2>
                   </div>
                   <GlareHover borderRadius="50%">
                     <button style={styles.closeBtn} onClick={() => setSelectedCert(null)}><X size={20}/></button>
@@ -125,7 +125,7 @@ const EnhancedBentoCard = ({ cert, onOpen }) => {
         style={{
           ...styles.bentoCard,
           width: cert.size === "large" ? "380px" : cert.size === "tall" ? "260px" : "310px",
-          border: `1px solid rgba(255,255,255,0.08)`,
+          border: `1px solid rgba(0,0,0,0.12)`,
           boxShadow: '0 4px 15px rgba(0,0,0,0.15)'
         }}
       >
@@ -141,7 +141,7 @@ const EnhancedBentoCard = ({ cert, onOpen }) => {
           </div>
           
           <button 
-            style={{...styles.viewBtn, border: `1px solid ${cert.color}66`, color: '#fff'}}
+            style={{...styles.viewBtn, border: `1px solid ${cert.color}66`, color: '#000000'}}
             onClick={onOpen}
           >
             <Maximize2 size={10} style={{marginRight: '4px'}}/> View
@@ -155,8 +155,8 @@ const EnhancedBentoCard = ({ cert, onOpen }) => {
 const styles = {
   section: { padding: '60px 0', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'transparent' },
   header: { textAlign: 'center', marginBottom: '40px' },
-  title: { color: '#fff', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: 0 },
-  highlight: { color: '#0ea5e9' },
+  title: { color: '#000000', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: 0 },
+  highlight: { color: '#0369a1' },
   
   maskContainer: {
     WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
@@ -169,7 +169,7 @@ const styles = {
   bentoCard: {
     height: '220px',
     borderRadius: '24px',
-    background: 'rgba(255, 255, 255, 0.05)', 
+    background: 'rgba(255, 255, 255, 0.55)', 
     backdropFilter: 'blur(15px)',
     WebkitBackdropFilter: 'blur(15px)',
     display: 'flex',
@@ -184,23 +184,23 @@ const styles = {
     borderRadius: '14px', 
     overflow: 'hidden', 
     position: 'relative', 
-    background: 'rgba(0,0,0,0.2)',
+    background: 'rgba(255,255,255,0.6)',
   },
   bentoImg: { width: '100%', height: '100%', objectFit: 'cover' },
   badge: { position: 'absolute', top: '8px', right: '8px', padding: '4px 10px', borderRadius: '8px', color: '#000', fontSize: '0.55rem', fontWeight: '900' },
   
   cardContent: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexGrow: 1, gap: '5px' },
-  bentoTitle: { color: '#fff', fontSize: '1rem', margin: 0, fontWeight: '800', lineHeight: 1.2 },
-  bentoIssuer: { color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' },
-  viewBtn: { display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', fontWeight: '700', fontSize: '0.7rem', cursor: 'pointer' },
+  bentoTitle: { color: '#000000', fontSize: '1rem', margin: 0, fontWeight: '800', lineHeight: 1.2 },
+  bentoIssuer: { color: 'rgba(0,0,0,0.55)', fontSize: '0.7rem' },
+  viewBtn: { display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: '10px', background: 'rgba(255,255,255,0.6)', fontWeight: '700', fontSize: '0.7rem', cursor: 'pointer' },
 
-  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(8px)', padding: '20px' },
-  modalContent: { background: '#1a1a1a', padding: '20px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', maxWidth: '800px', width: '90%' },
+  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(8px)', padding: '20px' },
+  modalContent: { background: '#ffffff', padding: '20px', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.12)', maxWidth: '800px', width: '90%' },
   modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' },
   fullImage: { width: '100%', borderRadius: '12px', display: 'block' },
   modalFooter: { marginTop: '15px', display: 'flex', justifyContent: 'center' },
   downloadBtn: { background: '#0ea5e9', color: '#fff', padding: '10px 20px', borderRadius: '12px', textDecoration: 'none', display: 'flex', alignItems: 'center', fontWeight: '700', fontSize: '0.9rem' },
-  closeBtn: { background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', padding: '8px', borderRadius: '50%', cursor: 'pointer', display: 'flex' }
+  closeBtn: { background: 'rgba(0,0,0,0.06)', border: '1.5px solid rgba(0,0,0,0.15)', color: '#000000', width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease' }
 };
 
 export default Certificates;

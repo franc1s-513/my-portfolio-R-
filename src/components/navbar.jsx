@@ -72,9 +72,7 @@ const Navbar = ({ isDark, onOpenModal }) => {
           }
         }
       }
-      if (current !== activeSection) {
-        setActiveSection(current);
-      }
+      setActiveSection((prev) => (prev === current ? prev : current));
     };
     
     // Throttle scroll spy
@@ -100,13 +98,10 @@ const Navbar = ({ isDark, onOpenModal }) => {
   const handleNavClick = (e, item) => {
     e.preventDefault();
     const key = item.toLowerCase();
-    if (key === 'about' || key === 'projects' || key === 'certificates') {
+    if (key === 'about' || key === 'projects' || key === 'certificates' || key === 'contact') {
       if (onOpenModal) onOpenModal(key);
     } else if (key === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (key === 'contact') {
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
     if (isOpen) setIsOpen(false);
   };
@@ -146,7 +141,7 @@ const Navbar = ({ isDark, onOpenModal }) => {
   }, [isOpen]);
 
   const navLinks = ['Home', 'About', 'Projects', 'Certificates', 'Contact'];
-  const textColor = isDark ? '#FFFFFF' : '#0f172a';
+  const textColor = isDark ? '#FFFFFF' : '#000000';
 
   const navStyle = {
     ...styles.nav,
@@ -250,8 +245,8 @@ const Navbar = ({ isDark, onOpenModal }) => {
                 }}
               >
                 {isOpen
-                  ? <X color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
-                  : <Menu color={isDark ? '#FFFFFF' : '#0f172a'} size={24} />
+                  ? <X color={isDark ? '#FFFFFF' : '#000000'} size={24} />
+                  : <Menu color={isDark ? '#FFFFFF' : '#000000'} size={24} />
                 }
               </button>
             </GlareHover>
@@ -293,7 +288,7 @@ const Navbar = ({ isDark, onOpenModal }) => {
                     onClick={(e) => handleNavClick(e, item)}
                     style={{
                       ...styles.mobileLink,
-                      color: isActive(item) ? '#0ea5e9' : (isDark ? '#FFFFFF' : '#0f172a'),
+                      color: isActive(item) ? '#0ea5e9' : (isDark ? '#FFFFFF' : '#000000'),
                       textShadow: isActive(item) ? '0 0 20px rgba(14, 165, 233, 0.5)' : 'none',
                     }}
                     aria-current={isActive(item) ? 'page' : undefined}

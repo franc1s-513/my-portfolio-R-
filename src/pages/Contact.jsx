@@ -33,7 +33,7 @@ const FinalPortfolioPage = () => {
           justify-content: center;
           padding: 80px 20px 40px;
           background: transparent;
-          color: white;
+          color: #000000;
           font-family: system-ui, -apple-system, sans-serif;
         }
 
@@ -49,10 +49,10 @@ const FinalPortfolioPage = () => {
 
         /* CLOUD & BRANDING */
         .glass-cloud {
-          fill: rgba(255, 255, 255, 0.05);
+          fill: rgba(255, 255, 255, 0.55);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          stroke: rgba(255, 255, 255, 0.3);
+          stroke: rgba(0, 0, 0, 0.25);
           stroke-width: 1.5px;
         }
 
@@ -78,7 +78,7 @@ const FinalPortfolioPage = () => {
           font-size: clamp(2rem, 8vw, 3.5rem);
           letter-spacing: 0.25em; 
           text-transform: uppercase;
-          text-shadow: 0 0 20px rgba(255,255,255,0.2);
+          text-shadow: 0 0 20px rgba(255,255,255,0.6);
         }
 
         /* FORM STYLES */
@@ -90,21 +90,25 @@ const FinalPortfolioPage = () => {
 
         .glow-pill {
           width: 100%;
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(255, 255, 255, 0.55);
           backdrop-filter: blur(10px);
-          border: 1.5px solid rgba(255, 255, 255, 0.2);
+          border: 1.5px solid rgba(0, 0, 0, 0.25);
           border-radius: 50px;
           padding: 16px 25px;
-          color: #fff;
+          color: #000000;
           outline: none;
           transition: all 0.4s ease;
           margin-top: 8px;
           box-sizing: border-box;
         }
 
+        .glow-pill::placeholder {
+          color: rgba(0, 0, 0, 0.45);
+        }
+
         .glow-pill:focus {
-          border-color: rgba(255, 255, 255, 0.8);
-          box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+          border-color: rgba(14, 165, 233, 0.8);
+          box-shadow: 0 0 25px rgba(14, 165, 233, 0.25);
         }
 
         .textarea-glow {
@@ -131,7 +135,7 @@ const FinalPortfolioPage = () => {
         }
 
         .glow-btn:hover {
-          box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+          box-shadow: 0 0 30px rgba(14, 165, 233, 0.45);
         }
 
         @keyframes float {
@@ -215,21 +219,21 @@ const FinalPortfolioPage = () => {
         <motion.a 
           href="https://github.com/franc1s-513" target="_blank" rel="noreferrer"
           whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
-          style={{ color: '#fff', transition: 'color 0.3s' }}
+          style={{ color: '#000000', transition: 'color 0.3s' }}
         >
           <Github size={28} />
         </motion.a>
         <motion.a 
           href="https://instagram.com/franc1s._txt" target="_blank" rel="noreferrer"
           whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
-          style={{ color: '#fff', transition: 'color 0.3s' }}
+          style={{ color: '#000000', transition: 'color 0.3s' }}
         >
           <Instagram size={28} />
         </motion.a>
         <motion.a 
           href="mailto:francisfernandov07@gmail.com"
           whileHover={{ scale: 1.15, color: '#0ea5e9' }} whileTap={{ scale: 0.9 }}
-          style={{ color: '#fff', transition: 'color 0.3s' }}
+          style={{ color: '#000000', transition: 'color 0.3s' }}
         >
           <Mail size={28} />
         </motion.a>
@@ -239,20 +243,8 @@ const FinalPortfolioPage = () => {
 };
 
 // --- STYLING OBJECTS (Updated for consistency) ---
-const socialCircle = { 
-  width: '50px', 
-  height: '50px', 
-  borderRadius: '50%', 
-  border: '1px solid rgba(255,255,255,0.2)', 
-  display: 'flex', 
-  alignItems: 'center', 
-  justifyContent: 'center', 
-  cursor: 'pointer', 
-  background: 'rgba(255,255,255,0.05)'
-};
-
 const fieldLabel = { 
-  color: '#fff', 
+  color: '#000000', 
   fontSize: '0.7rem', 
   fontWeight: '900', 
   letterSpacing: '2px', 
@@ -261,7 +253,7 @@ const fieldLabel = {
 };
 
 const formHeader = { 
-  color: 'rgba(255,255,255,0.5)', 
+  color: 'rgba(0,0,0,0.55)', 
   fontSize: '0.6rem', 
   display: 'flex', 
   alignItems: 'center', 

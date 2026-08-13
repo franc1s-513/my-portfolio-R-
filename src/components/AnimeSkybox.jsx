@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Html, useProgress } from '@react-three/drei';
 
@@ -13,6 +13,12 @@ import GlareHover from './GlareHover';
 
 function CanvasLoader() {
   const { progress, active } = useProgress();
+
+  // Broadcast real asset loading progress to the LoadingScreen overlay
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('asset-progress', { detail: progress }));
+  }, [progress]);
+
   if (!active && progress === 100) return null;
 
   return (

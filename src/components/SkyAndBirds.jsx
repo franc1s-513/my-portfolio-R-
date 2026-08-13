@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import AnimeSkybox from './AnimeSkybox';
 
-const SkyAndBirds = ({ isDark, onOpenModal, activeModal }) => {
+const SkyAndBirds = ({ onOpenModal, activeModal }) => {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1, pointerEvents: 'none', overflow: 'hidden' }}>
       {/* 3D BACKGROUND */}

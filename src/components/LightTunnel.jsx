@@ -314,7 +314,9 @@ const LightTunnel = ({
       ctxMap.delete(container);
       try {
         container.removeChild(canvas);
-      } catch {}
+      } catch {
+        // Canvas already removed
+      }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);

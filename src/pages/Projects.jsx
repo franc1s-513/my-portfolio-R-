@@ -43,8 +43,8 @@ const ProjectCard = ({ project, index, isMobile }) => {
         animate={{ 
           y: [0, -12, 0],
           boxShadow: isHovered 
-            ? "0 30px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.25)" 
-            : "0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)"
+            ? "0 30px 60px rgba(0, 0, 0, 0.35), 0 0 30px rgba(14, 165, 233, 0.3)" 
+            : "0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(0, 0, 0, 0.1)"
         }}
         transition={{
           y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
@@ -58,7 +58,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
           rotateX: isMobile ? 0 : rotateX,
           rotateY: isMobile ? 0 : rotateY,
           transformStyle: "preserve-3d",
-          border: isHovered ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
+          border: isHovered ? '1px solid rgba(14, 165, 233, 0.55)' : '1px solid rgba(0, 0, 0, 0.1)',
         }}
       >
         {isHovered && !isMobile && (
@@ -68,7 +68,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
             left: 0,
             width: '100%',
             height: '100%',
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
             animation: 'shimmer 1.5s infinite',
             zIndex: 2,
             pointerEvents: 'none'
@@ -91,7 +91,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
             ...styles.imageContainer,
             height: project.featured ? '280px' : '180px',
             opacity: project.status === 'empty' ? 0.3 : 1,
-            border: '1px solid rgba(255,255,255,0.1)'
+            border: '1px solid rgba(0,0,0,0.12)'
           }}>
             {project.status !== 'empty' ? (
                <img src={project.image} alt={project.title} style={styles.image} />
@@ -123,7 +123,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
                     target="_blank"
                     rel="noreferrer"
                     style={styles.actionBtn}
-                    whileHover={{ backgroundColor: '#fff', color: '#0ea5e9', boxShadow: '0 0 20px #fff' }}
+                    whileHover={{ backgroundColor: '#0ea5e9', color: '#fff', boxShadow: '0 0 20px rgba(14,165,233,0.6)' }}
                   >
                     LIVE_DEMO <FiExternalLink size={14} />
                   </motion.a>
@@ -135,7 +135,7 @@ const ProjectCard = ({ project, index, isMobile }) => {
                       target="_blank"
                       rel="noreferrer"
                       style={styles.githubBtn}
-                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#fff' }}
+                      whileHover={{ backgroundColor: 'rgba(14,165,233,0.2)', borderColor: '#0ea5e9', color: '#0369a1' }}
                     >
                       <FaGithub size={15} /> CODE
                     </motion.a>
@@ -196,7 +196,7 @@ const Projects = () => {
         </div>
 
         <div style={styles.mainTitleBox}>
-          <h2 style={styles.mainTitle}>ALL_<span style={{color: '#fff'}}>PROJECTS</span></h2>
+          <h2 style={styles.mainTitle}>ALL_<span style={{color: '#000000'}}>PROJECTS</span></h2>
           <p style={styles.subtitle}>COMPLETE DIRECTORY OF DEVELOPED SYSTEMS AND ARCHITECTURES</p>
         </div>
 
@@ -210,12 +210,12 @@ const Projects = () => {
                   onClick={() => setActiveCategory(cat)}
                   style={{
                     ...styles.filterBtn,
-                    backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
-                    borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.2)',
-                    color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.7)',
+                    backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.5)',
+                    borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(0,0,0,0.25)',
+                    color: activeCategory === cat ? '#fff' : 'rgba(0,0,0,0.7)',
                     boxShadow: activeCategory === cat ? '0 0 20px rgba(14,165,233,0.4)' : 'none',
                   }}
-                  whileHover={{ scale: 1.05, borderColor: '#fff' }}
+                  whileHover={{ scale: 1.05, borderColor: '#0ea5e9' }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {cat.toUpperCase()}
@@ -226,7 +226,7 @@ const Projects = () => {
 
           {/* Search Bar */}
           <div style={{ position: 'relative', minWidth: isMobile ? '100%' : '280px' }}>
-            <FiSearch size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.5)' }} />
+            <FiSearch size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(0,0,0,0.5)' }} />
             <input
               type="text"
               placeholder="SEARCH MODULES..."
@@ -236,9 +236,9 @@ const Projects = () => {
                 width: '100%',
                 padding: '10px 16px 10px 42px',
                 borderRadius: '50px',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: '#fff',
+                background: 'rgba(255,255,255,0.55)',
+                border: '1px solid rgba(0,0,0,0.25)',
+                color: '#000000',
                 fontFamily: 'monospace',
                 fontSize: '0.8rem',
                 outline: 'none',
@@ -264,8 +264,8 @@ const Projects = () => {
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(255,255,255,0.03)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace', fontSize: '1rem', margin: 0 }}>
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(255,255,255,0.5)', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.1)' }}>
+            <p style={{ color: 'rgba(0,0,0,0.7)', fontFamily: 'monospace', fontSize: '1rem', margin: 0 }}>
               NO MODULES FOUND MATCHING "{searchQuery.toUpperCase()}"
             </p>
           </div>
@@ -281,16 +281,16 @@ const styles = {
   pageWrapper: { minHeight: '100vh', padding: '100px 5% 80px', position: 'relative' },
   container: { maxWidth: '1400px', margin: '0 auto' },
   topBar: { marginBottom: '30px' },
-  backBtn: { padding: '10px 20px', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', transition: '0.3s' },
-  backBtnBottom: { padding: '14px 32px', borderRadius: '50px', border: '2px solid #fff', background: 'rgba(255,255,255,0.08)', color: '#fff', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', transition: '0.3s' },
-  mainTitleBox: { marginBottom: '40px', borderLeft: '5px solid #fff', paddingLeft: '25px' },
-  mainTitle: { color: '#fff', fontSize: '2.8rem', fontWeight: '900', fontFamily: 'monospace', letterSpacing: '2px' },
-  subtitle: { color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', fontFamily: 'monospace', marginTop: '5px' },
+  backBtn: { padding: '10px 20px', borderRadius: '50px', border: '1px solid rgba(0,0,0,0.25)', background: 'rgba(255,255,255,0.5)', color: '#000000', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', transition: '0.3s' },
+  backBtnBottom: { padding: '14px 32px', borderRadius: '50px', border: '2px solid #000000', background: 'rgba(255,255,255,0.5)', color: '#000000', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', transition: '0.3s' },
+  mainTitleBox: { marginBottom: '40px', borderLeft: '5px solid #000000', paddingLeft: '25px' },
+  mainTitle: { color: '#000000', fontSize: '2.8rem', fontWeight: '900', fontFamily: 'monospace', letterSpacing: '2px' },
+  subtitle: { color: 'rgba(0,0,0,0.6)', fontSize: '0.9rem', fontFamily: 'monospace', marginTop: '5px' },
   filterRow: { display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' },
   filterBtn: { padding: '10px 22px', borderRadius: '50px', border: '1px solid', fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s' },
   
   projectCard: { 
-    background: 'rgba(255, 255, 255, 0.08)', 
+    background: 'rgba(255, 255, 255, 0.55)', 
     borderRadius: '35px', 
     backdropFilter: 'blur(20px)', 
     padding: '30px',
@@ -301,26 +301,26 @@ const styles = {
     overflow: 'hidden'
   },
   cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  systemId: { color: '#fff', fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold', letterSpacing: '1px' },
+  systemId: { color: '#000000', fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold', letterSpacing: '1px' },
   statusDot: { width: '10px', height: '10px', borderRadius: '50%' },
   
-  imageContainer: { borderRadius: '22px', overflow: 'hidden', marginBottom: '20px', background: 'rgba(255,255,255,0.03)' },
+  imageContainer: { borderRadius: '22px', overflow: 'hidden', marginBottom: '20px', background: 'rgba(255,255,255,0.5)' },
   image: { width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' },
   
   emptyState: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  emptyText: { color: '#fff', fontSize: '11px', letterSpacing: '4px', fontFamily: 'monospace', opacity: 0.7 },
+  emptyText: { color: '#000000', fontSize: '11px', letterSpacing: '4px', fontFamily: 'monospace', opacity: 0.6 },
   
   contentBox: { textAlign: 'left', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' },
-  titleText: { color: '#fff', fontSize: '1.6rem', fontWeight: '900', marginBottom: '12px', letterSpacing: '1px' },
-  descText: { color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '16px' },
+  titleText: { color: '#000000', fontSize: '1.6rem', fontWeight: '900', marginBottom: '12px', letterSpacing: '1px' },
+  descText: { color: 'rgba(0,0,0,0.85)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '16px' },
   tagRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' },
-  tag: { padding: '5px 14px', borderRadius: '50px', background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.35)', color: '#38bdf8', fontSize: '0.7rem', fontFamily: 'monospace', fontWeight: '700' },
+  tag: { padding: '5px 14px', borderRadius: '50px', background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.35)', color: '#0369a1', fontSize: '0.7rem', fontFamily: 'monospace', fontWeight: '700' },
   
   actionBtn: { 
     alignSelf: 'flex-start', 
     padding: '12px 22px', 
-    border: '2px solid #fff', 
-    color: '#fff', 
+    border: '2px solid #000000', 
+    color: '#000000', 
     borderRadius: '15px', 
     fontSize: '11px', 
     fontFamily: 'monospace', 
@@ -334,9 +334,9 @@ const styles = {
   githubBtn: {
     alignSelf: 'flex-start', 
     padding: '12px 20px', 
-    border: '1px solid rgba(255,255,255,0.3)', 
-    background: 'rgba(255,255,255,0.06)',
-    color: '#fff', 
+    border: '1px solid rgba(0,0,0,0.3)', 
+    background: 'rgba(255,255,255,0.5)',
+    color: '#000000', 
     borderRadius: '15px', 
     fontSize: '11px', 
     fontFamily: 'monospace', 

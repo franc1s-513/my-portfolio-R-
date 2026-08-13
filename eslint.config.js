@@ -23,7 +23,12 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|motion' }],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|motion', argsIgnorePattern: '^[A-Z_]|motion' }],
+      // React Compiler rules below produce false positives for valid
+      // @react-three/fiber patterns (mutating camera/gl in useFrame,
+      // memoized Math.random scene setup) so they are disabled.
+      'react-hooks/immutability': 'off',
+      'react-hooks/purity': 'off',
     },
   },
 ])

@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { projectsData } from '../data/projectsData';
 import profilePhoto from '../assets/photos/profile.jpg';
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper';
 import GlareHover from '../components/GlareHover';
-import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa6';
-import { IoMail } from 'react-icons/io5';
 import useScrollReveal from '../components/useScrollReveal';
 
 /* ── Framer Motion variants ─────────────────────────────────────── */
@@ -51,13 +48,6 @@ const letterVariants = {
   }
 };
 
-/* ── Social links data ──────────────────────────────────────────── */
-const socialLinks = [
-  { Icon: FaGithub,   url: 'https://github.com/franc1s-513',                          label: 'GITHUB'   },
-  { Icon: FaLinkedin, url: 'https://linkedin.com/in/francis-fernando-v-bb81a432a',    label: 'LINKEDIN' },
-  { Icon: FaInstagram,url: 'https://instagram.com/franc1s._txt',                      label: 'INSTA'    },
-  { Icon: IoMail,     url: 'mailto:francisfernandov07@gmail.com',                     label: 'EMAIL'    },
-];
 
 /* ── Component ──────────────────────────────────────────────────── */
 const Home = ({ isDark }) => {
@@ -163,12 +153,12 @@ const Home = ({ isDark }) => {
               {/* Name character reveal animation */}
               <motion.h1
                 variants={isReduced ? itemVariants : undefined}
-                style={{
-                  ...styles.name,
-                  fontSize: isMobile ? '3.2rem' : '5.8rem',
-                  textShadow: isDark ? '0 0 30px rgba(14, 165, 233, 0.4)' : 'none',
-                  textAlign: isMobile ? 'center' : 'left',
-                }}
+                  style={{
+                    ...styles.name,
+                    fontSize: isMobile ? '3.2rem' : '5.8rem',
+                    textShadow: isDark ? '0 0 30px rgba(14, 165, 233, 0.4)' : '0 2px 30px rgba(255, 255, 255, 0.45)',
+                    textAlign: isMobile ? 'center' : 'left',
+                  }}
               >
                 {isReduced ? (
                   <>FRANCIS<br />FERNANDO<span style={styles.dot}>.</span></>
@@ -304,7 +294,7 @@ const getStyles = () => ({
   },
   name: {
     fontWeight: '900',
-    color: '#fff',
+    color: '#000000',
     margin: '0 0 8px',
     lineHeight: '0.92',
     letterSpacing: '-3px',
@@ -315,8 +305,8 @@ const getStyles = () => ({
     fontWeight: '300',
     lineHeight: '1.25',
     letterSpacing: '-0.5px',
-    color: '#fff',
-    opacity: 0.9,
+    color: '#000000',
+    opacity: 0.95,
   },
   ctaGroup: {
     display: 'flex',
@@ -341,9 +331,9 @@ const getStyles = () => ({
   secondaryBtn: {
     padding: '15px 32px',
     borderRadius: '50px',
-    border: '2px solid rgba(255, 255, 255, 0.3)',
-    background: 'transparent',
-    color: '#fff',
+    border: '2px solid rgba(0, 0, 0, 0.35)',
+    background: 'rgba(255, 255, 255, 0.5)',
+    color: '#000000',
     fontWeight: '900',
     fontSize: '0.82rem',
     cursor: 'pointer',
@@ -373,10 +363,10 @@ const getStyles = () => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: '20px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+    borderTop: '1px solid rgba(0, 0, 0, 0.12)',
     fontFamily: 'monospace',
     fontSize: '0.65rem',
-    color: '#fff',
+    color: '#000000',
   },
   statusLeft: { display: 'flex', alignItems: 'center', gap: '10px' },
   blinkDot: {
@@ -389,7 +379,7 @@ const getStyles = () => ({
   },
   socialStrip: { display: 'flex', gap: '22px' },
   statusLink: {
-    color: '#fff',
+    color: '#000000',
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
@@ -407,7 +397,7 @@ const getStyles = () => ({
     paddingBottom: '20px',
   },
   mobileSocialIcon: {
-    color: 'rgba(255,255,255,0.7)',
+    color: 'rgba(0,0,0,0.7)',
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
@@ -415,8 +405,8 @@ const getStyles = () => ({
     width: '44px',
     height: '44px',
     borderRadius: '50%',
-    border: '1px solid rgba(255,255,255,0.15)',
-    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(0,0,0,0.15)',
+    background: 'rgba(255,255,255,0.5)',
   },
   projectsSection: {
     width: '100%',
@@ -442,14 +432,14 @@ const getStyles = () => ({
   sectionTitle: {
     fontSize: '2.6rem',
     fontWeight: '900',
-    color: '#fff',
+    color: '#000000',
     fontFamily: 'monospace',
     letterSpacing: '2px',
     margin: '0 0 8px',
   },
   sectionSubtitle: {
     fontSize: '0.82rem',
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,0.6)',
     fontFamily: 'monospace',
     margin: 0,
     letterSpacing: '1px',
@@ -478,8 +468,8 @@ const getStyles = () => ({
     overflow: 'hidden',
     width: '100%',
     height: '360px',
-    boxShadow: '0 20px 45px rgba(0,0,0,0.5), 0 0 35px rgba(14, 165, 233, 0.12)',
-    border: '1px solid rgba(255,255,255,0.15)',
+    boxShadow: '0 20px 45px rgba(0,0,0,0.25), 0 0 35px rgba(14, 165, 233, 0.12)',
+    border: '1px solid rgba(0,0,0,0.12)',
   },
   projectImg: {
     width: '100%',
@@ -497,7 +487,7 @@ const getStyles = () => ({
   projectSubtitle: {
     fontSize: '0.88rem',
     fontFamily: 'monospace',
-    color: '#0ea5e9',
+    color: '#0369a1',
     letterSpacing: '2px',
     fontWeight: '800',
     opacity: 0.95,
@@ -505,14 +495,14 @@ const getStyles = () => ({
   projectTitle: {
     fontSize: '2.4rem',
     fontWeight: '950',
-    color: '#fff',
+    color: '#000000',
     margin: '4px 0',
     letterSpacing: '-0.8px',
     lineHeight: '1.15',
   },
   projectDesc: {
     fontSize: '1.02rem',
-    color: 'rgba(255,255,255,0.85)',
+    color: 'rgba(0,0,0,0.85)',
     lineHeight: '1.65',
     margin: '4px 0 10px 0',
   },
@@ -557,9 +547,9 @@ const getStyles = () => ({
   secondaryActionBtn: {
     padding: '14px 28px',
     borderRadius: '50px',
-    border: '2px solid rgba(255, 255, 255, 0.3)',
-    background: 'transparent',
-    color: '#fff',
+    border: '2px solid rgba(0, 0, 0, 0.35)',
+    background: 'rgba(255, 255, 255, 0.5)',
+    color: '#000000',
     fontWeight: '900',
     fontSize: '0.82rem',
     cursor: 'pointer',
@@ -593,7 +583,7 @@ const getStyles = () => ({
     gap: '20px',
     marginTop: '60px',
     padding: '30px 0 60px',
-    borderTop: '1px solid rgba(255,255,255,0.08)',
+    borderTop: '1px solid rgba(0,0,0,0.12)',
     width: '100%',
     flexWrap: 'wrap',
   },
@@ -602,9 +592,9 @@ const getStyles = () => ({
     alignItems: 'center',
     padding: '12px 24px',
     borderRadius: '50px',
-    border: '1.5px solid rgba(255,255,255,0.15)',
-    background: 'rgba(255,255,255,0.03)',
-    color: '#fff',
+    border: '1.5px solid rgba(0,0,0,0.15)',
+    background: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     fontSize: '0.78rem',
     fontFamily: 'monospace',
     fontWeight: 'bold',
