@@ -1,184 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { FiArrowLeft } from 'react-icons/fi';
 
 import { projectsData } from '../data/projectsData';
-import PageTransition from '../components/PageTransition';
-import { FaGithub } from 'react-icons/fa6';
-import { FiExternalLink, FiSearch, FiArrowLeft } from 'react-icons/fi';
 import GlareHover from '../components/GlareHover';
-
-const shimmerStyle = `
-  @keyframes shimmer {
-    0% { transform: translateX(-150%) skewX(-20deg); }
-    100% { transform: translateX(150%) skewX(-20deg); }
-  }
-`;
-
-const ProjectCard = ({ project, index, isMobile }) => {
-  const cardRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
-
-  return (
-    <PageTransition delay={0.1 + (index * 0.05)} direction="up">
-      <style>{shimmerStyle}</style>
-      <motion.div
-        ref={cardRef}
-        id={`project-card-${index}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => { setIsHovered(false); x.set(0); y.set(0); }}
-        onMouseMove={(e) => {
-          if (isMobile) return;
-          const rect = cardRef.current.getBoundingClientRect();
-          x.set((e.clientX - rect.left) / rect.width - 0.5);
-          y.set((e.clientY - rect.top) / rect.height - 0.5);
-        }}
-        whileHover={{ scale: isMobile ? 1 : 1.02 }}
-        animate={{ 
-          y: [0, -12, 0],
-          boxShadow: isHovered 
-            ? "0 30px 60px rgba(0, 0, 0, 0.35), 0 0 30px rgba(14, 165, 233, 0.3)" 
-            : "0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(0, 0, 0, 0.1)"
-        }}
-        transition={{
-          y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
-          boxShadow: { duration: 0.3 },
-          scale: { type: "spring", stiffness: 300, damping: 20 }
-        }}
-        style={{
-          ...styles.projectCard,
-          gridColumn: !isMobile && project.featured ? "span 1" : "span 1",
-          gridRow: !isMobile && project.featured ? "span 2" : "span 1",
-          rotateX: isMobile ? 0 : rotateX,
-          rotateY: isMobile ? 0 : rotateY,
-          transformStyle: "preserve-3d",
-          border: isHovered ? '1px solid rgba(14, 165, 233, 0.55)' : '1px solid rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        {isHovered && !isMobile && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
-            animation: 'shimmer 1.5s infinite',
-            zIndex: 2,
-            pointerEvents: 'none'
-          }} />
-        )}
-
-        <div style={{ transform: "translateZ(40px)", display: 'flex', flexDirection: 'column', height: '100%', zIndex: 3 }}>
-          <div style={styles.cardHeader}>
-            <span style={styles.systemId}>
-              {project.status === 'empty' ? '[ SLOT_AVAILABLE ]' : `[ MODULE_${project.id} ]`}
-            </span>
-            <div style={{
-              ...styles.statusDot, 
-              backgroundColor: project.status === 'empty' ? 'rgba(255,255,255,0.2)' : '#22c55e',
-              boxShadow: project.status === 'empty' ? 'none' : '0 0 12px #22c55e'
-            }} />
-          </div>
-
-          <div style={{
-            ...styles.imageContainer,
-            height: project.featured ? '280px' : '180px',
-            opacity: project.status === 'empty' ? 0.3 : 1,
-            border: '1px solid rgba(0,0,0,0.12)'
-          }}>
-            {project.status !== 'empty' ? (
-               <img src={project.image} alt={project.title} style={styles.image} />
-            ) : (
-               <div style={styles.emptyState}>
-                 <span style={styles.emptyText} className="animate-pulse">AWAITING_UPLINK...</span>
-               </div>
-            )}
-          </div>
-          
-          <div style={styles.contentBox}>
-            <div>
-              <h3 style={styles.titleText}>{project.title.toUpperCase()}</h3>
-              <p style={styles.descText}>{project.fullDescription || project.description}</p>
-              {project.tags && (
-                <div style={styles.tagRow}>
-                  {project.tags.map((t, idx) => (
-                    <span key={idx} style={styles.tag}>{t}</span>
-                  ))}
-                </div>
-              )}
-            </div>
-            {project.status !== 'empty' && (
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: 'auto' }}>
-                <GlareHover borderRadius="6px">
-                  <motion.a 
-                    id={index === 0 ? "first-live-demo-btn" : undefined}
-                    href={project.link} 
-                    target="_blank"
-                    rel="noreferrer"
-                    style={styles.actionBtn}
-                    whileHover={{ backgroundColor: '#0ea5e9', color: '#fff', boxShadow: '0 0 20px rgba(14,165,233,0.6)' }}
-                  >
-                    LIVE_DEMO <FiExternalLink size={14} />
-                  </motion.a>
-                </GlareHover>
-                {project.github && (
-                  <GlareHover borderRadius="6px">
-                    <motion.a 
-                      href={project.github} 
-                      target="_blank"
-                      rel="noreferrer"
-                      style={styles.githubBtn}
-                      whileHover={{ backgroundColor: 'rgba(14,165,233,0.2)', borderColor: '#0ea5e9', color: '#0369a1' }}
-                    >
-                      <FaGithub size={15} /> CODE
-                    </motion.a>
-                  </GlareHover>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </motion.div>
-    </PageTransition>
-  );
-};
+import PortfolioCarousel from '../components/PortfolioCarousel';
 
 const Projects = () => {
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const categories = ['All', 'AI / ML', 'Web Dev', 'DevOps / Cloud'];
-  const filteredProjects = projectsData.filter((p) => {
-    const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
-    const q = searchQuery.toLowerCase().trim();
-    const matchesSearch = !q || (
-      p.title.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      (p.fullDescription && p.fullDescription.toLowerCase().includes(q)) ||
-      (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
-    );
-    return matchesCategory && matchesSearch;
-  });
-
   return (
     <div style={styles.pageWrapper}>
       <div style={styles.container}>
-        {/* Back to Home & Title */}
+        
+        {/* TOP BAR / BACK NAVIGATION */}
         <div style={styles.topBar}>
           <GlareHover borderRadius="50px">
             <motion.button
@@ -187,90 +20,17 @@ const Projects = () => {
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
               style={styles.backBtn}
-              whileHover={{ scale: 1.05, x: -5, backgroundColor: 'rgba(255,255,255,0.1)' }}
+              whileHover={{ scale: 1.05, x: -4 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FiArrowLeft size={18} /> BACK TO HOME
+              <FiArrowLeft size={16} />
+              <span>Back to Overview</span>
             </motion.button>
           </GlareHover>
         </div>
 
-        <div style={styles.mainTitleBox}>
-          <h2 style={styles.mainTitle}>ALL_<span style={{color: '#000000'}}>PROJECTS</span></h2>
-          <p style={styles.subtitle}>COMPLETE DIRECTORY OF DEVELOPED SYSTEMS AND ARCHITECTURES</p>
-        </div>
-
-        {/* Filter Controls (Search + Category Buttons) */}
-        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'stretch' : 'center', gap: '20px', marginBottom: '40px' }}>
-          {/* Category Filter Buttons */}
-          <div style={styles.filterRow}>
-            {categories.map((cat, i) => (
-              <GlareHover key={i} borderRadius="50px">
-                <motion.button
-                  onClick={() => setActiveCategory(cat)}
-                  style={{
-                    ...styles.filterBtn,
-                    backgroundColor: activeCategory === cat ? '#0ea5e9' : 'rgba(255,255,255,0.5)',
-                    borderColor: activeCategory === cat ? '#0ea5e9' : 'rgba(0,0,0,0.25)',
-                    color: activeCategory === cat ? '#fff' : 'rgba(0,0,0,0.7)',
-                    boxShadow: activeCategory === cat ? '0 0 20px rgba(14,165,233,0.4)' : 'none',
-                  }}
-                  whileHover={{ scale: 1.05, borderColor: '#0ea5e9' }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {cat.toUpperCase()}
-                </motion.button>
-              </GlareHover>
-            ))}
-          </div>
-
-          {/* Search Bar */}
-          <div style={{ position: 'relative', minWidth: isMobile ? '100%' : '280px' }}>
-            <FiSearch size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(0,0,0,0.5)' }} />
-            <input
-              type="text"
-              placeholder="SEARCH MODULES..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 16px 10px 42px',
-                borderRadius: '50px',
-                background: 'rgba(255,255,255,0.55)',
-                border: '1px solid rgba(0,0,0,0.25)',
-                color: '#000000',
-                fontFamily: 'monospace',
-                fontSize: '0.8rem',
-                outline: 'none',
-                backdropFilter: 'blur(10px)',
-                boxShadow: searchQuery ? '0 0 15px rgba(14,165,233,0.3)' : 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Grid of Projects */}
-        {filteredProjects.length > 0 ? (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-            gridAutoRows: 'minmax(280px, auto)', 
-            gap: '30px',
-            gridAutoFlow: 'dense'
-          }}>
-            {filteredProjects.map((p, index) => (
-              <ProjectCard key={p.id} project={p} index={index} isMobile={isMobile} />
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(255,255,255,0.5)', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.1)' }}>
-            <p style={{ color: 'rgba(0,0,0,0.7)', fontFamily: 'monospace', fontSize: '1rem', margin: 0 }}>
-              NO MODULES FOUND MATCHING "{searchQuery.toUpperCase()}"
-            </p>
-          </div>
-        )}
-
+        {/* 3D CYLINDRICAL "MY WORKS" ROTATING SHOWCASE */}
+        <PortfolioCarousel projects={projectsData} />
 
       </div>
     </div>
@@ -278,74 +38,45 @@ const Projects = () => {
 };
 
 const styles = {
-  pageWrapper: { minHeight: '100vh', padding: '100px 5% 80px', position: 'relative' },
-  container: { maxWidth: '1400px', margin: '0 auto' },
-  topBar: { marginBottom: '30px' },
-  backBtn: { padding: '10px 20px', borderRadius: '50px', border: '1px solid rgba(0,0,0,0.25)', background: 'rgba(255,255,255,0.5)', color: '#000000', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', transition: '0.3s' },
-  backBtnBottom: { padding: '14px 32px', borderRadius: '50px', border: '2px solid #000000', background: 'rgba(255,255,255,0.5)', color: '#000000', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', transition: '0.3s' },
-  mainTitleBox: { marginBottom: '40px', borderLeft: '5px solid #000000', paddingLeft: '25px' },
-  mainTitle: { color: '#000000', fontSize: '2.8rem', fontWeight: '900', fontFamily: 'monospace', letterSpacing: '2px' },
-  subtitle: { color: 'rgba(0,0,0,0.6)', fontSize: '0.9rem', fontFamily: 'monospace', marginTop: '5px' },
-  filterRow: { display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' },
-  filterBtn: { padding: '10px 22px', borderRadius: '50px', border: '1px solid', fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s' },
-  
-  projectCard: { 
-    background: 'rgba(255, 255, 255, 0.55)', 
-    borderRadius: '35px', 
-    backdropFilter: 'blur(20px)', 
-    padding: '30px',
-    transition: 'border 0.4s ease, transform 0.2s ease',
+  pageWrapper: {
+    minHeight: '100vh',
+    padding: '30px 4% 60px 4%',
+    position: 'relative',
+    background: 'transparent',
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
+  },
+  container: {
+    width: '100%',
+    maxWidth: '1300px',
+    margin: '0 auto',
+  },
+  topBar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: '10px',
+    zIndex: 20,
     position: 'relative',
-    overflow: 'hidden'
   },
-  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  systemId: { color: '#000000', fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold', letterSpacing: '1px' },
-  statusDot: { width: '10px', height: '10px', borderRadius: '50%' },
-  
-  imageContainer: { borderRadius: '22px', overflow: 'hidden', marginBottom: '20px', background: 'rgba(255,255,255,0.5)' },
-  image: { width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' },
-  
-  emptyState: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  emptyText: { color: '#000000', fontSize: '11px', letterSpacing: '4px', fontFamily: 'monospace', opacity: 0.6 },
-  
-  contentBox: { textAlign: 'left', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' },
-  titleText: { color: '#000000', fontSize: '1.6rem', fontWeight: '900', marginBottom: '12px', letterSpacing: '1px' },
-  descText: { color: 'rgba(0,0,0,0.85)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '16px' },
-  tagRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' },
-  tag: { padding: '5px 14px', borderRadius: '50px', background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.35)', color: '#0369a1', fontSize: '0.7rem', fontFamily: 'monospace', fontWeight: '700' },
-  
-  actionBtn: { 
-    alignSelf: 'flex-start', 
-    padding: '12px 22px', 
-    border: '2px solid #000000', 
-    color: '#000000', 
-    borderRadius: '15px', 
-    fontSize: '11px', 
-    fontFamily: 'monospace', 
-    fontWeight: 'bold', 
-    textDecoration: 'none', 
-    display: 'flex',
+  backBtn: {
+    padding: '10px 22px',
+    borderRadius: '50px',
+    border: '1.5px solid #e5a93c',
+    background: 'rgba(8, 12, 62, 0.65)',
+    color: '#ffffff',
+    fontSize: '0.82rem',
+    fontWeight: '800',
+    letterSpacing: '0.5px',
+    cursor: 'pointer',
+    display: 'inline-flex',
     alignItems: 'center',
-    gap: '6px',
-    transition: '0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
-  },
-  githubBtn: {
-    alignSelf: 'flex-start', 
-    padding: '12px 20px', 
-    border: '1px solid rgba(0,0,0,0.3)', 
-    background: 'rgba(255,255,255,0.5)',
-    color: '#000000', 
-    borderRadius: '15px', 
-    fontSize: '11px', 
-    fontFamily: 'monospace', 
-    fontWeight: 'bold', 
-    textDecoration: 'none', 
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    transition: '0.3s'
+    gap: '8px',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    boxShadow: '0 8px 20px rgba(8, 12, 62, 0.3)',
+    transition: 'all 0.25s ease',
   }
 };
 
