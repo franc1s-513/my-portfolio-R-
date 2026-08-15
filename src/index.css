@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --sky-blue: #38bdf8;
   --soft-white: #f8fafc;
@@ -43,6 +45,14 @@
 canvas {
   transform: translateZ(0);
   will-change: transform;
+}
+
+/* React-three-fiber canvases must not be forced into their own GPU layer:
+   combined with the modal's entrance animation this made the lanyard canvas
+   flash for a second and then go blank on real GPUs. */
+.lanyard-wrapper canvas {
+  transform: none !important;
+  will-change: auto !important;
 }
 
 /* --- TYPEWRITER CURSOR BLINK --- */
