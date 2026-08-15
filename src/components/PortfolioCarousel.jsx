@@ -17,7 +17,8 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
   const totalItems = projects.length || 1;
   const angleStep = 360 / totalItems;
-  const radius = isMobile ? 260 : 430;
+  // Compact radius for balanced perspective
+  const radius = isMobile ? 210 : 350;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -25,14 +26,13 @@ const PortfolioCarousel = ({ projects = [] }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Trackpad / Mouse Pad scroll control (wheel event)
+  // Trackpad / Mouse Pad wheel swipe support
   useEffect(() => {
     const viewport = containerRef.current;
     if (!viewport) return;
 
     const onWheel = (e) => {
       e.preventDefault();
-      // Trackpad horizontal swipe (deltaX) or standard wheel (deltaY)
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       targetRotationRef.current -= delta * 0.16;
     };
@@ -63,7 +63,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
     });
   };
 
-  // Smooth lerp physics loop
+  // Smooth lerp loop
   useEffect(() => {
     const loop = () => {
       const diff = targetRotationRef.current - currentRotationRef.current;
@@ -86,7 +86,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
     };
   }, [angleStep, totalItems]);
 
-  // Mouse drag & parallax
+  // Mouse handlers
   const handleMouseDown = (e) => {
     isDraggingRef.current = true;
     startXRef.current = e.clientX;
@@ -101,11 +101,10 @@ const PortfolioCarousel = ({ projects = [] }) => {
       lastMouseXRef.current = e.clientX;
       targetRotationRef.current += deltaX * 0.28;
     } else {
-      // Subtle parallax look-around
       const rect = containerRef.current.getBoundingClientRect();
       const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       const baseSnap = -Math.round(-currentRotationRef.current / angleStep) * angleStep;
-      targetRotationRef.current = baseSnap - normX * 12;
+      targetRotationRef.current = baseSnap - normX * 10;
     }
   };
 
@@ -126,7 +125,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
     targetRotationRef.current = -nearestIndex * angleStep;
   };
 
-  // Touch handlers for mobile
+  // Touch handlers
   const handleTouchStart = (e) => {
     isDraggingRef.current = true;
     startXRef.current = e.touches[0].clientX;
@@ -152,25 +151,25 @@ const PortfolioCarousel = ({ projects = [] }) => {
       <style>{`
         .portfolio-showcase {
           width: 100%;
-          min-height: 82vh;
           background: transparent;
           color: #f8fafc;
-          padding: 10px 0 40px 0;
+          padding: 10px 0 20px 0;
           display: flex;
           flex-direction: column;
           align-items: center;
           position: relative;
           user-select: none;
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         /* HEADER SECTION */
         .showcase-header {
           width: 100%;
-          max-width: 900px;
+          max-width: 860px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 30px;
+          margin-bottom: 28px;
           position: relative;
           z-index: 10;
         }
@@ -182,32 +181,32 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .showcase-title {
-          font-family: "Playfair Display", Georgia, serif;
-          font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-size: clamp(2rem, 4vw, 3rem);
           font-weight: 900;
           color: #080c3e !important;
-          -webkit-text-stroke: 1.5px #e5a93c !important;
+          -webkit-text-stroke: 1.4px #e5a93c !important;
           paint-order: stroke fill !important;
-          letter-spacing: -0.8px;
-          margin: 0 0 8px 0;
+          letter-spacing: -0.5px;
+          margin: 0 0 6px 0;
           line-height: 1.1;
         }
 
         .showcase-subtitle {
-          font-size: 0.95rem;
+          font-size: 0.88rem;
           color: #ffffff !important;
           -webkit-text-stroke: 0.6px #000000 !important;
           paint-order: stroke fill !important;
-          max-width: 520px;
+          max-width: 480px;
           margin: 0 auto;
-          line-height: 1.5;
+          line-height: 1.4;
           font-weight: 500;
         }
 
         /* MINIMAL CIRCULAR ARROW CONTROLS */
         .nav-arrow-btn {
-          width: 50px;
-          height: 50px;
+          width: 46px;
+          height: 46px;
           border-radius: 50%;
           border: 1.5px solid #e5a93c;
           background: rgba(8, 12, 62, 0.7);
@@ -217,7 +216,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
           justify-content: center;
           cursor: pointer;
           transition: all 0.25s ease;
-          box-shadow: 0 6px 20px rgba(8, 12, 62, 0.4);
+          box-shadow: 0 4px 16px rgba(8, 12, 62, 0.4);
           flex-shrink: 0;
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
@@ -235,10 +234,10 @@ const PortfolioCarousel = ({ projects = [] }) => {
           transform: scale(0.95);
         }
 
-        /* 3D CYLINDER VIEWPORT */
+        /* 3D CYLINDER VIEWPORT - COMPACT & CLEAN */
         .carousel-viewport {
           width: 100%;
-          height: 480px;
+          height: 360px;
           perspective: 1200px;
           perspective-origin: 50% 50%;
           display: flex;
@@ -254,8 +253,8 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .cylinder-drum {
-          width: 290px;
-          height: 400px;
+          width: 230px;
+          height: 330px;
           position: absolute;
           transform-style: preserve-3d;
           will-change: transform;
@@ -264,16 +263,16 @@ const PortfolioCarousel = ({ projects = [] }) => {
           justify-content: center;
         }
 
-        /* 3D PROJECT CARD */
+        /* 3D COMPACT PROJECT CARD */
         .project-3d-card {
           position: absolute;
-          width: 290px;
-          height: 390px;
-          border-radius: 20px;
+          width: 230px;
+          height: 320px;
+          border-radius: 16px;
           overflow: hidden;
-          background: rgba(8, 12, 62, 0.7);
+          background: rgba(8, 12, 62, 0.75);
           border: 1.5px solid rgba(229, 169, 60, 0.45);
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45), 0 0 25px rgba(8, 12, 62, 0.5);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(8, 12, 62, 0.4);
           transform-style: preserve-3d;
           backface-visibility: hidden;
           transition: filter 0.35s ease, opacity 0.35s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -281,7 +280,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
         .project-3d-card.active-card {
           border-color: #e5a93c;
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), 0 0 35px rgba(229, 169, 60, 0.45);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(229, 169, 60, 0.4);
         }
 
         .card-img-wrap {
@@ -304,23 +303,23 @@ const PortfolioCarousel = ({ projects = [] }) => {
           transform: scale(1.06);
         }
 
-        /* BOTTOM OVERLAY INFO PANEL */
+        /* BOTTOM OVERLAY INFO PANEL (COMPACT) */
         .card-info-panel {
           position: absolute;
-          bottom: 12px;
-          left: 12px;
-          right: 12px;
-          border-radius: 14px;
-          background: rgba(8, 12, 62, 0.88);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1.5px solid rgba(229, 169, 60, 0.4);
-          padding: 14px 16px;
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          border-radius: 12px;
+          background: rgba(8, 12, 62, 0.9);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1.2px solid rgba(229, 169, 60, 0.4);
+          padding: 10px 12px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
           color: #ffffff;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
           transition: all 0.3s ease;
         }
 
@@ -328,26 +327,26 @@ const PortfolioCarousel = ({ projects = [] }) => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 6px;
+          gap: 4px;
         }
 
         .card-category-tag {
-          font-size: 0.65rem;
+          font-size: 0.62rem;
           font-weight: 800;
           color: #00f0ff;
           text-transform: uppercase;
-          letter-spacing: 0.8px;
+          letter-spacing: 0.6px;
         }
 
         .card-actions-strip {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
         }
 
         .card-action-icon {
-          width: 28px;
-          height: 28px;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           background: rgba(229, 169, 60, 0.2);
           border: 1px solid #e5a93c;
@@ -366,20 +365,20 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .card-title-text {
-          font-size: 1.05rem;
+          font-size: 0.95rem;
           font-weight: 800;
           color: #ffffff;
           margin: 0;
-          letter-spacing: -0.3px;
+          letter-spacing: -0.2px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
 
         .card-desc-text {
-          font-size: 0.78rem;
+          font-size: 0.72rem;
           color: #cbd5e1;
-          line-height: 1.35;
+          line-height: 1.3;
           margin: 0;
           display: -webkit-box;
           -webkit-line-clamp: 2;
@@ -389,64 +388,47 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
         .card-pill-row {
           display: flex;
-          gap: 5px;
+          gap: 4px;
           flex-wrap: wrap;
-          margin-top: 2px;
         }
 
         .pill-chip {
-          padding: 2px 8px;
+          padding: 2px 6px;
           border-radius: 50px;
           background: rgba(8, 12, 62, 0.65);
           border: 1px solid #00f0ff;
-          font-size: 0.65rem;
+          font-size: 0.6rem;
           font-weight: 700;
           color: #00f0ff;
           letter-spacing: 0.2px;
         }
 
-        /* INSTRUCTION HINT */
-        .interaction-hint {
-          margin-top: 24px;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.78rem;
-          font-weight: 600;
-          color: rgba(255, 255, 255, 0.85);
-          background: rgba(8, 12, 62, 0.5);
-          padding: 6px 16px;
-          border-radius: 50px;
-          border: 1px solid rgba(229, 169, 60, 0.3);
-          backdrop-filter: blur(8px);
-        }
-
         @media (max-width: 768px) {
           .showcase-header {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
           }
           .showcase-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
           }
           .nav-arrow-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
           }
           .carousel-viewport {
-            height: 400px;
-          }
-          .cylinder-drum {
-            width: 240px;
             height: 330px;
           }
+          .cylinder-drum {
+            width: 200px;
+            height: 290px;
+          }
           .project-3d-card {
-            width: 230px;
-            height: 320px;
+            width: 190px;
+            height: 280px;
           }
         }
       `}</style>
 
-      {/* CLEAN HEADER ROW WITH FLANKING ARROWS */}
+      {/* HEADER ROW WITH FLANKING ARROWS */}
       <div className="showcase-header">
         <button 
           className="nav-arrow-btn" 
@@ -454,7 +436,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
           aria-label="Previous project"
           title="Previous (or Swipe Left)"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} />
         </button>
 
         <div className="heading-center">
@@ -470,11 +452,11 @@ const PortfolioCarousel = ({ projects = [] }) => {
           aria-label="Next project"
           title="Next (or Swipe Right)"
         >
-          <ArrowRight size={20} />
+          <ArrowRight size={18} />
         </button>
       </div>
 
-      {/* 3D DRUM VIEWPORT (SUPPORTS MOUSE PAD SCROLL / DRAG / PARALLAX) */}
+      {/* 3D DRUM VIEWPORT */}
       <div 
         className="carousel-viewport"
         ref={containerRef}
@@ -515,12 +497,12 @@ const PortfolioCarousel = ({ projects = [] }) => {
                   />
                 </div>
 
-                {/* Floating Bottom Info Panel */}
+                {/* Compact Floating Bottom Info Panel */}
                 <div 
                   className="card-info-panel"
                   style={{
-                    opacity: isCenter ? 1 : 0.4,
-                    transform: isCenter ? 'translateY(0)' : 'translateY(6px)'
+                    opacity: isCenter ? 1 : 0.35,
+                    transform: isCenter ? 'translateY(0)' : 'translateY(4px)'
                   }}
                 >
                   <div className="card-top-meta">
@@ -535,7 +517,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
                           onClick={(e) => e.stopPropagation()}
                           title="View Source Code"
                         >
-                          <Github size={14} />
+                          <Github size={12} />
                         </a>
                       )}
                       <a
@@ -546,7 +528,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
                         onClick={(e) => e.stopPropagation()}
                         title="Live Demo"
                       >
-                        <ArrowUpRight size={15} />
+                        <ArrowUpRight size={13} />
                       </a>
                     </div>
                   </div>
@@ -569,11 +551,6 @@ const PortfolioCarousel = ({ projects = [] }) => {
             );
           })}
         </div>
-      </div>
-
-      {/* TRACKPAD / MOUSE PAD INTERACTION HINT */}
-      <div className="interaction-hint">
-        <span>↔ Swipe on your trackpad or drag with mouse to spin</span>
       </div>
     </section>
   );
