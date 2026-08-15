@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --sky-blue: #38bdf8;
-  --soft-white: #f8fafc;
-  --dark-bg: #020617;
+  --sky-blue: #00f0ff;
+  --soft-white: #ffffff;
+  --dark-bg: #030712;
   --accent-blue: #0ea5e9;
+  --navy-bold: #080c3e;
+  --gold-outline: #e5a93c;
 
-  /* Calm, readable palette for the bright sky background */
-  --text-main: #000000;
-  --text-sub: #1f2937;
-  --text-faint: rgba(0, 0, 0, 0.55);
-  --text-accent: #0369a1;
-  --card-bg: rgba(255, 255, 255, 0.55);
-  --card-border: rgba(14, 165, 233, 0.25);
-  --card-hover-border: rgba(14, 165, 233, 0.6);
+  /* Bold, punchy palette with crisp outlines */
+  --text-main: #080c3e;
+  --text-sub: #ffffff;
+  --text-faint: rgba(255, 255, 255, 0.85);
+  --text-accent: #e5a93c;
+  --card-bg: rgba(8, 12, 62, 0.45);
+  --card-border: rgba(229, 169, 60, 0.45);
+  --card-hover-border: #e5a93c;
 
   /* Spacing rhythm */
   --space-xs: 0.5rem;
@@ -445,4 +447,130 @@ p {
 .story-block:hover {
   border-left-color: #0ea5e9 !important;
 }
+
+/* --- 20. GLOBAL CUSTOM TYPOGRAPHY THEME --- */
+/* Main Letters: Thick Navy Blue with Crisp Golden Line Border */
+h1, h2, h3, h4,
+.hero-name,
+.sectionTitle,
+.projectTitle,
+.main-heading,
+.bento-title,
+.about-main-title,
+.card-main-title,
+.modal-title,
+.pre-heading {
+  color: #080c3e !important;
+  font-weight: 900 !important;
+  -webkit-text-stroke: 1.3px #e5a93c !important;
+  paint-order: stroke fill !important;
+  text-shadow: none !important;
+}
+
+/* Small Lines / Descriptions / Subtitles: White Letters with Crisp Black Border */
+p,
+.sub-heading,
+.sectionSubtitle,
+.projectDesc,
+.tagline,
+.statusLink,
+.about-desc,
+.timeline-desc,
+.timeline-institution,
+.project-card-desc,
+.bento-issuer,
+.bento-desc {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  -webkit-text-stroke: 0.8px #000000 !important;
+  paint-order: stroke fill !important;
+  text-shadow: none !important;
+}
+
+/* --- 21. BOLD COLOR & OUTLINE DESIGN SYSTEM --- */
+/* Glassmorphism Cards & Panels with Crisp Gold/Cyan Outlines */
+.form-card,
+.projectCard,
+.bento-card,
+.story-block,
+.card-lift,
+[class*="Card"],
+[class*="-card"] {
+  border: 1.5px solid rgba(229, 169, 60, 0.45) !important;
+  box-shadow: 0 16px 40px rgba(8, 12, 62, 0.3), inset 0 0 0 1px rgba(229, 169, 60, 0.2) !important;
+  transition: all 0.35s var(--ease-out-expo) !important;
+}
+
+.form-card:hover,
+.projectCard:hover,
+.bento-card:hover,
+.story-block:hover,
+.card-lift:hover {
+  border-color: #e5a93c !important;
+  box-shadow: 0 20px 48px rgba(8, 12, 62, 0.5), 0 0 24px rgba(229, 169, 60, 0.45), inset 0 0 0 1px rgba(229, 169, 60, 0.4) !important;
+}
+
+/* Buttons with Bold Outlines */
+.submit-btn,
+.primaryActionBtn,
+.primaryBtn,
+button[type="submit"] {
+  background: #080c3e !important;
+  color: #ffffff !important;
+  border: 2px solid #e5a93c !important;
+  box-shadow: 0 8px 24px rgba(8, 12, 62, 0.4), 0 0 16px rgba(229, 169, 60, 0.3) !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+}
+
+.submit-btn:hover,
+.primaryActionBtn:hover,
+.primaryBtn:hover,
+button[type="submit"]:hover {
+  background: #e5a93c !important;
+  color: #080c3e !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(229, 169, 60, 0.6) !important;
+  transform: translateY(-2px);
+}
+
+.secondaryBtn,
+.secondaryActionBtn {
+  background: rgba(8, 12, 62, 0.6) !important;
+  color: #ffffff !important;
+  border: 2px solid #e5a93c !important;
+  font-weight: 800 !important;
+}
+
+.secondaryBtn:hover,
+.secondaryActionBtn:hover {
+  background: #080c3e !important;
+  border-color: #00f0ff !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4) !important;
+}
+
+/* Social & Icon Badges with Bold Gold/Cyan Outline */
+.social-link,
+.mobileSocialIcon {
+  border: 1.5px solid rgba(229, 169, 60, 0.5) !important;
+  box-shadow: 0 4px 14px rgba(8, 12, 62, 0.25) !important;
+}
+
+.social-link:hover,
+.mobileSocialIcon:hover {
+  border-color: #e5a93c !important;
+  background: rgba(8, 12, 62, 0.8) !important;
+  box-shadow: 0 0 16px rgba(229, 169, 60, 0.5) !important;
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Tags with Neon Cyan / Gold Outlines */
+.tag {
+  background: rgba(8, 12, 62, 0.6) !important;
+  border: 1.5px solid #00f0ff !important;
+  color: #00f0ff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25) !important;
+}
+
 

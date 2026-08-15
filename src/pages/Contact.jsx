@@ -144,12 +144,18 @@ const Contact = () => {
           line-height: 1.1;
           letter-spacing: -1px;
           margin-bottom: 16px;
-          color: #f8fafc;
+          color: #080c3e !important;
+          -webkit-text-stroke: 1.3px #e5a93c !important;
+          paint-order: stroke fill !important;
+          text-shadow: none !important;
         }
 
         .sub-heading {
           font-size: 1.05rem;
-          color: #cbd5e1;
+          color: #ffffff !important;
+          -webkit-text-stroke: 0.8px #000000 !important;
+          paint-order: stroke fill !important;
+          text-shadow: none !important;
           font-weight: 500;
           line-height: 1.6;
           max-width: 480px;
