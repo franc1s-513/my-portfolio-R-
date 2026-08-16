@@ -10,19 +10,22 @@ const Projects = () => {
       <div style={styles.lightRaysWrapper}>
         <LightRays
           raysOrigin="top-center"
-          raysColor="#ffffff"
-          raysSpeed={1.2}
-          lightSpread={0.85}
-          rayLength={1.6}
+          raysColor="#38bdf8"
+          raysSpeed={0.8}
+          lightSpread={1.5}
+          rayLength={2.5}
           pulsating={true}
-          fadeDistance={1.2}
-          saturation={1.0}
+          fadeDistance={1.4}
+          saturation={1.3}
           followMouse={true}
-          mouseInfluence={0.15}
-          noiseAmount={0.04}
-          distortion={0.03}
+          mouseInfluence={0.25}
+          noiseAmount={0.03}
+          distortion={0.04}
         />
       </div>
+
+      {/* FOCUSED SPOTLIGHT CONE ILLUMINATING THE CAROUSEL */}
+      <div style={styles.spotlightCone} />
 
       <div style={styles.container}>
         <PortfolioCarousel projects={projectsData} />
@@ -34,7 +37,7 @@ const Projects = () => {
 const styles = {
   pageWrapper: {
     minHeight: 'auto',
-    padding: '0 2% 20px 2%',
+    padding: '20px 2% 40px 2%',
     position: 'relative',
     background: 'transparent',
     display: 'flex',
@@ -51,11 +54,23 @@ const styles = {
     height: '100%',
     pointerEvents: 'none',
     zIndex: 1,
-    opacity: 0.85,
+    opacity: 0.95,
+  },
+  spotlightCone: {
+    position: 'absolute',
+    top: '-40px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: 'min(900px, 95vw)',
+    height: '480px',
+    background: 'radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.28) 0%, rgba(14, 165, 233, 0.12) 45%, transparent 75%)',
+    filter: 'blur(25px)',
+    pointerEvents: 'none',
+    zIndex: 1,
   },
   container: {
     width: '100%',
-    maxWidth: '1300px',
+    maxWidth: '1350px',
     margin: '0 auto',
     position: 'relative',
     zIndex: 2,
