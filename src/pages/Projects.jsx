@@ -33,14 +33,14 @@ const Projects = () => {
 
 const styles = {
   pageWrapper: {
-    minHeight: '85vh',
-    padding: '0 4% 40px 4%',
+    minHeight: 'auto',
+    padding: '0 2% 20px 2%',
     position: 'relative',
     background: 'transparent',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     overflow: 'hidden',
   },
   lightRaysWrapper: {

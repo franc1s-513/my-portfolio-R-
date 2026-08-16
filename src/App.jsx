@@ -160,7 +160,7 @@ function App() {
             </motion.button>
 
             <div
-              style={{ position: 'relative', zIndex: 10, paddingTop: '80px', paddingBottom: '40px' }}
+              style={{ position: 'relative', zIndex: 10, paddingTop: '45px', paddingBottom: '30px' }}
               onClick={(e) => e.stopPropagation()}
             >
               <Suspense fallback={null}>

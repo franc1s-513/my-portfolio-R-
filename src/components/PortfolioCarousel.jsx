@@ -153,7 +153,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
           width: 100%;
           background: transparent;
           color: #f8fafc;
-          padding: 10px 0 20px 0;
+          padding: 0 0 20px 0;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -165,51 +165,42 @@ const PortfolioCarousel = ({ projects = [] }) => {
         /* HEADER SECTION */
         .showcase-header {
           width: 100%;
-          max-width: 860px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 28px;
+          text-align: center;
+          margin-bottom: 20px;
           position: relative;
           z-index: 10;
         }
 
-        .heading-center {
-          text-align: center;
-          flex: 1;
-          padding: 0 16px;
-        }
-
         .showcase-title {
-          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-          font-size: clamp(2rem, 4vw, 3rem);
+          font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+          font-size: clamp(2.2rem, 4.5vw, 3.2rem);
           font-weight: 900;
           color: #080c3e !important;
-          -webkit-text-stroke: 1.4px #e5a93c !important;
-          paint-order: stroke fill !important;
           letter-spacing: -0.5px;
-          margin: 0 0 6px 0;
+          margin: 0;
           line-height: 1.1;
+          text-shadow: 0 2px 20px rgba(14, 165, 233, 0.2);
         }
 
-        .showcase-subtitle {
-          font-size: 0.88rem;
-          color: #ffffff !important;
-          -webkit-text-stroke: 0.6px #000000 !important;
-          paint-order: stroke fill !important;
-          max-width: 480px;
-          margin: 0 auto;
-          line-height: 1.4;
-          font-weight: 500;
+        /* CAROUSEL CONTAINER WITH FLANKING ARROWS */
+        .carousel-main-container {
+          width: 100%;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        /* MINIMAL CIRCULAR ARROW CONTROLS */
+        /* MINIMAL CIRCULAR ARROW CONTROLS POSITIONED ON SIDES */
         .nav-arrow-btn {
-          width: 46px;
-          height: 46px;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
           border: 1.5px solid #e5a93c;
-          background: rgba(8, 12, 62, 0.7);
+          background: rgba(8, 12, 62, 0.75);
           color: #ffffff;
           display: flex;
           align-items: center;
@@ -220,18 +211,27 @@ const PortfolioCarousel = ({ projects = [] }) => {
           flex-shrink: 0;
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
+          z-index: 25;
+        }
+
+        .nav-arrow-left {
+          left: 15px;
+        }
+
+        .nav-arrow-right {
+          right: 15px;
         }
 
         .nav-arrow-btn:hover {
           background: #e5a93c;
           border-color: #ffffff;
           color: #080c3e;
-          transform: scale(1.1);
+          transform: translateY(-50%) scale(1.1);
           box-shadow: 0 8px 25px rgba(229, 169, 60, 0.6);
         }
 
         .nav-arrow-btn:active {
-          transform: scale(0.95);
+          transform: translateY(-50%) scale(0.95);
         }
 
         /* 3D CYLINDER VIEWPORT - COMPACT & CLEAN */
@@ -405,7 +405,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
         @media (max-width: 768px) {
           .showcase-header {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
           }
           .showcase-title {
             font-size: 1.8rem;
@@ -413,6 +413,12 @@ const PortfolioCarousel = ({ projects = [] }) => {
           .nav-arrow-btn {
             width: 38px;
             height: 38px;
+          }
+          .nav-arrow-left {
+            left: 5px;
+          }
+          .nav-arrow-right {
+            right: 5px;
           }
           .carousel-viewport {
             height: 330px;
@@ -428,56 +434,44 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
       `}</style>
 
-      {/* HEADER ROW WITH FLANKING ARROWS */}
+      {/* HEADER WITH TITLE */}
       <div className="showcase-header">
+        <h1 className="showcase-title">My Works</h1>
+      </div>
+
+      {/* MAIN CAROUSEL AREA WITH SIDE CONTROLS */}
+      <div className="carousel-main-container">
         <button 
-          className="nav-arrow-btn" 
+          className="nav-arrow-btn nav-arrow-left" 
           onClick={handlePrev}
           aria-label="Previous project"
           title="Previous (or Swipe Left)"
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={20} />
         </button>
 
-        <div className="heading-center">
-          <h1 className="showcase-title">My Works</h1>
-          <p className="showcase-subtitle">
-            Drag, swipe, or use your mouse pad to spin through my engineering projects.
-          </p>
-        </div>
-
-        <button 
-          className="nav-arrow-btn" 
-          onClick={handleNext}
-          aria-label="Next project"
-          title="Next (or Swipe Right)"
+        {/* 3D DRUM VIEWPORT */}
+        <div 
+          className="carousel-viewport"
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <ArrowRight size={18} />
-        </button>
-      </div>
+          <div className="cylinder-drum" ref={cylinderGroupRef}>
+            {projects.map((project, index) => {
+              const cardAngle = index * angleStep;
+              const isCenter = currentIndex === index;
 
-      {/* 3D DRUM VIEWPORT */}
-      <div 
-        className="carousel-viewport"
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="cylinder-drum" ref={cylinderGroupRef}>
-          {projects.map((project, index) => {
-            const cardAngle = index * angleStep;
-            const isCenter = currentIndex === index;
-
-            return (
-              <div
-                key={project.id || index}
-                className={`project-3d-card ${isCenter ? 'active-card' : ''}`}
-                onClick={() => rotateTo(index)}
+              return (
+                <div
+                  key={project.id || index}
+                  className={`project-3d-card ${isCenter ? 'active-card' : ''}`}
+                  onClick={() => rotateTo(index)}
                 style={{
                   transform: `rotateY(${cardAngle}deg) translateZ(${radius}px)`,
                   opacity: isCenter ? 1 : 0.55,
@@ -552,8 +546,18 @@ const PortfolioCarousel = ({ projects = [] }) => {
           })}
         </div>
       </div>
-    </section>
-  );
+
+      <button 
+        className="nav-arrow-btn nav-arrow-right" 
+        onClick={handleNext}
+        aria-label="Next project"
+        title="Next (or Swipe Right)"
+      >
+        <ArrowRight size={20} />
+      </button>
+    </div>
+  </section>
+);
 };
 
 export default PortfolioCarousel;

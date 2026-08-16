@@ -100,12 +100,19 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
       <Canvas 
         camera={{ position: [0, 0, 0.1], fov: 75 }} 
         dpr={[1, 1.5]} 
-        gl={{ powerPreference: "high-performance", antialias: false, stencil: false }}
+        performance={{ min: 0.6 }}
+        gl={{ 
+          powerPreference: "high-performance", 
+          antialias: false, 
+          stencil: false,
+          depth: true,
+          alpha: false
+        }}
       >
-        {/* VIBRANT ENVIRONMENT LIGHTING */}
-        <ambientLight intensity={2.4} />
-        <directionalLight position={[20, 50, 30]} intensity={3.5} />
-        <directionalLight position={[-30, 20, -20]} intensity={1.8} />
+        {/* VIBRANT OPTIMIZED ENVIRONMENT LIGHTING */}
+        <ambientLight intensity={2.6} />
+        <directionalLight position={[20, 50, 30]} intensity={3.8} />
+        <directionalLight position={[-30, 20, -20]} intensity={2.0} />
 
         {/* SCROLL PARALLAX CAMERA CONTROL */}
         <ScrollCamera />
@@ -116,186 +123,182 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
 
           {!activeModal && (
             <>
-              {/* Flying Birds Flock */}
-              <FlyingBirds count={12} />
+              {/* Flying Birds Flock (Optimized) */}
+              <FlyingBirds count={7} />
 
               {/* Castle 3: About Page (Emerald Glow - Right Sector) */}
               <group position={[18, -100, -45]}>
-                <pointLight position={[0, 15, 10]} intensity={12} color="#22c55e" distance={50} />
-                <pointLight position={[0, -5, -5]} intensity={6} color="#4ade80" distance={30} />
+                <pointLight position={[0, 10, 5]} intensity={6} color="#22c55e" distance={40} decay={2} />
                 <Castle3 scale={1.0} rotation={[0, -Math.PI / 6, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120}>
-                  <GlareHover borderRadius="14px">
-                  <div 
+                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
+                  <button 
                     onClick={(e) => {
                       e.stopPropagation();
                       onOpenModal('about');
                     }}
                     style={{
-                      background: 'rgba(34, 197, 94, 0.9)',
-                      color: 'white',
-                      padding: '12px 26px',
+                      background: 'linear-gradient(135deg, #16a34a, #22c55e)',
+                      color: '#ffffff',
+                      padding: '12px 24px',
                       borderRadius: '14px',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      fontSize: '15px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: '800',
+                      fontSize: '14px',
                       cursor: 'pointer',
-                      border: '2px solid rgba(255,255,255,0.95)',
-                      boxShadow: '0 0 30px rgba(34, 197, 94, 0.9), 0 10px 30px rgba(0,0,0,0.4)',
+                      border: '1.5px solid rgba(255,255,255,0.9)',
+                      boxShadow: '0 0 25px rgba(34, 197, 94, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
                       whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(10px)',
-                      transition: 'transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+                      backdropFilter: 'blur(8px)',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                       userSelect: 'none',
-                      pointerEvents: 'auto',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
                     }}
                     className="btn-press"
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                      e.currentTarget.style.boxShadow = '0 0 40px rgba(34, 197, 94, 1), 0 12px 35px rgba(0,0,0,0.5)';
+                      e.currentTarget.style.transform = 'scale(1.08)';
+                      e.currentTarget.style.boxShadow = '0 0 35px rgba(34, 197, 94, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 197, 94, 0.9), 0 10px 30px rgba(0,0,0,0.4)';
+                      e.currentTarget.style.boxShadow = '0 0 25px rgba(34, 197, 94, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
                     }}
                   >
                     ABOUT PAGE 👤
-                  </div>
-                  </GlareHover>
+                  </button>
                 </Html>
               </group>
 
               {/* Castle 1: Projects Page (Sky Blue Glow - Left Sector) */}
               <group position={[-18, -200, -45]}>
-                <pointLight position={[0, 15, 10]} intensity={12} color="#0ea5e9" distance={50} />
-                <pointLight position={[0, -5, -5]} intensity={6} color="#38bdf8" distance={30} />
+                <pointLight position={[0, 10, 5]} intensity={6} color="#0ea5e9" distance={40} decay={2} />
                 <Castle scale={1.0} rotation={[0, Math.PI / 4, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120}>
-                  <GlareHover borderRadius="14px">
-                  <div 
+                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
+                  <button 
                     onClick={(e) => {
                       e.stopPropagation();
                       onOpenModal('projects');
                     }}
                     style={{
-                      background: 'rgba(14, 165, 233, 0.9)',
-                      color: 'white',
-                      padding: '12px 26px',
+                      background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                      color: '#ffffff',
+                      padding: '12px 24px',
                       borderRadius: '14px',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      fontSize: '15px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: '800',
+                      fontSize: '14px',
                       cursor: 'pointer',
-                      border: '2px solid rgba(255,255,255,0.95)',
-                      boxShadow: '0 0 30px rgba(14, 165, 233, 0.9), 0 10px 30px rgba(0,0,0,0.4)',
+                      border: '1.5px solid rgba(255,255,255,0.9)',
+                      boxShadow: '0 0 25px rgba(14, 165, 233, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
                       whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(10px)',
-                      transition: 'transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+                      backdropFilter: 'blur(8px)',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                       userSelect: 'none',
-                      pointerEvents: 'auto',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
                     }}
                     className="btn-press"
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                      e.currentTarget.style.boxShadow = '0 0 40px rgba(14, 165, 233, 1), 0 12px 35px rgba(0,0,0,0.5)';
+                      e.currentTarget.style.transform = 'scale(1.08)';
+                      e.currentTarget.style.boxShadow = '0 0 35px rgba(14, 165, 233, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 30px rgba(14, 165, 233, 0.9), 0 10px 30px rgba(0,0,0,0.4)';
+                      e.currentTarget.style.boxShadow = '0 0 25px rgba(14, 165, 233, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
                     }}
                   >
                     PROJECTS PAGE 🎯
-                  </div>
-                  </GlareHover>
+                  </button>
                 </Html>
               </group>
 
               {/* Castle 2: Certificate Page (Purple Glow - Front/Right Sector) */}
               <group position={[15, -300, -45]}>
-                <pointLight position={[0, 15, 10]} intensity={12} color="#a855f7" distance={50} />
-                <pointLight position={[0, -5, -5]} intensity={6} color="#c084fc" distance={30} />
+                <pointLight position={[0, 10, 5]} intensity={6} color="#a855f7" distance={40} decay={2} />
                 <Castle2 scale={1.0} rotation={[0, -Math.PI / 8, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120}>
-                  <GlareHover borderRadius="14px">
-                  <div 
+                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
+                  <button 
                     onClick={(e) => {
                       e.stopPropagation();
                       onOpenModal('certificates');
                     }}
                     style={{
-                      background: 'rgba(168, 85, 247, 0.9)',
-                      color: 'white',
-                      padding: '12px 26px',
+                      background: 'linear-gradient(135deg, #7e22ce, #a855f7)',
+                      color: '#ffffff',
+                      padding: '12px 24px',
                       borderRadius: '14px',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      fontSize: '15px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: '800',
+                      fontSize: '14px',
                       cursor: 'pointer',
-                      border: '2px solid rgba(255,255,255,0.95)',
-                      boxShadow: '0 0 30px rgba(168, 85, 247, 0.9), 0 10px 30px rgba(0,0,0,0.4)',
+                      border: '1.5px solid rgba(255,255,255,0.9)',
+                      boxShadow: '0 0 25px rgba(168, 85, 247, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
                       whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(10px)',
-                      transition: 'transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+                      backdropFilter: 'blur(8px)',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                       userSelect: 'none',
-                      pointerEvents: 'auto',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
                     }}
                     className="btn-press"
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                      e.currentTarget.style.boxShadow = '0 0 40px rgba(168, 85, 247, 1), 0 12px 35px rgba(0,0,0,0.5)';
+                      e.currentTarget.style.transform = 'scale(1.08)';
+                      e.currentTarget.style.boxShadow = '0 0 35px rgba(168, 85, 247, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.9), 0 10px 30px rgba(0,0,0,0.4)';
+                      e.currentTarget.style.boxShadow = '0 0 25px rgba(168, 85, 247, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
                     }}
                   >
                     CERTIFICATE PAGE 📜
-                  </div>
-                  </GlareHover>
+                  </button>
                 </Html>
               </group>
 
               {/* Mystic Stones: Contact Page (Golden Glow) */}
               <group position={[-15, -400, -45]}>
-                <pointLight position={[0, 15, 10]} intensity={12} color="#eab308" distance={50} />
-                <pointLight position={[0, -5, -5]} intensity={6} color="#facc15" distance={30} />
+                <pointLight position={[0, 10, 5]} intensity={6} color="#eab308" distance={40} decay={2} />
                 <MysticStones scale={1.0} rotation={[0, Math.PI / 6, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120}>
-                  <GlareHover borderRadius="14px">
-                  <div 
+                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
+                  <button 
                     onClick={(e) => {
                       e.stopPropagation();
                       onOpenModal('contact');
                     }}
                     style={{
-                      background: 'rgba(234, 179, 8, 0.9)',
-                      color: 'white',
-                      padding: '12px 26px',
+                      background: 'linear-gradient(135deg, #ca8a04, #eab308)',
+                      color: '#ffffff',
+                      padding: '12px 24px',
                       borderRadius: '14px',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      fontSize: '15px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: '800',
+                      fontSize: '14px',
                       cursor: 'pointer',
-                      border: '2px solid rgba(255,255,255,0.95)',
-                      boxShadow: '0 0 30px rgba(234, 179, 8, 0.9), 0 10px 30px rgba(0,0,0,0.4)',
+                      border: '1.5px solid rgba(255,255,255,0.9)',
+                      boxShadow: '0 0 25px rgba(234, 179, 8, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
                       whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(10px)',
-                      transition: 'transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+                      backdropFilter: 'blur(8px)',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                       userSelect: 'none',
-                      pointerEvents: 'auto',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
                     }}
                     className="btn-press"
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                      e.currentTarget.style.boxShadow = '0 0 40px rgba(234, 179, 8, 1), 0 12px 35px rgba(0,0,0,0.5)';
+                      e.currentTarget.style.transform = 'scale(1.08)';
+                      e.currentTarget.style.boxShadow = '0 0 35px rgba(234, 179, 8, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 30px rgba(234, 179, 8, 0.9), 0 10px 30px rgba(0,0,0,0.4)';
+                      e.currentTarget.style.boxShadow = '0 0 25px rgba(234, 179, 8, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
                     }}
                   >
                     CONTACT PAGE 📞
-                  </div>
-                  </GlareHover>
+                  </button>
                 </Html>
               </group>
             </>

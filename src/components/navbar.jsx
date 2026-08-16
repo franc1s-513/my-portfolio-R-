@@ -60,22 +60,26 @@ const Navbar = ({ isDark, onOpenModal }) => {
 
   useEffect(() => {
     const handleScrollSpy = () => {
-      const sections = ['home', 'about', 'projects', 'certificates', 'contact'];
+      const scrollY = window.scrollY || window.pageYOffset;
+      const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+      const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
       let current = 'Home';
-      
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            current = section.charAt(0).toUpperCase() + section.slice(1);
-          }
-        }
+      if (progress < 0.25) {
+        current = 'Home';
+      } else if (progress < 0.55) {
+        current = 'About';
+      } else if (progress < 0.82) {
+        current = 'Projects';
+      } else if (progress < 0.94) {
+        current = 'Certificates';
+      } else {
+        current = 'Contact';
       }
       setActiveSection((prev) => (prev === current ? prev : current));
     };
     
-    // Throttle scroll spy
+    // Throttle scroll spy with requestAnimationFrame
     let isThrottled = false;
     const throttledScrollSpy = () => {
       if (!isThrottled) {

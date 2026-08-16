@@ -45,20 +45,8 @@ export default function CustomCursor() {
     const handleMouseUp = () => setIsClicking(false);
 
     const handleMouseOver = (e) => {
-      const target = e.target;
-      if (
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.classList.contains('interactive') ||
-        target.classList.contains('btn-press') ||
-        target.getAttribute('role') === 'button'
-      ) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
+      const isInteractive = Boolean(e.target.closest('a, button, [role="button"], .interactive, .btn-press, input, textarea'));
+      setIsHovering((prev) => (prev !== isInteractive ? isInteractive : prev));
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });

@@ -5,53 +5,38 @@
   --soft-white: #ffffff;
   --dark-bg: #030712;
   --accent-blue: #0ea5e9;
+  --accent-cyan: #38bdf8;
   --navy-bold: #080c3e;
+  --solar-gold: #f59e0b;
   --gold-outline: #e5a93c;
 
-  /* Bold, punchy palette with crisp outlines */
+  /* Modern High-Contrast Palette */
   --text-main: #080c3e;
-  --text-sub: #ffffff;
-  --text-faint: rgba(255, 255, 255, 0.85);
-  --text-accent: #e5a93c;
-  --card-bg: rgba(8, 12, 62, 0.45);
-  --card-border: rgba(229, 169, 60, 0.45);
-  --card-hover-border: #e5a93c;
-
-  /* Spacing rhythm */
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 8rem;
+  --text-sub: #334155;
+  --text-muted: #64748b;
+  --text-accent: #0284c7;
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(14, 165, 233, 0.25);
+  --card-hover-border: #0ea5e9;
 
   /* Easing curves */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* --- GLOBAL TRANSITION ENGINE --- */
+/* --- PERFORMANCE OPTIMIZED BOX MODEL --- */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Remove box-shadow and !important from universal selector to allow custom durations & spring transitions */
-*:not(canvas):not(svg):not([data-r3f]):not(.r3f-html-container) {
-  transition:
-    background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.4s ease,
-    border-color 0.5s ease;
-}
-
+/* GPU acceleration for WebGL canvases */
 canvas {
   transform: translateZ(0);
   will-change: transform;
 }
 
-/* React-three-fiber canvases must not be forced into their own GPU layer:
-   combined with the modal's entrance animation this made the lanyard canvas
-   flash for a second and then go blank on real GPUs. */
 .lanyard-wrapper canvas {
   transform: none !important;
   will-change: auto !important;
@@ -73,13 +58,12 @@ canvas {
 /* --- CLIP-PATH IMAGE REVEAL --- */
 .image-reveal-clip {
   clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
-  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .image-reveal-clip.visible {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
-
 
 /* Prevent transitions from affecting cursor position */
 .custom-cursor-container,
@@ -118,56 +102,61 @@ html.dark-mode {
   background-color: var(--dark-bg);
 }
 
-/* --- BODY --- */
+/* --- BODY & CORE TYPOGRAPHY --- */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   background: transparent !important;
-  color: #000000;
+  color: #0f172a;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* --- 2. ATMOSPHERIC LAYERS REMOVED (Legacy White Fog) --- */
-
-/* --- 3. DARK MODE OVERRIDES --- */
+/* --- DARK MODE OVERRIDES --- */
 body.dark-mode {
-  --text-main: #ffffff;
-  --text-sub: rgba(255, 255, 255, 0.75);
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-hover-border: rgba(14, 165, 233, 0.4);
+  --text-main: #f8fafc;
+  --text-sub: #cbd5e1;
+  --text-muted: #94a3b8;
+  --card-bg: rgba(15, 23, 42, 0.7);
+  --card-border: rgba(56, 189, 248, 0.2);
+  --card-hover-border: rgba(56, 189, 248, 0.5);
   color: #f1f5f9 !important;
 }
 
 body.dark-mode nav {
-  background: rgba(15, 23, 42, 0.4) !important;
+  background: rgba(15, 23, 42, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* --- 4. COMPONENT STYLES --- */
+/* --- GLASS CARD SYSTEM --- */
 .glass-card {
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 body.dark-mode .glass-card {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .nav-link {
   text-decoration: none;
   color: var(--text-main);
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.88rem;
   position: relative;
-  opacity: 0.8;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .nav-link::after {
@@ -178,14 +167,18 @@ body.dark-mode .glass-card {
   bottom: -4px;
   left: 0;
   background-color: var(--accent-blue);
-  transition: width 0.3s ease !important;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  opacity: 1;
 }
 
 .nav-link:hover::after {
   width: 100%;
 }
 
-/* --- 5. ANIMATIONS --- */
+/* --- ANIMATIONS --- */
 .hero-float {
   will-change: transform;
   backface-visibility: hidden;
@@ -194,11 +187,11 @@ body.dark-mode .glass-card {
 
 @keyframes floating {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  50% { transform: translateY(-12px); }
 }
 
 body.dark-mode .hero-name {
-  text-shadow: 0 0 25px rgba(14, 165, 233, 0.6);
+  text-shadow: 0 0 35px rgba(14, 165, 233, 0.4);
   color: #ffffff;
 }
 
@@ -211,13 +204,13 @@ body.dark-mode .hero-name {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 6. SCROLL REVEAL SYSTEM --- */
+/* --- SCROLL REVEAL SYSTEM --- */
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(28px);
   transition:
-    opacity 0.7s var(--ease-out-expo),
-    transform 0.7s var(--ease-out-expo) !important;
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
 }
 
 .reveal.visible {
@@ -227,10 +220,10 @@ body.dark-mode .hero-name {
 
 .reveal-left {
   opacity: 0;
-  transform: translateX(-32px);
+  transform: translateX(-28px);
   transition:
-    opacity 0.7s var(--ease-out-expo),
-    transform 0.7s var(--ease-out-expo) !important;
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
 }
 
 .reveal-left.visible {
@@ -240,10 +233,10 @@ body.dark-mode .hero-name {
 
 .reveal-scale {
   opacity: 0;
-  transform: scale(0.94);
+  transform: scale(0.95);
   transition:
-    opacity 0.6s var(--ease-out-expo),
-    transform 0.6s var(--ease-out-expo) !important;
+    opacity 0.5s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo);
 }
 
 .reveal-scale.visible {
@@ -251,15 +244,15 @@ body.dark-mode .hero-name {
   transform: scale(1);
 }
 
-/* Stagger delays for child elements */
-.stagger-1 { transition-delay: 0.05s !important; }
-.stagger-2 { transition-delay: 0.12s !important; }
-.stagger-3 { transition-delay: 0.19s !important; }
-.stagger-4 { transition-delay: 0.26s !important; }
-.stagger-5 { transition-delay: 0.33s !important; }
-.stagger-6 { transition-delay: 0.40s !important; }
+/* Stagger delays */
+.stagger-1 { transition-delay: 0.04s; }
+.stagger-2 { transition-delay: 0.08s; }
+.stagger-3 { transition-delay: 0.12s; }
+.stagger-4 { transition-delay: 0.16s; }
+.stagger-5 { transition-delay: 0.20s; }
+.stagger-6 { transition-delay: 0.24s; }
 
-/* --- 7. SKELETON LOADER --- */
+/* --- SKELETON LOADER --- */
 @keyframes skeleton-shimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
@@ -277,29 +270,27 @@ body.dark-mode .hero-name {
   border-radius: 8px;
 }
 
-/* --- 8. FOCUS & ACCESSIBILITY --- */
+/* --- FOCUS & ACCESSIBILITY --- */
 :focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-/* Remove outline for mouse users, keep for keyboard */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* High-contrast focus for interactive elements */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2) !important;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
 }
 
-/* --- 9. REDUCED MOTION SUPPORT --- */
+/* --- REDUCED MOTION SUPPORT --- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -319,7 +310,7 @@ textarea:focus-visible {
   }
 }
 
-/* --- 10. UI UTILITIES --- */
+/* --- UI UTILITIES --- */
 .custom-cursor-container {
   pointer-events: none;
   z-index: 9999;
@@ -328,16 +319,14 @@ textarea:focus-visible {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(14, 165, 233, 0.3);
+  background: rgba(14, 165, 233, 0.35);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 165, 233, 0.55);
+  background: rgba(14, 165, 233, 0.65);
 }
 
-/* --- 11. HOVER MICRO-INTERACTIONS --- */
-
-/* Underline slide-in for text links */
+/* --- MICRO-INTERACTIONS --- */
 .link-underline {
   position: relative;
   text-decoration: none;
@@ -351,24 +340,22 @@ textarea:focus-visible {
   width: 0;
   height: 1.5px;
   background: var(--accent-blue);
-  transition: width 0.3s var(--ease-out-expo) !important;
+  transition: width 0.3s var(--ease-out-expo);
 }
 
 .link-underline:hover::after {
   width: 100%;
 }
 
-/* Glow pulse for accent elements */
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(14, 165, 233, 0.4); }
-  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.8), 0 0 40px rgba(14, 165, 233, 0.3); }
+  0%, 100% { box-shadow: 0 0 8px rgba(14, 165, 233, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.7), 0 0 35px rgba(14, 165, 233, 0.25); }
 }
 
 .glow-pulse {
   animation: glow-pulse 2.5s ease-in-out infinite;
 }
 
-/* Status blink */
 @keyframes blink-dot {
   0%, 100% { opacity: 1; box-shadow: 0 0 10px #22c55e; }
   50% { opacity: 0.4; box-shadow: 0 0 4px #22c55e; }
@@ -378,7 +365,6 @@ textarea:focus-visible {
   animation: blink-dot 2s ease-in-out infinite;
 }
 
-/* --- 12. PAGE TRANSITION OVERLAY --- */
 .page-transition-overlay {
   position: fixed;
   inset: 0;
@@ -387,190 +373,148 @@ textarea:focus-visible {
   pointer-events: none;
 }
 
-/* --- 13. MARQUEE PAUSE ON HOVER --- */
 .marquee-wrapper:hover .marquee-track-inner,
 .marquee-row:hover > div {
   animation-play-state: paused !important;
 }
 
-/* --- 14. CARD HOVER LIFT --- */
 .card-lift {
-  transition:
-    transform 0.35s var(--ease-out-expo),
-    box-shadow 0.35s var(--ease-out-expo) !important;
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
 }
 
 .card-lift:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(14, 165, 233, 0.2) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(14, 165, 233, 0.3);
 }
 
-/* --- 15. BUTTON PRESS EFFECT --- */
 .btn-press {
-  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-press:active {
-  transform: scale(0.96) !important;
+  transform: scale(0.96);
 }
 
-/* --- 16. IMAGE ZOOM ON HOVER --- */
 .img-zoom-container {
   overflow: hidden;
 }
 
 .img-zoom-container img {
-  transition: transform 0.6s var(--ease-out-expo) !important;
+  transition: transform 0.5s var(--ease-out-expo);
 }
 
 .img-zoom-container:hover img {
-  transform: scale(1.06) !important;
+  transform: scale(1.05);
 }
 
-/* --- 17. TYPOGRAPHY RHYTHM --- */
+/* --- TYPOGRAPHY RHYTHM & CRISP RENDERING --- */
 h1, h2, h3, h4, h5, h6 {
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #080c3e;
+  font-weight: 800;
 }
 
 p {
+  font-family: 'Inter', sans-serif;
   line-height: 1.7;
+  color: #1e293b;
+  font-weight: 400;
 }
 
-/* --- 18. SELECTION STYLE --- */
 ::selection {
   background: rgba(14, 165, 233, 0.3);
   color: inherit;
 }
 
-/* --- 19. ABOUT STORY LOG HOVER --- */
-.story-block:hover {
-  border-left-color: #0ea5e9 !important;
-}
-
-/* --- 20. GLOBAL CUSTOM TYPOGRAPHY THEME --- */
-/* Main Letters: Thick Navy Blue with Crisp Golden Line Border */
-h1, h2, h3, h4,
-.hero-name,
-.sectionTitle,
-.projectTitle,
-.main-heading,
-.bento-title,
-.about-main-title,
-.card-main-title,
-.modal-title,
-.pre-heading {
-  color: #080c3e !important;
-  font-weight: 900 !important;
-  -webkit-text-stroke: 1.3px #e5a93c !important;
-  paint-order: stroke fill !important;
-  text-shadow: none !important;
-}
-
-/* Small Lines / Descriptions / Subtitles: White Letters with Crisp Black Border */
-p,
-.sub-heading,
-.sectionSubtitle,
-.projectDesc,
-.tagline,
-.statusLink,
-.about-desc,
-.timeline-desc,
-.timeline-institution,
-.project-card-desc,
-.bento-issuer,
-.bento-desc {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-  -webkit-text-stroke: 0.8px #000000 !important;
-  paint-order: stroke fill !important;
-  text-shadow: none !important;
-}
-
-/* --- 21. BOLD COLOR & OUTLINE DESIGN SYSTEM --- */
-/* Glassmorphism Cards & Panels with Crisp Gold/Cyan Outlines */
+/* --- MODERN GLASSMORPHIC CARDS & PANELS --- */
 .form-card,
 .projectCard,
 .bento-card,
-.story-block,
-.card-lift,
-[class*="Card"],
-[class*="-card"] {
-  border: 1.5px solid rgba(229, 169, 60, 0.45) !important;
-  box-shadow: 0 16px 40px rgba(8, 12, 62, 0.3), inset 0 0 0 1px rgba(229, 169, 60, 0.2) !important;
-  transition: all 0.35s var(--ease-out-expo) !important;
+.story-block {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s var(--ease-out-expo), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-card:hover,
 .projectCard:hover,
 .bento-card:hover,
-.story-block:hover,
-.card-lift:hover {
-  border-color: #e5a93c !important;
-  box-shadow: 0 20px 48px rgba(8, 12, 62, 0.5), 0 0 24px rgba(229, 169, 60, 0.45), inset 0 0 0 1px rgba(229, 169, 60, 0.4) !important;
+.story-block:hover {
+  border-color: rgba(14, 165, 233, 0.6);
+  box-shadow: 0 20px 45px rgba(14, 165, 233, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Buttons with Bold Outlines */
+/* Primary Action Buttons */
 .submit-btn,
 .primaryActionBtn,
 .primaryBtn,
 button[type="submit"] {
-  background: #080c3e !important;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
   color: #ffffff !important;
-  border: 2px solid #e5a93c !important;
-  box-shadow: 0 8px 24px rgba(8, 12, 62, 0.4), 0 0 16px rgba(229, 169, 60, 0.3) !important;
-  font-weight: 800 !important;
-  letter-spacing: 1px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.35) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.25s ease !important;
 }
 
 .submit-btn:hover,
 .primaryActionBtn:hover,
 .primaryBtn:hover,
 button[type="submit"]:hover {
-  background: #e5a93c !important;
-  color: #080c3e !important;
-  border-color: #ffffff !important;
-  box-shadow: 0 12px 30px rgba(229, 169, 60, 0.6) !important;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.5) !important;
   transform: translateY(-2px);
 }
 
 .secondaryBtn,
 .secondaryActionBtn {
-  background: rgba(8, 12, 62, 0.6) !important;
-  color: #ffffff !important;
-  border: 2px solid #e5a93c !important;
-  font-weight: 800 !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+  color: #080c3e !important;
+  border: 1.5px solid rgba(14, 165, 233, 0.4) !important;
+  font-weight: 700 !important;
+  transition: all 0.25s ease !important;
 }
 
 .secondaryBtn:hover,
 .secondaryActionBtn:hover {
-  background: #080c3e !important;
-  border-color: #00f0ff !important;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4) !important;
+  background: rgba(14, 165, 233, 0.1) !important;
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.25) !important;
 }
 
-/* Social & Icon Badges with Bold Gold/Cyan Outline */
+/* Social & Icon Badges */
 .social-link,
 .mobileSocialIcon {
-  border: 1.5px solid rgba(229, 169, 60, 0.5) !important;
-  box-shadow: 0 4px 14px rgba(8, 12, 62, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  color: #080c3e !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.25s ease !important;
 }
 
 .social-link:hover,
 .mobileSocialIcon:hover {
-  border-color: #e5a93c !important;
-  background: rgba(8, 12, 62, 0.8) !important;
-  box-shadow: 0 0 16px rgba(229, 169, 60, 0.5) !important;
+  border-color: #0ea5e9 !important;
+  background: #0ea5e9 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4) !important;
   transform: translateY(-3px) scale(1.05);
 }
 
-/* Tags with Neon Cyan / Gold Outlines */
+/* Tags with Neon Cyan Outlines */
 .tag {
-  background: rgba(8, 12, 62, 0.6) !important;
-  border: 1.5px solid #00f0ff !important;
-  color: #00f0ff !important;
-  font-weight: 800 !important;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25) !important;
+  background: rgba(14, 165, 233, 0.1) !important;
+  border: 1px solid rgba(14, 165, 233, 0.4) !important;
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
 }
+
 
 
