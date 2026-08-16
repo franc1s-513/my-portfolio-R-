@@ -17,8 +17,8 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
   const totalItems = projects.length || 1;
   const angleStep = 360 / totalItems;
-  // Radius tuned for spacious 3D cylinder
-  const radius = isMobile ? 240 : 380;
+  // Compact radius for balanced perspective
+  const radius = isMobile ? 210 : 350;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -153,115 +153,91 @@ const PortfolioCarousel = ({ projects = [] }) => {
           width: 100%;
           background: transparent;
           color: #f8fafc;
-          padding: 10px 0 30px 0;
+          padding: 10px 0 20px 0;
           display: flex;
           flex-direction: column;
           align-items: center;
           position: relative;
           user-select: none;
-          font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* HEADER SECTION WITH GENEROUS SPACING */
+        /* HEADER SECTION */
         .showcase-header {
           width: 100%;
-          text-align: center;
-          margin-bottom: 55px;
+          max-width: 860px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 28px;
           position: relative;
           z-index: 10;
         }
 
-        .showcase-badge {
-          display: inline-block;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 0.78rem;
-          font-weight: 800;
-          letter-spacing: 2px;
-          color: #38bdf8;
-          background: rgba(14, 165, 233, 0.12);
-          border: 1px solid rgba(56, 189, 248, 0.3);
-          padding: 6px 16px;
-          border-radius: 50px;
-          margin-bottom: 12px;
-          text-transform: uppercase;
+        .heading-center {
+          text-align: center;
+          flex: 1;
+          padding: 0 16px;
         }
 
         .showcase-title {
-          font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
-          font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-size: clamp(2rem, 4vw, 3rem);
           font-weight: 900;
-          color: #080c3e;
-          letter-spacing: -0.8px;
-          margin: 0 0 10px 0;
+          color: #080c3e !important;
+          -webkit-text-stroke: 1.4px #e5a93c !important;
+          paint-order: stroke fill !important;
+          letter-spacing: -0.5px;
+          margin: 0 0 6px 0;
           line-height: 1.1;
-          text-shadow: 0 2px 20px rgba(14, 165, 233, 0.2);
         }
 
         .showcase-subtitle {
-          font-size: 0.95rem;
-          color: #475569;
-          font-weight: 500;
+          font-size: 0.88rem;
+          color: #ffffff !important;
+          -webkit-text-stroke: 0.6px #000000 !important;
+          paint-order: stroke fill !important;
+          max-width: 480px;
           margin: 0 auto;
-          max-width: 500px;
-          line-height: 1.5;
-        }
-
-        /* CAROUSEL CONTAINER WITH FLANKING ARROWS */
-        .carousel-main-container {
-          width: 100%;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          line-height: 1.4;
+          font-weight: 500;
         }
 
         /* MINIMAL CIRCULAR ARROW CONTROLS */
         .nav-arrow-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 52px;
-          height: 52px;
+          width: 46px;
+          height: 46px;
           border-radius: 50%;
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          background: rgba(255, 255, 255, 0.75);
-          color: #080c3e;
+          border: 1.5px solid #e5a93c;
+          background: rgba(8, 12, 62, 0.7);
+          color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.25s ease;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+          box-shadow: 0 4px 16px rgba(8, 12, 62, 0.4);
           flex-shrink: 0;
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          z-index: 25;
-        }
-
-        .nav-arrow-left {
-          left: 10px;
-        }
-
-        .nav-arrow-right {
-          right: 10px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
         }
 
         .nav-arrow-btn:hover {
-          background: #0ea5e9;
-          border-color: #38bdf8;
-          color: #ffffff;
-          transform: translateY(-50%) scale(1.1);
-          box-shadow: 0 12px 30px rgba(14, 165, 233, 0.45);
+          background: #e5a93c;
+          border-color: #ffffff;
+          color: #080c3e;
+          transform: scale(1.1);
+          box-shadow: 0 8px 25px rgba(229, 169, 60, 0.6);
         }
 
         .nav-arrow-btn:active {
-          transform: translateY(-50%) scale(0.95);
+          transform: scale(0.95);
         }
 
-        /* 3D CYLINDER VIEWPORT */
+        /* 3D CYLINDER VIEWPORT - COMPACT & CLEAN */
         .carousel-viewport {
           width: 100%;
-          height: 440px;
+          height: 360px;
           perspective: 1200px;
           perspective-origin: 50% 50%;
           display: flex;
@@ -277,8 +253,8 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .cylinder-drum {
-          width: 290px;
-          height: 410px;
+          width: 230px;
+          height: 330px;
           position: absolute;
           transform-style: preserve-3d;
           will-change: transform;
@@ -287,38 +263,32 @@ const PortfolioCarousel = ({ projects = [] }) => {
           justify-content: center;
         }
 
-        /* PREMIUM GLASSMORPHIC PROJECT CARD */
+        /* 3D COMPACT PROJECT CARD */
         .project-3d-card {
           position: absolute;
-          width: 290px;
-          height: 410px;
-          border-radius: 24px;
+          width: 230px;
+          height: 320px;
+          border-radius: 16px;
           overflow: hidden;
-          background: rgba(255, 255, 255, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.6);
-          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.8);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(8, 12, 62, 0.75);
+          border: 1.5px solid rgba(229, 169, 60, 0.45);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(8, 12, 62, 0.4);
           transform-style: preserve-3d;
           backface-visibility: hidden;
-          transition: filter 0.35s ease, opacity 0.35s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-          display: flex;
-          flex-direction: column;
+          transition: filter 0.35s ease, opacity 0.35s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .project-3d-card.active-card {
-          border-color: #0ea5e9;
-          box-shadow: 0 25px 60px rgba(14, 165, 233, 0.25), 0 0 30px rgba(56, 189, 248, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.9);
-          transform: scale(1.03);
+          border-color: #e5a93c;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(229, 169, 60, 0.4);
         }
 
-        /* CARD HEADER / THUMBNAIL */
         .card-img-wrap {
           width: 100%;
-          height: 165px;
-          position: relative;
+          height: 100%;
+          position: absolute;
+          inset: 0;
           overflow: hidden;
-          background: #0f172a;
         }
 
         .card-img-wrap img {
@@ -330,323 +300,257 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .project-3d-card:hover .card-img-wrap img {
-          transform: scale(1.08);
+          transform: scale(1.06);
         }
 
-        .card-category-badge {
+        /* BOTTOM OVERLAY INFO PANEL (COMPACT) */
+        .card-info-panel {
           position: absolute;
-          top: 12px;
-          left: 12px;
-          font-family: 'JetBrains Mono', monospace;
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          border-radius: 12px;
+          background: rgba(8, 12, 62, 0.9);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1.2px solid rgba(229, 169, 60, 0.4);
+          padding: 10px 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          color: #ffffff;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+          transition: all 0.3s ease;
+        }
+
+        .card-top-meta {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 4px;
+        }
+
+        .card-category-tag {
           font-size: 0.62rem;
           font-weight: 800;
-          color: #ffffff;
-          background: rgba(8, 12, 62, 0.75);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          padding: 4px 10px;
-          border-radius: 20px;
-          letter-spacing: 0.8px;
+          color: #00f0ff;
           text-transform: uppercase;
+          letter-spacing: 0.6px;
         }
 
-        .card-status-dot {
-          position: absolute;
-          top: 14px;
-          right: 12px;
+        .card-actions-strip {
           display: flex;
           align-items: center;
           gap: 5px;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 0.6rem;
-          font-weight: 700;
-          color: #ffffff;
-          background: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(8px);
-          padding: 3px 8px;
-          border-radius: 12px;
         }
 
-        .live-dot {
-          width: 6px;
-          height: 6px;
+        .card-action-icon {
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
-          background: #22c55e;
-          box-shadow: 0 0 8px #22c55e;
-        }
-
-        /* CARD CONTENT BODY */
-        .card-body-panel {
-          padding: 16px 18px 18px;
+          background: rgba(229, 169, 60, 0.2);
+          border: 1px solid #e5a93c;
+          color: #ffffff;
           display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          flex-grow: 1;
-          background: rgba(255, 255, 255, 0.4);
+          align-items: center;
+          justify-content: center;
+          transition: all 0.25s ease;
+          text-decoration: none;
         }
 
-        .card-main-title {
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 1.15rem;
-          font-weight: 800;
+        .card-action-icon:hover {
+          background: #e5a93c;
           color: #080c3e;
-          margin: 0 0 6px 0;
-          letter-spacing: -0.3px;
+          transform: scale(1.15);
+        }
+
+        .card-title-text {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0;
+          letter-spacing: -0.2px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
 
-        .card-desc-paragraph {
-          font-size: 0.8rem;
-          color: #334155;
-          line-height: 1.45;
-          margin: 0 0 10px 0;
+        .card-desc-text {
+          font-size: 0.72rem;
+          color: #cbd5e1;
+          line-height: 1.3;
+          margin: 0;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          font-weight: 400;
         }
 
-        /* TAGS PILL ROW */
-        .card-tag-row {
+        .card-pill-row {
           display: flex;
-          gap: 6px;
+          gap: 4px;
           flex-wrap: wrap;
-          margin-bottom: 14px;
         }
 
-        .tag-pill {
-          padding: 3px 8px;
-          border-radius: 6px;
-          background: rgba(14, 165, 233, 0.12);
-          border: 1px solid rgba(14, 165, 233, 0.3);
-          font-size: 0.65rem;
+        .pill-chip {
+          padding: 2px 6px;
+          border-radius: 50px;
+          background: rgba(8, 12, 62, 0.65);
+          border: 1px solid #00f0ff;
+          font-size: 0.6rem;
           font-weight: 700;
-          color: #0284c7;
-          font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ACTION BUTTONS GRID */
-        .card-actions-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          margin-top: auto;
-        }
-
-        .card-btn-action {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 8px 12px;
-          border-radius: 10px;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-decoration: none;
-          transition: all 0.2s ease;
-          cursor: pointer;
-        }
-
-        .btn-live-demo {
-          background: linear-gradient(135deg, #0ea5e9, #0284c7);
-          color: #ffffff;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
-        }
-
-        .btn-live-demo:hover {
-          background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-          box-shadow: 0 6px 18px rgba(14, 165, 233, 0.5);
-          transform: translateY(-1px);
-        }
-
-        .btn-source-code {
-          background: rgba(255, 255, 255, 0.8);
-          color: #080c3e;
-          border: 1px solid rgba(14, 165, 233, 0.35);
-        }
-
-        .btn-source-code:hover {
-          background: rgba(14, 165, 233, 0.15);
-          border-color: #0ea5e9;
-          transform: translateY(-1px);
+          color: #00f0ff;
+          letter-spacing: 0.2px;
         }
 
         @media (max-width: 768px) {
           .showcase-header {
-            margin-bottom: 35px;
+            margin-bottom: 16px;
           }
           .showcase-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
           }
           .nav-arrow-btn {
-            width: 42px;
-            height: 42px;
-          }
-          .nav-arrow-left {
-            left: 5px;
-          }
-          .nav-arrow-right {
-            right: 5px;
+            width: 38px;
+            height: 38px;
           }
           .carousel-viewport {
-            height: 380px;
+            height: 330px;
           }
           .cylinder-drum {
-            width: 230px;
-            height: 340px;
+            width: 200px;
+            height: 290px;
           }
           .project-3d-card {
-            width: 230px;
-            height: 340px;
-            border-radius: 18px;
-          }
-          .card-img-wrap {
-            height: 130px;
-          }
-          .card-body-panel {
-            padding: 12px 14px 14px;
-          }
-          .card-main-title {
-            font-size: 1rem;
-          }
-          .card-desc-paragraph {
-            font-size: 0.72rem;
-            margin-bottom: 6px;
+            width: 190px;
+            height: 280px;
           }
         }
       `}</style>
 
-      {/* HEADER WITH GENEROUS SPACING & REFINED SUBTITLE */}
+      {/* HEADER ROW WITH FLANKING ARROWS */}
       <div className="showcase-header">
-        <div className="showcase-badge">03 / Selected Works</div>
-        <h1 className="showcase-title">My Works</h1>
-        <p className="showcase-subtitle">
-          Explore interactive architectures, machine learning models, and full-stack systems.
-        </p>
-      </div>
-
-      {/* MAIN CAROUSEL AREA WITH SIDE CONTROLS */}
-      <div className="carousel-main-container">
         <button 
-          className="nav-arrow-btn nav-arrow-left" 
+          className="nav-arrow-btn" 
           onClick={handlePrev}
           aria-label="Previous project"
           title="Previous (or Swipe Left)"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} />
         </button>
 
-        {/* 3D DRUM VIEWPORT */}
-        <div 
-          className="carousel-viewport"
-          ref={containerRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className="cylinder-drum" ref={cylinderGroupRef}>
-            {projects.map((project, index) => {
-              const cardAngle = index * angleStep;
-              const isCenter = currentIndex === index;
-
-              return (
-                <div
-                  key={project.id || index}
-                  className={`project-3d-card ${isCenter ? 'active-card' : ''}`}
-                  onClick={() => rotateTo(index)}
-                  style={{
-                    transform: `rotateY(${cardAngle}deg) translateZ(${radius}px)`,
-                    opacity: isCenter ? 1 : 0.45,
-                    filter: isCenter ? 'brightness(1)' : 'brightness(0.75)',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {/* Card Visual Header */}
-                  <div className="card-img-wrap">
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800";
-                      }}
-                    />
-                    <span className="card-category-badge">{project.category}</span>
-                    <div className="card-status-dot">
-                      <div className="live-dot" />
-                      <span>{project.status || 'Active'}</span>
-                    </div>
-                  </div>
-
-                  {/* Card Body Content */}
-                  <div className="card-body-panel">
-                    <div>
-                      <h3 className="card-main-title">{project.title}</h3>
-                      <p className="card-desc-paragraph">
-                        {project.description}
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="card-tag-row">
-                        {project.tags?.slice(0, 3).map((tag, tIdx) => (
-                          <span key={tIdx} className="tag-pill">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="card-actions-grid">
-                        <a
-                          href={project.link || project.github || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="card-btn-action btn-live-demo"
-                          onClick={(e) => e.stopPropagation()}
-                          title="Live Demo"
-                        >
-                          <span>Demo</span>
-                          <ArrowUpRight size={13} />
-                        </a>
-
-                        {project.github && (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="card-btn-action btn-source-code"
-                            onClick={(e) => e.stopPropagation()}
-                            title="View Source Code"
-                          >
-                            <Github size={13} />
-                            <span>Code</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <div className="heading-center">
+          <h1 className="showcase-title">My Works</h1>
+          <p className="showcase-subtitle">
+            Drag, swipe, or use your mouse pad to spin through my engineering projects.
+          </p>
         </div>
 
         <button 
-          className="nav-arrow-btn nav-arrow-right" 
+          className="nav-arrow-btn" 
           onClick={handleNext}
           aria-label="Next project"
           title="Next (or Swipe Right)"
         >
-          <ArrowRight size={20} />
+          <ArrowRight size={18} />
         </button>
+      </div>
+
+      {/* 3D DRUM VIEWPORT */}
+      <div 
+        className="carousel-viewport"
+        ref={containerRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="cylinder-drum" ref={cylinderGroupRef}>
+          {projects.map((project, index) => {
+            const cardAngle = index * angleStep;
+            const isCenter = currentIndex === index;
+
+            return (
+              <div
+                key={project.id || index}
+                className={`project-3d-card ${isCenter ? 'active-card' : ''}`}
+                onClick={() => rotateTo(index)}
+                style={{
+                  transform: `rotateY(${cardAngle}deg) translateZ(${radius}px)`,
+                  opacity: isCenter ? 1 : 0.55,
+                  filter: isCenter ? 'brightness(1)' : 'brightness(0.7)',
+                  cursor: 'pointer'
+                }}
+              >
+                {/* Full-bleed Thumbnail */}
+                <div className="card-img-wrap">
+                  <img 
+                    src={project.image} 
+                    alt={project.title} 
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800";
+                    }}
+                  />
+                </div>
+
+                {/* Compact Floating Bottom Info Panel */}
+                <div 
+                  className="card-info-panel"
+                  style={{
+                    opacity: isCenter ? 1 : 0.35,
+                    transform: isCenter ? 'translateY(0)' : 'translateY(4px)'
+                  }}
+                >
+                  <div className="card-top-meta">
+                    <span className="card-category-tag">{project.category}</span>
+                    <div className="card-actions-strip">
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="card-action-icon"
+                          onClick={(e) => e.stopPropagation()}
+                          title="View Source Code"
+                        >
+                          <Github size={12} />
+                        </a>
+                      )}
+                      <a
+                        href={project.link || project.github || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="card-action-icon"
+                        onClick={(e) => e.stopPropagation()}
+                        title="Live Demo"
+                      >
+                        <ArrowUpRight size={13} />
+                      </a>
+                    </div>
+                  </div>
+
+                  <h3 className="card-title-text">{project.title}</h3>
+
+                  <p className="card-desc-text">
+                    {project.description}
+                  </p>
+
+                  <div className="card-pill-row">
+                    {project.tags?.slice(0, 3).map((tag, tIdx) => (
+                      <span key={tIdx} className="pill-chip">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ class ErrorBoundary extends React.Component {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: 'monospace',
+          fontFamily: 'var(--font-mono)',
           padding: '20px',
           zIndex: 99999,
           textAlign: 'center'
@@ -34,7 +34,7 @@ class ErrorBoundary extends React.Component {
           <div style={{
             background: 'rgba(15, 23, 42, 0.8)',
             border: '1px solid rgba(14, 165, 233, 0.4)',
-            borderRadius: '20px',
+            borderRadius: 'var(--radius-lg)',
             padding: '40px',
             maxWidth: '500px',
             boxShadow: '0 0 40px rgba(14, 165, 233, 0.2)'
@@ -55,10 +55,21 @@ class ErrorBoundary extends React.Component {
                 borderRadius: '50px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-mono)',
                 fontSize: '0.9rem',
                 letterSpacing: '1px',
-                boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)'
+                boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)',
+                transition: 'all 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#38bdf8';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 0 30px rgba(14, 165, 233, 0.7)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#0ea5e9';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(14, 165, 233, 0.5)';
               }}
             >
               RELOAD APPLICATION ↻

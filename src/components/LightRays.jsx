@@ -284,7 +284,12 @@ void main() {
         }
       };
 
-      window.addEventListener('resize', updatePlacement);
+      let resizeTimeout;
+      const debouncedUpdatePlacement = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updatePlacement, 150);
+      };
+      window.addEventListener('resize', debouncedUpdatePlacement);
       updatePlacement();
       animationIdRef.current = requestAnimationFrame(loop);
 
@@ -294,7 +299,8 @@ void main() {
           animationIdRef.current = null;
         }
 
-        window.removeEventListener('resize', updatePlacement);
+        window.removeEventListener('resize', debouncedUpdatePlacement);
+        clearTimeout(resizeTimeout);
 
         if (renderer) {
           try {

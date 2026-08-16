@@ -1,20 +1,15 @@
 import * as THREE from 'three';
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useCallback } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Html, useProgress } from '@react-three/drei';
 
-import { Model as Castle } from './Castle';
-import Castle2 from './Castle2';
-import Castle3 from './Castle3';
-import MysticStones from './MysticStones';
+import { ModelLoader } from './ModelLoader';
 import { ScrollCamera } from './ScrollCamera';
 import FlyingBirds from './FlyingBirds';
-import GlareHover from './GlareHover';
 
 function CanvasLoader() {
   const { progress, active } = useProgress();
 
-  // Broadcast real asset loading progress to the LoadingScreen overlay
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('asset-progress', { detail: progress }));
   }, [progress]);
@@ -30,7 +25,7 @@ function CanvasLoader() {
         borderRadius: '18px',
         padding: '18px 30px',
         color: '#fff',
-        fontFamily: 'monospace',
+        fontFamily: "'JetBrains Mono', monospace",
         textAlign: 'center',
         whiteSpace: 'nowrap',
         backdropFilter: 'blur(12px)',
@@ -70,29 +65,76 @@ function SkyboxModel({ activeModal }) {
   }, [fantasyScene]);
 
   useFrame(({ camera }, delta) => {
-    if (animeRef.current) {
-      animeRef.current.position.y = camera.position.y;
-    }
+    if (animeRef.current) animeRef.current.position.y = camera.position.y;
     if (fantasyRef.current) {
       fantasyRef.current.position.y = camera.position.y;
-      if (activeModal) {
-        fantasyRef.current.rotation.y += delta * 0.05;
-      }
+      if (activeModal) fantasyRef.current.rotation.y += delta * 0.05;
     }
   });
 
   return (
     <>
-      {/* Show regular anime sky when NO modal is open */}
       {!activeModal && <primitive ref={animeRef} object={animeScene} raycast={() => null} />}
-      
-      {/* Show 3D fantasy sky when ANY modal IS open */}
       {activeModal && clonedFantasy && (
         <primitive ref={fantasyRef} object={clonedFantasy} scale={[5, 5, 5]} raycast={() => null} />
       )}
     </>
   );
 }
+
+/* DRY Nav Button for 3D HTML overlays */
+function NavButton3D({ label, emoji, gradientColors, glowColor, onClick }) {
+  const btnStyle = useMemo(() => ({
+    background: `linear-gradient(135deg, ${gradientColors[0]}, ${gradientColors[1]})`,
+    color: '#ffffff',
+    padding: '12px 24px',
+    borderRadius: '14px',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontWeight: '800',
+    fontSize: '14px',
+    cursor: 'pointer',
+    border: '1.5px solid rgba(255,255,255,0.9)',
+    boxShadow: `0 0 25px ${glowColor}, 0 8px 25px rgba(0,0,0,0.35)`,
+    whiteSpace: 'nowrap',
+    backdropFilter: 'blur(8px)',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    userSelect: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  }), [gradientColors, glowColor]);
+
+  const handleEnter = useCallback((e) => {
+    e.currentTarget.style.transform = 'scale(1.08)';
+    e.currentTarget.style.boxShadow = `0 0 35px ${glowColor}, 0 10px 30px rgba(0,0,0,0.45)`;
+  }, [glowColor]);
+
+  const handleLeave = useCallback((e) => {
+    e.currentTarget.style.transform = 'scale(1)';
+    e.currentTarget.style.boxShadow = `0 0 25px ${glowColor}, 0 8px 25px rgba(0,0,0,0.35)`;
+  }, [glowColor]);
+
+  return (
+    <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
+      <button
+        onClick={(e) => { e.stopPropagation(); onClick(); }}
+        style={btnStyle}
+        className="btn-press"
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        {label} {emoji}
+      </button>
+    </Html>
+  );
+}
+
+const NAV_ZONES = [
+  { position: [18, -100, -45], modelPath: '/Castle 3.glb', floatPreset: 'castle3', glowColor: '#22c55e', gradientColors: ['#16a34a', '#22c55e'], label: 'ABOUT PAGE', emoji: '👤', key: 'about', rotation: [0, -Math.PI / 6, 0] },
+  { position: [-18, -200, -45], modelPath: '/Castle.glb', floatPreset: 'castle1', glowColor: '#0ea5e9', gradientColors: ['#0284c7', '#0ea5e9'], label: 'PROJECTS PAGE', emoji: '🎯', key: 'projects', rotation: [0, Math.PI / 4, 0] },
+  { position: [15, -300, -45], modelPath: '/Castle 2.glb', floatPreset: 'castle2', glowColor: '#a855f7', gradientColors: ['#7e22ce', '#a855f7'], label: 'CERTIFICATE PAGE', emoji: '📜', key: 'certificates', rotation: [0, -Math.PI / 8, 0] },
+  { position: [-15, -400, -45], modelPath: '/mystic_stones_of_the_sky.glb', floatPreset: 'stones', glowColor: '#eab308', gradientColors: ['#ca8a04', '#eab308'], label: 'CONTACT PAGE', emoji: '📞', key: 'contact', rotation: [0, Math.PI / 6, 0] },
+];
 
 const AnimeSkybox = ({ onOpenModal, activeModal }) => {
   return (
@@ -101,209 +143,40 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
         camera={{ position: [0, 0, 0.1], fov: 75 }} 
         dpr={[1, 1.5]} 
         performance={{ min: 0.6 }}
-        gl={{ 
-          powerPreference: "high-performance", 
-          antialias: false, 
-          stencil: false,
-          depth: true,
-          alpha: false
-        }}
+        gl={{ powerPreference: "high-performance", antialias: false, stencil: false, depth: true, alpha: false }}
       >
-        {/* VIBRANT OPTIMIZED ENVIRONMENT LIGHTING */}
         <ambientLight intensity={2.6} />
         <directionalLight position={[20, 50, 30]} intensity={3.8} />
         <directionalLight position={[-30, 20, -20]} intensity={2.0} />
 
-        {/* SCROLL PARALLAX CAMERA CONTROL */}
         <ScrollCamera />
 
         <React.Suspense fallback={<CanvasLoader />}>
-          {/* ANIME / FANTASY SKYBOX BACKGROUND */}
           <SkyboxModel activeModal={activeModal} />
 
           {!activeModal && (
             <>
-              {/* Flying Birds Flock (Optimized) */}
               <FlyingBirds count={7} />
-
-              {/* Castle 3: About Page (Emerald Glow - Right Sector) */}
-              <group position={[18, -100, -45]}>
-                <pointLight position={[0, 10, 5]} intensity={6} color="#22c55e" distance={40} decay={2} />
-                <Castle3 scale={1.0} rotation={[0, -Math.PI / 6, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenModal('about');
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, #16a34a, #22c55e)',
-                      color: '#ffffff',
-                      padding: '12px 24px',
-                      borderRadius: '14px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: '800',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      border: '1.5px solid rgba(255,255,255,0.9)',
-                      boxShadow: '0 0 25px rgba(34, 197, 94, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
-                      whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(8px)',
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                      userSelect: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    className="btn-press"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.08)';
-                      e.currentTarget.style.boxShadow = '0 0 35px rgba(34, 197, 94, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 25px rgba(34, 197, 94, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
-                    }}
-                  >
-                    ABOUT PAGE 👤
-                  </button>
-                </Html>
-              </group>
-
-              {/* Castle 1: Projects Page (Sky Blue Glow - Left Sector) */}
-              <group position={[-18, -200, -45]}>
-                <pointLight position={[0, 10, 5]} intensity={6} color="#0ea5e9" distance={40} decay={2} />
-                <Castle scale={1.0} rotation={[0, Math.PI / 4, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenModal('projects');
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
-                      color: '#ffffff',
-                      padding: '12px 24px',
-                      borderRadius: '14px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: '800',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      border: '1.5px solid rgba(255,255,255,0.9)',
-                      boxShadow: '0 0 25px rgba(14, 165, 233, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
-                      whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(8px)',
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                      userSelect: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    className="btn-press"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.08)';
-                      e.currentTarget.style.boxShadow = '0 0 35px rgba(14, 165, 233, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 25px rgba(14, 165, 233, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
-                    }}
-                  >
-                    PROJECTS PAGE 🎯
-                  </button>
-                </Html>
-              </group>
-
-              {/* Castle 2: Certificate Page (Purple Glow - Front/Right Sector) */}
-              <group position={[15, -300, -45]}>
-                <pointLight position={[0, 10, 5]} intensity={6} color="#a855f7" distance={40} decay={2} />
-                <Castle2 scale={1.0} rotation={[0, -Math.PI / 8, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenModal('certificates');
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, #7e22ce, #a855f7)',
-                      color: '#ffffff',
-                      padding: '12px 24px',
-                      borderRadius: '14px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: '800',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      border: '1.5px solid rgba(255,255,255,0.9)',
-                      boxShadow: '0 0 25px rgba(168, 85, 247, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
-                      whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(8px)',
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                      userSelect: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    className="btn-press"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.08)';
-                      e.currentTarget.style.boxShadow = '0 0 35px rgba(168, 85, 247, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 25px rgba(168, 85, 247, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
-                    }}
-                  >
-                    CERTIFICATE PAGE 📜
-                  </button>
-                </Html>
-              </group>
-
-              {/* Mystic Stones: Contact Page (Golden Glow) */}
-              <group position={[-15, -400, -45]}>
-                <pointLight position={[0, 10, 5]} intensity={6} color="#eab308" distance={40} decay={2} />
-                <MysticStones scale={1.0} rotation={[0, Math.PI / 6, 0]} />
-                <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenModal('contact');
-                    }}
-                    style={{
-                      background: 'linear-gradient(135deg, #ca8a04, #eab308)',
-                      color: '#ffffff',
-                      padding: '12px 24px',
-                      borderRadius: '14px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontWeight: '800',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      border: '1.5px solid rgba(255,255,255,0.9)',
-                      boxShadow: '0 0 25px rgba(234, 179, 8, 0.7), 0 8px 25px rgba(0,0,0,0.35)',
-                      whiteSpace: 'nowrap',
-                      backdropFilter: 'blur(8px)',
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                      userSelect: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                    className="btn-press"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.08)';
-                      e.currentTarget.style.boxShadow = '0 0 35px rgba(234, 179, 8, 0.9), 0 10px 30px rgba(0,0,0,0.45)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 0 25px rgba(234, 179, 8, 0.7), 0 8px 25px rgba(0,0,0,0.35)';
-                    }}
-                  >
-                    CONTACT PAGE 📞
-                  </button>
-                </Html>
-              </group>
+              {NAV_ZONES.map((zone) => (
+                <group key={zone.key} position={zone.position}>
+                  <pointLight position={[0, 10, 5]} intensity={6} color={zone.glowColor} distance={40} decay={2} />
+                  <ModelLoader
+                    modelPath={zone.modelPath}
+                    floatPreset={zone.floatPreset}
+                    scale={1.0}
+                    rotation={zone.rotation}
+                  />
+                  <NavButton3D
+                    label={zone.label}
+                    emoji={zone.emoji}
+                    gradientColors={zone.gradientColors}
+                    glowColor={zone.glowColor}
+                    onClick={() => onOpenModal(zone.key)}
+                  />
+                </group>
+              ))}
             </>
           )}
-
         </React.Suspense>
       </Canvas>
     </div>

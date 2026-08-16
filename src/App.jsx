@@ -20,14 +20,12 @@ const Certificates = lazy(() => import('./pages/Certificates'));
 const Contact = lazy(() => import('./pages/Contact'));
 
 function App() {
-  const [isDark] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = (modalName) => {
     setIsTransitioning(true);
-    // Play transition for 2 seconds, then open the modal
     setTimeout(() => {
       setIsTransitioning(false);
       setActiveModal(modalName);
@@ -55,7 +53,6 @@ function App() {
     return () => { document.body.style.overflow = ''; };
   }, [isLoading]);
 
-  // --- RENDER BACKEND WAKE-UP ---
   useEffect(() => {
     const wakeServer = async () => {
       try {
@@ -65,7 +62,6 @@ function App() {
         console.warn("Backend is still spinning up...");
       }
     };
-    
     wakeServer();
   }, []);
 
@@ -88,17 +84,17 @@ function App() {
       <Suspense fallback={null}>
         <SkyAndBirds onOpenModal={handleOpenModal} activeModal={activeModal} />
       </Suspense>
-      <WindParticles isDark={isDark} />
+      <WindParticles />
 
       {/* LAYER 2: MAIN CONTENT (Scroll Track & Modals) */}
-      <main style={{ position: 'relative', zIndex: 10, background: 'transparent', pointerEvents: 'none' }}>
-        <div id="home" style={{ pointerEvents: 'auto' }}><Home isDark={isDark} /></div>
+      <main style={{ position: 'relative', zIndex: 'var(--z-content)', background: 'transparent', pointerEvents: 'none' }}>
+        <div id="home" style={{ pointerEvents: 'auto' }}><Home /></div>
         
         {/* Invisible scroll track to allow diving down the 3D scene */}
         <div style={{ height: '350vh' }}></div>
       </main>
 
-      {/* LAYER 3: 3D PAGE MODALS (Using fantasy_sky_background.glb as 3D background) */}
+      {/* LAYER 3: 3D PAGE MODALS */}
       <AnimatePresence>
         {activeModal && (
           <motion.div
@@ -111,13 +107,10 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: isDark ? 'rgba(10, 15, 30, 0.55)' : 'rgba(240, 248, 255, 0.55)',
+              background: 'rgba(240, 248, 255, 0.55)',
               overflowY: 'auto',
             }}
           >
-            {/* FANTASY SKY BACKGROUND IS HANDLED IN AnimeSkybox.jsx DIRECTLY */}
-
-            {/* CLOSE BUTTON — circular, consistent, good affordance */}
             <motion.button
               aria-label="Close page"
               title="Close (Esc)"
@@ -137,7 +130,7 @@ function App() {
                 justifyContent: 'center',
                 background: 'rgba(255,255,255,0.75)',
                 border: '1.5px solid rgba(0, 0, 0, 0.25)',
-                color: isDark ? '#fff' : '#000000',
+                color: '#000000',
                 borderRadius: '50%',
                 cursor: 'pointer',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
@@ -152,7 +145,7 @@ function App() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(255,255,255,0.75)';
-                e.currentTarget.style.color = isDark ? '#fff' : '#000000';
+                e.currentTarget.style.color = '#000000';
                 e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.25)';
               }}
             >
@@ -164,10 +157,10 @@ function App() {
               onClick={(e) => e.stopPropagation()}
             >
               <Suspense fallback={null}>
-                {activeModal === 'about' && <About isDark={isDark} />}
-                {activeModal === 'projects' && <Projects isDark={isDark} />}
-                {activeModal === 'certificates' && <Certificates isDark={isDark} />}
-                {activeModal === 'contact' && <Contact isDark={isDark} />}
+                {activeModal === 'about' && <About />}
+                {activeModal === 'projects' && <Projects />}
+                {activeModal === 'certificates' && <Certificates />}
+                {activeModal === 'contact' && <Contact />}
               </Suspense>
             </div>
           </motion.div>
@@ -186,7 +179,7 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 10000,
-              background: '#0a0f1e', // Dark cosmic background
+              background: '#0a0f1e',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',

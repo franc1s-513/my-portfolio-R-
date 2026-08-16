@@ -7,11 +7,8 @@ export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
 
-  // Motion values for instant inner dot movement (zero React re-renders)
   const dotX = useMotionValue(-100);
   const dotY = useMotionValue(-100);
-
-  // Smooth springs for the outer ring
   const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
   const cursorX = useSpring(-100, springConfig);
   const cursorY = useSpring(-100, springConfig);
@@ -20,12 +17,20 @@ export default function CustomCursor() {
     const checkDevice = () => {
       setIsDesktop(window.innerWidth >= 768 && !window.matchMedia("(pointer: coarse)").matches);
     };
-
     checkDevice();
     window.addEventListener('resize', checkDevice, { passive: true });
-
     return () => window.removeEventListener('resize', checkDevice);
   }, []);
+
+  // Add/remove cursor-active class on body for CSS fallback
+  useEffect(() => {
+    if (isDesktop) {
+      document.body.classList.add('custom-cursor-active');
+    } else {
+      document.body.classList.remove('custom-cursor-active');
+    }
+    return () => document.body.classList.remove('custom-cursor-active');
+  }, [isDesktop]);
 
   useEffect(() => {
     if (!isDesktop) return;
@@ -40,7 +45,6 @@ export default function CustomCursor() {
 
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
-
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
@@ -70,16 +74,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      <style>
-        {`
-          @media (min-width: 768px) and (pointer: fine) {
-            * {
-              cursor: none !important;
-            }
-          }
-        `}
-      </style>
-
       {/* Inner Dot */}
       <motion.div
         style={{
@@ -88,7 +82,7 @@ export default function CustomCursor() {
           left: 0,
           width: '5px',
           height: '5px',
-          backgroundColor: '#0ea5e9',
+          backgroundColor: 'var(--color-primary)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 99999,
@@ -97,9 +91,7 @@ export default function CustomCursor() {
           opacity: isVisible ? 1 : 0,
           mixBlendMode: 'difference'
         }}
-        animate={{
-          scale: isClicking ? 0.5 : 1,
-        }}
+        animate={{ scale: isClicking ? 0.5 : 1 }}
         transition={{ duration: 0.15 }}
       />
 

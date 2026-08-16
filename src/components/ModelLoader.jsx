@@ -1,11 +1,19 @@
 import React, { useMemo, useRef } from 'react';
-import { useGLTF, Html } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export function Castle2({ onClick, ...props }) {
-  const { scene } = useGLTF('/Castle 2.glb');
+const FLOAT_PRESETS = {
+  castle1: { freq: 1.3, phase: 0, amp: 2.0 },
+  castle2: { freq: 1.4, phase: 2, amp: 2.2 },
+  castle3: { freq: 1.2, phase: 0.5, amp: 2.5 },
+  stones:  { freq: 0.8, phase: 1.2, amp: 1.8 },
+};
+
+export function ModelLoader({ modelPath, floatPreset = 'castle1', onClick, ...props }) {
+  const { scene } = useGLTF(modelPath);
   const groupRef = useRef();
+  const float = FLOAT_PRESETS[floatPreset] || FLOAT_PRESETS.castle1;
 
   const { clonedScene, modelScale } = useMemo(() => {
     const clone = scene.clone(true);
@@ -39,18 +47,16 @@ export function Castle2({ onClick, ...props }) {
     return { clonedScene: wrapper, modelScale: scaleFactor };
   }, [scene]);
 
-  // Gentle floating animation
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.position.y = (props.position?.[1] || 0) + Math.sin(state.clock.getElapsedTime() * 1.4 + 2) * 2.2;
+      const t = state.clock.getElapsedTime();
+      groupRef.current.position.y = (props.position?.[1] || 0) + Math.sin(t * float.freq + float.phase) * float.amp;
     }
   });
 
   return (
     <group {...props} ref={groupRef} dispose={null}>
-      {/* Removed embedded tag */}
-
-      <group 
+      <group
         scale={modelScale}
         onClick={(e) => {
           e.stopPropagation();
@@ -63,5 +69,9 @@ export function Castle2({ onClick, ...props }) {
   );
 }
 
+export default ModelLoader;
+
+useGLTF.preload('/Castle.glb');
 useGLTF.preload('/Castle 2.glb');
-export default Castle2;
+useGLTF.preload('/Castle 3.glb');
+useGLTF.preload('/mystic_stones_of_the_sky.glb');

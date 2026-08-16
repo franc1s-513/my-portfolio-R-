@@ -71,21 +71,18 @@ const LoadingScreen = ({ onFinish }) => {
         position: 'fixed',
         inset: 0,
         zIndex: 100000,
-        // warm, light background that complements the gold strokeColor (#c8990b)
         background: 'radial-gradient(ellipse at center, #fff9ec 0%, #fff1d6 45%, #fff7e8 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '36px',
-        color: '#030339', // use stroke fill color for readable contrast
-        fontFamily: "'Outfit', 'Inter', monospace, sans-serif",
+        color: '#030339',
+        fontFamily: "var(--font-display)",
         padding: '20px',
         boxSizing: 'border-box',
       }}
     >
-      <style>{`@keyframes ld-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }`}</style>
-
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -117,7 +114,7 @@ const LoadingScreen = ({ onFinish }) => {
             height: '10px',
             borderRadius: '50px',
             overflow: 'hidden',
-            background: 'rgba(255,255,255,0.07)',
+            background: 'rgba(14,165,233,0.07)',
             border: '1px solid rgba(14,165,233,0.4)',
             boxShadow: '0 0 24px rgba(14,165,233,0.15)',
           }}
@@ -140,11 +137,12 @@ const LoadingScreen = ({ onFinish }) => {
             marginTop: '10px',
             fontSize: '0.7rem',
             letterSpacing: '2px',
-            color: 'rgba(255,255,255,0.55)',
+            color: '#030339',
+            opacity: 0.65,
           }}
         >
           <span>{assetsLoading ? 'UPLINKING 3D ENVIRONMENT...' : 'INITIALIZING PORTFOLIO...'}</span>
-          <span style={{ color: '#38bdf8', fontWeight: 800 }}>{displayed}%</span>
+          <span style={{ color: '#0284c7', fontWeight: 800, opacity: 1 }}>{displayed}%</span>
         </div>
       </div>
     </motion.div>

@@ -1,349 +1,388 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { SiReact, SiNodedotjs, SiTailwindcss, SiJavascript, SiPython, SiMongodb, SiGit, SiCplusplus, SiFramer } from 'react-icons/si';
-import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaCoffee } from 'react-icons/fa';
+import {
+  SiReact,
+  SiNodedotjs,
+  SiTailwindcss,
+  SiJavascript,
+  SiPython,
+  SiMongodb,
+  SiGit,
+  SiCplusplus,
+  SiFramer,
+  SiThreedotjs,
+  SiFastapi,
+  SiDocker
+} from 'react-icons/si';
+import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaGraduationCap, FaCode, FaRocket } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
-import { FiExternalLink, FiCompass, FiCpu, FiTarget } from "react-icons/fi"; 
+import {
+  FiExternalLink,
+  FiCompass,
+  FiCpu,
+  FiTarget,
+  FiCheckCircle,
+  FiArrowRight,
+  FiLayers,
+  FiTerminal,
+  FiAward,
+  FiMapPin
+} from 'react-icons/fi';
 import PageTransition from '../components/PageTransition';
 import LogoLoop from '../components/LogoLoop';
+import profilePhoto from '../assets/photos/profile.jpg';
+import './About.css';
 
 const About = () => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
 
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
-  const techStack = ["React", "Node.js", "Framer Motion", "TailwindCSS", "JavaScript", "Python", "MongoDB", "Git", "Java", "C++"];
-  const iconStack = [SiReact, SiNodedotjs, SiTailwindcss, SiJavascript, SiPython, SiMongodb, SiGit, FaJava, SiCplusplus, SiFramer];
+  const techStack = [
+    "React", "Three.js", "Node.js", "Python", "Framer Motion",
+    "TailwindCSS", "MongoDB", "FastAPI", "Git", "C++", "Java"
+  ];
 
-  const socialLinks = [
-    { Icon: FaGithub, url: "https://github.com/franc1s-513", label: "GITHUB" },
-    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a", label: "LINKEDIN" },
-    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt", label: "INSTA" },
-    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com", label: "EMAIL" }
+  const skillDomains = [
+    {
+      category: "Frontend & 3D Web",
+      icon: <SiReact size={18} color="#0ea5e9" />,
+      skills: ["React 19", "Three.js / R3F", "Framer Motion", "TailwindCSS", "WebGL Shaders"]
+    },
+    {
+      category: "Backend & Databases",
+      icon: <SiNodedotjs size={18} color="#22c55e" />,
+      skills: ["Node.js", "FastAPI", "Python", "MongoDB", "RESTful Architecture"]
+    },
+    {
+      category: "DevOps & Cloud Tools",
+      icon: <SiDocker size={18} color="#0ea5e9" />,
+      skills: ["Git / GitHub", "Docker", "Linux", "Vite", "CI / CD Pipelines"]
+    }
   ];
 
   const timelineData = [
     {
-      year: "2022",
-      title: "SECONDARY EDUCATION",
-      institution: "ST.joseph's Academy",
-      detail: "Completed my board examinations, marking the start of my logical and analytical problem-solving journey.",
-    },
-    {
-      year: "2024",
-      title: "HIGHER SECONDARY EDUCATION ",
-      institution: "Asian Christian Academy",
-      detail: "Officially entered the world of professional development. Started mastering the core languages of the modern web.",
-    },
-    {
-      year: "2024 - 2028",
-      title: "COLLEGE",
+      year: "2024 — 2028",
+      status: "CURRENT",
+      title: "B.E. Computer Science & Engineering",
       institution: "KSR College of Engineering",
-      detail: "Currently a II-Year student, deep-diving into complex architectures and scaling my knowledge in full-stack engineering.",
-      hasLink: true 
+      detail: "II-Year undergraduate specializing in scalable web systems, interactive 3D visualization, and cloud-native software architecture.",
+      highlights: ["Core CS Foundations", "Full-Stack Development", "Software Architecture"]
+    },
+    {
+      year: "2022 — 2024",
+      status: "COMPLETED",
+      title: "Higher Secondary Education (HSC)",
+      institution: "Asian Christian Academy",
+      detail: "Focused on Mathematics & Computer Science. Built foundational projects in software architecture and algorithms.",
+      highlights: ["Computer Science Major", "Algorithmic Logic", "Web Basics"]
+    },
+    {
+      year: "2022",
+      status: "COMPLETED",
+      title: "Secondary School Education (SSLC)",
+      institution: "St. Joseph's Academy",
+      detail: "Graduated with excellence, sparking a passion for logic, analytical problem solving, and computational engineering.",
+      highlights: ["Mathematics Honors", "Analytical Foundations"]
     }
   ];
 
+  const stats = [
+    { label: "Engineering Track", value: "B.E. CSE" },
+    { label: "Core Focus", value: "Full-Stack & Systems" },
+    { label: "Performance Goal", value: "60+ FPS Polish" },
+    { label: "Location", value: "Tamil Nadu, IN" }
+  ];
+
+  const socialLinks = [
+    { Icon: FaGithub, url: "https://github.com/franc1s-513", label: "GITHUB" },
+    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a", label: "LINKEDIN" },
+    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt", label: "INSTAGRAM" },
+    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com", label: "EMAIL" }
+  ];
+
   return (
-    <div style={styles.container} ref={containerRef}>
-      <style>{`
-        @media (max-width: 768px) {
-          .objective-responsive {
-            grid-template-columns: 1fr !important;
-            padding: 28px !important;
-            gap: 30px !important;
-          }
-          .story-grid-responsive {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
-
+    <div className="about-page-wrapper" ref={containerRef}>
       <PageTransition direction="up">
-        <header style={styles.header}>
-          <motion.h1 
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            style={styles.title}
-          >
-            DECODING <br/> <span style={styles.highlight}>FRANCIS</span>
-          </motion.h1>
-        </header>
 
-        {/* PREMIUM BENTO-STYLE BIO CARDS */}
-        <section style={styles.storySection}>
-          <div className="story-grid-responsive" style={styles.storyGrid}>
-            {/* CARD 1: ORIGIN */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -8, scale: 1.02, borderColor: '#0ea5e9', boxShadow: '0 20px 40px rgba(14, 165, 233, 0.18)' }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              style={styles.storyCard}
-            >
-              <div style={styles.cardHeader}>
-                <span style={styles.cardBadge}>01 / ORIGIN</span>
-                <div style={styles.cardIconWrapper}>
-                  <FiCompass size={22} style={{ color: '#0ea5e9' }} />
-                </div>
-              </div>
-              <h3 style={styles.cardSubtitle}>The Beginning in Hosur</h3>
-              <p style={styles.storyBody}>
-                Entered the world in March 2006 in the city of <b style={styles.highlightText}>Hosur</b>. Since then, I've always been hands-on—exploring different fields, overcoming setbacks, and making strong comebacks with everything I set my mind to.
-              </p>
-              <div style={styles.cardFooter}>
-                <span style={styles.cardMeta}>📍 Hosur, India • Est. 2006</span>
-              </div>
-            </motion.div>
-
-            {/* CARD 2: HOOK */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -8, scale: 1.02, borderColor: '#0ea5e9', boxShadow: '0 20px 40px rgba(14, 165, 233, 0.18)' }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
-              style={styles.storyCard}
-            >
-              <div style={styles.cardHeader}>
-                <span style={styles.cardBadge}>02 / HOOK</span>
-                <div style={styles.cardIconWrapper}>
-                  <FiCpu size={22} style={{ color: '#0ea5e9' }} />
-                </div>
-              </div>
-              <h3 style={styles.cardSubtitle}>Gaming to Architecture</h3>
-              <p style={styles.storyBody}>
-                By the end of my schooling, my focus shifted toward computers. It started with intense gaming sessions, which quickly evolved into a fascination with <b style={styles.highlightText}>web architecture</b> and a drive to build digital ecosystems of my own.
-              </p>
-              <div style={styles.cardFooter}>
-                <span style={styles.cardMeta}>💻 Full-Stack Ecosystems</span>
-              </div>
-            </motion.div>
-
-            {/* CARD 3: MISSION */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -8, scale: 1.02, borderColor: '#0ea5e9', boxShadow: '0 20px 40px rgba(14, 165, 233, 0.18)' }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.24 }}
-              style={styles.storyCard}
-            >
-              <div style={styles.cardHeader}>
-                <span style={styles.cardBadge}>03 / MISSION</span>
-                <div style={styles.cardIconWrapper}>
-                  <FiTarget size={22} style={{ color: '#0ea5e9' }} />
-                </div>
-              </div>
-              <h3 style={styles.cardSubtitle}>Impactful Engineering</h3>
-              <p style={styles.storyBody}>
-                Chasing innovation and competing in this fast-moving tech landscape. My objective is to solve <b style={styles.highlightText}>complex engineering challenges</b> and deliver them through impactful interfaces where people remember me by the lines of code I craft.
-              </p>
-              <div style={styles.cardFooter}>
-                <span style={styles.cardMeta}>🚀 Innovation Driven</span>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section style={{ marginBottom: '80px' }}>
-          <div style={styles.marqueeContainer}>
-            <LogoLoop
-              logos={techStack.map(tech => ({ node: <div style={styles.techPill}>{tech}</div> }))}
-              speed={60}
-              direction="left"
-              logoHeight={50}
-              gap={60}
-              hoverSpeed={15}
-            />
-          </div>
-        </section>
-
-        <motion.section 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="objective-responsive"
-          style={styles.objectiveSection}
+        {/* HERO BIO SHOWCASE */}
+        <motion.section
+          className="hero-bio-card"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div style={styles.objectiveContent}>
-            <h3 style={styles.storyIndex}>OBJECTIVE</h3>
-            <p style={styles.storyBody}>
-              To leverage my background in full-stack software development and AI engineering to solve real-world problems. I strive to create intuitive, performant, and scalable digital solutions.
+          <div className="hero-bio-left">
+            <div className="badge-pill">
+              <FaCode size={13} />
+              <span>01 / Profile & Persona</span>
+            </div>
+
+            <h1 className="hero-main-title">
+              Engineering the <span className="hero-highlight">logic</span> behind the interface.
+            </h1>
+
+            <p className="hero-bio-paragraph">
+              I am <b>Francis Fernando</b>, an engineering student and full-stack software builder based in Tamil Nadu. I specialize in turning complex system workflows into high-performance web applications, interactive 3D landscapes, and intuitive digital tools.
             </p>
+
+            <div className="stats-grid">
+              {stats.map((s, idx) => (
+                <div key={idx} className="stat-card">
+                  <span className="stat-label">{s.label}</span>
+                  <span className="stat-value">{s.value}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={styles.photoContainer}>
-            <div style={styles.photoShape}>
-              <img src="/your-photo.jpg" alt="Francis Fernando" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '20px' }} />
+
+          <div className="hero-bio-right">
+            <div className="profile-frame-wrap">
+              <img src={profilePhoto} alt="Francis Fernando" className="profile-img-element" />
+              <div className="profile-float-tag">
+                <div className="float-tag-left">
+                  <div className="live-dot" aria-hidden="true" />
+                  <span>Building Software</span>
+                </div>
+                <FiMapPin size={14} color="#38bdf8" />
+              </div>
             </div>
           </div>
         </motion.section>
 
-        <section style={{ marginTop: '90px', marginBottom: '100px' }}>
-          <div style={{ marginBottom: '40px' }}>
-            <h3 style={styles.storyIndex}>04 / ACADEMIC JOURNEY</h3>
-            <h2 style={styles.sectionHeading}>Education Timeline</h2>
+        {/* BENTO BIO TRILOGY */}
+        <section style={{ marginBottom: 'var(--space-section)' }}>
+          <div className="section-title-wrap">
+            <div className="section-label">02 / Narrative Trilogy</div>
+            <h2 className="section-title">The Engineering Story</h2>
           </div>
 
-          <div style={styles.tWrapper}>
-            <div style={styles.vLineBase} />
-            <motion.div style={{ ...styles.vLineActive, scaleY }} />
+          <div className="bento-grid">
+            <motion.div
+              className="bento-card"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div>
+                <div className="bento-card-header">
+                  <span className="bento-step-pill">01 / ORIGIN</span>
+                  <div className="bento-icon-wrap">
+                    <FiCompass size={20} />
+                  </div>
+                </div>
+                <h3 className="bento-title">Roots in Hosur</h3>
+                <p className="bento-body">
+                  Growing up in Hosur, curiosity was my primary compass. From early experiments with electronics to taking apart computer programs, I learned that failure is just raw data for a comeback.
+                </p>
+              </div>
+              <div className="bento-footer">
+                <FiMapPin size={13} color="#0ea5e9" />
+                <span>Hosur, Tamil Nadu <time dateTime="2006">Est. 2006</time></span>
+              </div>
+            </motion.div>
 
-            {timelineData.map((milestone, index) => {
-              return (
-                <motion.div 
-                  key={index} 
-                  initial={{ opacity: 0, y: 40 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  viewport={{ once: true, margin: "-100px" }} 
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  style={styles.tItem}
-                >
-                  <div style={styles.tDot} />
-                  
-                  {milestone.year === "2024" ? (
-                      <div style={styles.flexLayout}>
-                          <div style={{ flex: 1 }}>
-                              <span style={styles.tYear}>{milestone.year}</span>
-                              <h3 style={styles.tTitle}>{milestone.title}</h3>
-                              <p style={styles.tInstitution}>{milestone.institution}</p>
-                              <p style={styles.tDetail}>{milestone.detail}</p>
-                          </div>
-                          
-                          <div style={styles.fuelInline}>
-                              <FaCoffee style={styles.fuelIcon} size={85}/>
-                              <div>
-                                  <h4 style={styles.fuelQuote}>"Have a sip, have a look."</h4>
-                              </div>
-                          </div>
-                      </div>
-                  ) : (
-                      <>
-                          <span style={styles.tYear}>{milestone.year}</span>
-                          <h3 style={styles.tTitle}>{milestone.title}</h3>
-                          <p style={styles.tInstitution}>{milestone.institution}</p>
-                          <p style={styles.tDetail}>{milestone.detail}</p>
-                      </>
-                  )}
+            <motion.div
+              className="bento-card"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div>
+                <div className="bento-card-header">
+                  <span className="bento-step-pill">02 / EVOLUTION</span>
+                  <div className="bento-icon-wrap">
+                    <FiCpu size={20} />
+                  </div>
+                </div>
+                <h3 className="bento-title">Gaming to Full-Stack</h3>
+                <p className="bento-body">
+                  Intense gaming sessions uncovered my fascination for computer graphics and interactive responsiveness. That curiosity evolved into mastering JavaScript engines, full-stack frameworks, and 3D shaders.
+                </p>
+              </div>
+              <div className="bento-footer">
+                <FiLayers size={13} color="#0ea5e9" />
+                <span>Full-Stack & 3D Interactive Web</span>
+              </div>
+            </motion.div>
 
-                  {milestone.hasLink && (
-                    <motion.button 
-                      id="about-projects-btn"
-                      onClick={() => navigate('/projects')}
-                      whileHover={{ scale: 1.05, backgroundColor: '#0ea5e9', color: '#fff' }}
-                      style={styles.projectBtn}
-                    >
-                      VIEW_MY_PROJECTS <FiExternalLink size={14} />
-                    </motion.button>
-                  )}
-                </motion.div>
-              );
-            })}
+            <motion.div
+              className="bento-card"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div>
+                <div className="bento-card-header">
+                  <span className="bento-step-pill">03 / MISSION</span>
+                  <div className="bento-icon-wrap">
+                    <FiTarget size={20} />
+                  </div>
+                </div>
+                <h3 className="bento-title">High-Impact Engineering</h3>
+                <p className="bento-body">
+                  Solving complex architectural challenges by pairing clean, modular backend pipelines with visceral, butter-smooth frontend interfaces that leave a lasting impression.
+                </p>
+              </div>
+              <div className="bento-footer">
+                <FaRocket size={13} color="#0ea5e9" />
+                <span>Zero-Lag Scalable Solutions</span>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        <section style={{ marginBottom: '40px' }}>
-          <div style={styles.marqueeContainer}>
+        {/* LOGO LOOP MARQUEE */}
+        <section style={{ marginBottom: 'var(--space-section)' }}>
+          <div style={{ overflow: 'hidden', padding: '20px 0', borderTop: '1px solid rgba(0,0,0,0.06)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
             <LogoLoop
-              logos={iconStack.map((Icon) => ({ node: <div style={styles.iconPill}><Icon size={40} /></div> }))}
-              speed={60}
-              direction="right"
-              logoHeight={50}
-              gap={60}
+              logos={techStack.map((tech) => ({
+                node: (
+                  <div style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '1.4rem',
+                    fontWeight: '800',
+                    color: 'rgba(8, 12, 62, 0.45)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <span>{tech}</span>
+                  </div>
+                )
+              }))}
+              speed={55}
+              direction="left"
+              logoHeight={40}
+              gap={50}
               hoverSpeed={15}
             />
           </div>
         </section>
 
-        {!isMobile && (
-          <div style={styles.statusBar}>
-            <div style={styles.statusLeft}>
-              <div style={styles.blink} /> 
-              <span style={{opacity: 0.3}}>|</span>
-            </div>
+        {/* SKILLS MATRIX */}
+        <section style={{ marginBottom: 'var(--space-section)' }}>
+          <div className="section-title-wrap">
+            <div className="section-label">03 / Technical Matrix</div>
+            <h2 className="section-title">Core Competencies</h2>
+          </div>
 
-            <div style={styles.socialStrip}>
-              {socialLinks.map((item, i) => (
-                <a key={i} href={item.url} target="_blank" rel="noreferrer" style={styles.statusLink}>
-                  <item.Icon size={16} style={{ color: '#000000' }} />
-                  {item.label}
-                </a>
-              ))}
+          <div className="skills-matrix-grid">
+            {skillDomains.map((domain, idx) => (
+              <motion.div
+                key={idx}
+                className="domain-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+              >
+                <div className="domain-header">
+                  {domain.icon}
+                  <h3 className="domain-title">{domain.category}</h3>
+                </div>
+                <div className="chips-wrap">
+                  {domain.skills.map((skill, sIdx) => (
+                    <div key={sIdx} className="skill-chip-item">
+                      <FiCheckCircle size={11} color="#0ea5e9" />
+                      <span>{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ACADEMIC JOURNEY TIMELINE */}
+        <section style={{ marginBottom: 'var(--space-section)' }}>
+          <div className="section-title-wrap">
+            <div className="section-label">04 / Academic Journey</div>
+            <h2 className="section-title">Education & Milestones</h2>
+          </div>
+
+          <div className="timeline-container">
+            <div className="timeline-line-base" aria-hidden="true" />
+            <motion.div className="timeline-line-active" style={{ scaleY }} />
+
+            {timelineData.map((item, idx) => (
+              <motion.div
+                key={idx}
+                className="timeline-item-row"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+              >
+                <div className="timeline-dot-pin" aria-hidden="true" />
+                <div className="timeline-content-card">
+                  <div className="timeline-top-meta">
+                    <span className="timeline-year-text">{item.year}</span>
+                    <span className="timeline-status-badge">{item.status}</span>
+                  </div>
+                  <h3 className="timeline-degree-title">{item.title}</h3>
+                  <div className="timeline-institution-text">{item.institution}</div>
+                  <p className="timeline-description">{item.detail}</p>
+                  <div className="timeline-highlights-row">
+                    {item.highlights.map((h, hIdx) => (
+                      <span key={hIdx} className="highlight-chip">
+                        <FiAward size={11} />
+                        <span>{h}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* BOTTOM CALL TO ACTION */}
+        <section>
+          <div className="bottom-cta-banner">
+            <div>
+              <h3 className="cta-heading">Want to see these skills in action?</h3>
+              <p className="cta-sub">Explore deployed production projects or initiate a project conversation.</p>
+            </div>
+            <div className="cta-button-group">
+              <button
+                onClick={() => navigate('/projects')}
+                className="cta-btn-primary"
+              >
+                <span>Explore Works</span>
+                <FiArrowRight size={15} />
+              </button>
             </div>
           </div>
-        )}
+        </section>
+
+        {/* BOTTOM STATUS BAR */}
+        <div className="bottom-status-bar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="live-dot" aria-hidden="true" />
+            <span style={{ fontWeight: '700' }}>Available for Engineering Roles & Projects</span>
+          </div>
+
+          <div className="socials-cluster">
+            {socialLinks.map((item, i) => (
+              <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" className="social-link-node">
+                <item.Icon size={14} />
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
       </PageTransition>
     </div>
   );
-};
-
-const styles = {
-  container: { padding: '140px 8% 80px', color: '#000000', minHeight: '100vh', maxWidth: '1240px', margin: '0 auto', position: 'relative' },
-  header: { marginBottom: '60px' },
-  title: { fontSize: 'clamp(3rem, 8vw, 5.8rem)', fontWeight: '900', lineHeight: '0.95', letterSpacing: '-2px', fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif" },
-  highlight: { color: '#0284c7' },
-  
-  flexLayout: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '40px', flexWrap: 'wrap' },
-  fuelInline: { display: 'flex', alignItems: 'center', gap: '20px', padding: '20px', background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(14, 165, 233, 0.2)', borderRadius: '16px', maxWidth: '300px' },
-  fuelIcon: { color: '#080c3e' },
-  fuelQuote: { margin: 0, fontSize: '0.8rem', opacity: 0.8, fontFamily: "'JetBrains Mono', monospace", color: '#080c3e' },
-
-  storySection: { marginBottom: '80px' },
-  storyGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '26px' },
-  storyCard: { background: 'rgba(255, 255, 255, 0.65)', border: '1px solid rgba(255, 255, 255, 0.6)', borderRadius: '24px', padding: '36px 30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backdropFilter: 'blur(16px)', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', transition: 'all 0.3s ease', cursor: 'pointer', position: 'relative', overflow: 'hidden' },
-  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' },
-  cardBadge: { fontSize: '0.78rem', fontWeight: '800', background: 'rgba(14, 165, 233, 0.12)', color: '#0284c7', padding: '6px 14px', borderRadius: '50px', letterSpacing: '1.5px', fontFamily: "'Plus Jakarta Sans', sans-serif" },
-  cardIconWrapper: { width: '46px', height: '46px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(14, 165, 233, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  cardSubtitle: { fontSize: '1.35rem', fontWeight: '800', color: '#080c3e', margin: '0 0 16px 0', fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '-0.5px' },
-  storyIndex: { fontSize: '0.85rem', fontWeight: '800', color: '#0284c7', letterSpacing: '2px', marginBottom: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif", textTransform: 'uppercase' },
-  storyBody: { fontSize: '1.05rem', lineHeight: '1.75', color: '#334155', margin: '0 0 24px 0', fontWeight: '400', flex: 1 },
-  highlightText: { color: '#0284c7', fontWeight: '700' },
-  cardFooter: { borderTop: '1px solid rgba(0, 0, 0, 0.08)', paddingTop: '16px', display: 'flex', alignItems: 'center' },
-  cardMeta: { fontSize: '0.8rem', fontFamily: "'JetBrains Mono', monospace", color: '#64748b', fontWeight: '600' },
-
-  objectiveSection: { display: 'grid', gridTemplateColumns: '1fr 280px', gap: '50px', alignItems: 'center', background: 'rgba(255, 255, 255, 0.65)', padding: '50px', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.6)', marginBottom: '90px', boxShadow: '0 12px 32px rgba(0,0,0,0.06)' },
-  objectiveContent: {},
-  photoContainer: { display: 'flex', justifyContent: 'center' },
-  photoShape: { width: '240px', height: '240px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.5)', border: '1px solid rgba(14, 165, 233, 0.2)', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' },
-
-  sectionHeading: { fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: '900', color: '#080c3e', margin: '0 0 10px 0', fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '-1px' },
-
-  marqueeContainer: { overflow: 'hidden', padding: '28px 0', borderTop: '1px solid rgba(0,0,0,0.08)', borderBottom: '1px solid rgba(0,0,0,0.08)' },
-  techPill: { fontFamily: "'JetBrains Mono', monospace", fontSize: '1.6rem', fontWeight: '700', color: 'rgba(8, 12, 62, 0.55)' }, 
-  iconPill: { color: 'rgba(8, 12, 62, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-
-  tWrapper: { position: 'relative', paddingLeft: '45px' },
-  vLineBase: { position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: 'rgba(0,0,0,0.1)' },
-  vLineActive: { position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: '#0284c7' },
-  tItem: { position: 'relative', marginBottom: '70px' },
-  tDot: { position: 'absolute', left: '-51px', top: '10px', width: '12px', height: '12px', borderRadius: '50%', background: '#0ea5e9', boxShadow: '0 0 12px #0ea5e9' },
-  tYear: { fontWeight: 'bold', fontFamily: "'JetBrains Mono', monospace", color: '#0284c7', fontSize: '1.2rem' },
-  tTitle: { fontSize: '2rem', margin: '10px 0', fontWeight: '800', fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#080c3e' },
-  tInstitution: { color: '#64748b', fontSize: '0.95rem', marginBottom: '14px', fontWeight: '600' },
-  tDetail: { color: '#334155', maxWidth: '650px', lineHeight: '1.65', fontSize: '1.02rem' },
-
-  projectBtn: { marginTop: '22px', padding: '14px 28px', borderRadius: '50px', border: '1px solid #0284c7', background: 'rgba(14, 165, 233, 0.12)', color: '#0284c7', fontFamily: "'JetBrains Mono', monospace", fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', transition: '0.3s' },
-
-  statusBar: { position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '40px 0 20px', borderTop: '1px solid rgba(0, 0, 0, 0.08)', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem', color: '#080c3e', marginTop: '60px' },
-  statusLeft: { display: 'flex', alignItems: 'center', gap: '15px', opacity: 0.7 },
-  blink: { width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 10px #22c55e' },
-  socialStrip: { display: 'flex', gap: '25px' },
-  statusLink: { color: '#080c3e', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '600' },
 };
 
 export default About;

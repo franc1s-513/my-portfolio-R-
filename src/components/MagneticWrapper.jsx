@@ -6,6 +6,7 @@ const MagneticWrapper = ({ children, sensitivity = 0.4 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
+    if (!ref.current) return;
     const { clientX, clientY } = e;
     const { width, height, left, top } = ref.current.getBoundingClientRect();
     
@@ -19,13 +20,11 @@ const MagneticWrapper = ({ children, sensitivity = 0.4 }) => {
   };
 
   const handleMouseEnter = () => {
-    // Dispatch a custom event to notify the CustomCursor
     window.dispatchEvent(new CustomEvent('cursorEnter'));
   };
 
   const handleMouseLeave = () => {
     setPosition({ x: 0, y: 0 });
-    // Dispatch a custom event to reset the CustomCursor
     window.dispatchEvent(new CustomEvent('cursorLeave'));
   };
 
@@ -33,8 +32,8 @@ const MagneticWrapper = ({ children, sensitivity = 0.4 }) => {
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter} // Triggers expansion
-      onMouseLeave={handleMouseLeave} // Triggers reset
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
       style={{ display: 'inline-block' }}

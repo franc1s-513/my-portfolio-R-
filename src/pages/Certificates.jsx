@@ -155,8 +155,8 @@ const EnhancedBentoCard = ({ cert, onOpen }) => {
 const styles = {
   section: { padding: '60px 0', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'transparent' },
   header: { textAlign: 'center', marginBottom: '40px' },
-  title: { color: '#080c3e', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif" },
-  highlight: { color: '#0284c7' },
+  title: { color: '#000000', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: 0 },
+  highlight: { color: '#0369a1' },
   
   maskContainer: {
     WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
@@ -169,9 +169,9 @@ const styles = {
   bentoCard: {
     height: '220px',
     borderRadius: '24px',
-    background: 'rgba(255, 255, 255, 0.65)', 
-    backdropFilter: 'blur(16px)',
-    WebkitBackdropFilter: 'blur(16px)',
+    background: 'rgba(255, 255, 255, 0.55)', 
+    backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
@@ -184,23 +184,23 @@ const styles = {
     borderRadius: '14px', 
     overflow: 'hidden', 
     position: 'relative', 
-    background: 'rgba(255,255,255,0.7)',
+    background: 'rgba(255,255,255,0.6)',
   },
   bentoImg: { width: '100%', height: '100%', objectFit: 'cover' },
-  badge: { position: 'absolute', top: '8px', right: '8px', padding: '4px 10px', borderRadius: '8px', color: '#fff', fontSize: '0.6rem', fontWeight: '800', fontFamily: "'JetBrains Mono', monospace" },
+  badge: { position: 'absolute', top: '8px', right: '8px', padding: '4px 10px', borderRadius: '8px', color: '#000', fontSize: '0.55rem', fontWeight: '900' },
   
   cardContent: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexGrow: 1, gap: '5px' },
-  bentoTitle: { color: '#080c3e', fontSize: '1rem', margin: 0, fontWeight: '800', lineHeight: 1.2, fontFamily: "'Plus Jakarta Sans', sans-serif" },
-  bentoIssuer: { color: '#64748b', fontSize: '0.75rem', fontWeight: '500' },
-  viewBtn: { display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: '10px', background: 'rgba(255,255,255,0.75)', fontWeight: '700', fontSize: '0.7rem', cursor: 'pointer', border: '1px solid rgba(14, 165, 233, 0.3)' },
+  bentoTitle: { color: '#000000', fontSize: '1rem', margin: 0, fontWeight: '800', lineHeight: 1.2 },
+  bentoIssuer: { color: 'rgba(0,0,0,0.55)', fontSize: '0.7rem' },
+  viewBtn: { display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: '10px', background: 'rgba(255,255,255,0.6)', fontWeight: '700', fontSize: '0.7rem', cursor: 'pointer' },
 
-  overlay: { position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.75)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(12px)', padding: '20px' },
-  modalContent: { background: '#ffffff', padding: '24px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.4)', maxWidth: '800px', width: '90%', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' },
+  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(8px)', padding: '20px' },
+  modalContent: { background: '#ffffff', padding: '20px', borderRadius: '24px', border: '1px solid rgba(0,0,0,0.12)', maxWidth: '800px', width: '90%' },
   modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' },
-  fullImage: { width: '100%', borderRadius: '14px', display: 'block' },
-  modalFooter: { marginTop: '18px', display: 'flex', justifyContent: 'center' },
-  downloadBtn: { background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', color: '#fff', padding: '12px 24px', borderRadius: '12px', textDecoration: 'none', display: 'flex', alignItems: 'center', fontWeight: '700', fontSize: '0.9rem', boxShadow: '0 8px 24px rgba(14, 165, 233, 0.35)' },
-  closeBtn: { background: 'rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.1)', color: '#080c3e', width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }
+  fullImage: { width: '100%', borderRadius: '12px', display: 'block' },
+  modalFooter: { marginTop: '15px', display: 'flex', justifyContent: 'center' },
+  downloadBtn: { background: '#0ea5e9', color: '#fff', padding: '10px 20px', borderRadius: '12px', textDecoration: 'none', display: 'flex', alignItems: 'center', fontWeight: '700', fontSize: '0.9rem' },
+  closeBtn: { background: 'rgba(0,0,0,0.06)', border: '1.5px solid rgba(0,0,0,0.15)', color: '#000000', width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease' }
 };
 
 export default Certificates;
