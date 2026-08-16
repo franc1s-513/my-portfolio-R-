@@ -4,10 +4,8 @@ import { X } from 'lucide-react';
 
 // --- COMPONENTS (3D scene is code-split into its own chunk) ---
 import WindParticles from './components/WindParticles';
-
 import CustomCursor from './components/CustomCursor';
 import LightTunnel from './components/LightTunnel';
-import GlareHover from './components/GlareHover';
 import LoadingScreen from './components/LoadingScreen';
 
 const SkyAndBirds = lazy(() => import('./components/SkyAndBirds'));
