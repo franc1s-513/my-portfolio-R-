@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Github, X } from 'lucide-react';
+import GlareHover from './GlareHover';
 
 const ProjectModal = ({ project, onClose }) => {
   useEffect(() => {
@@ -858,70 +859,80 @@ const PortfolioCarousel = ({ projects = [] }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  {/* Card Visual Header */}
-                  <div className="card-img-wrap">
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800";
-                      }}
-                    />
-                    <span className="card-category-badge">{project.category}</span>
-                    <div className="card-status-dot">
-                      <div className="live-dot" />
-                      <span>{project.status || 'Active'}</span>
-                    </div>
-                  </div>
-
-                  {/* Card Body Content */}
-                  <div className="card-body-panel">
-                    <div>
-                      <h3 className="card-main-title">{project.title}</h3>
-                      <p className="card-desc-paragraph">
-                        {project.description}
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="card-tag-row">
-                        {project.tags?.slice(0, 3).map((tag, tIdx) => (
-                          <span key={tIdx} className="tag-pill">
-                            {tag}
-                          </span>
-                        ))}
+                  <GlareHover
+                    width="100%"
+                    height="100%"
+                    borderRadius="24px"
+                    glareColor="#ffffff"
+                    glareOpacity={0.6}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+                      {/* Card Visual Header */}
+                      <div className="card-img-wrap">
+                        <img 
+                          src={project.image} 
+                          alt={project.title} 
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800";
+                          }}
+                        />
+                        <span className="card-category-badge">{project.category}</span>
+                        <div className="card-status-dot">
+                          <div className="live-dot" />
+                          <span>{project.status || 'Active'}</span>
+                        </div>
                       </div>
 
-                      <div className="card-actions-grid">
-                        <a
-                          href={project.link || project.github || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="card-btn-action btn-live-demo"
-                          onClick={(e) => e.stopPropagation()}
-                          title="Live Demo"
-                        >
-                          <span>Demo</span>
-                          <ArrowUpRight size={13} />
-                        </a>
+                      {/* Card Body Content */}
+                      <div className="card-body-panel">
+                        <div>
+                          <h3 className="card-main-title">{project.title}</h3>
+                          <p className="card-desc-paragraph">
+                            {project.description}
+                          </p>
+                        </div>
 
-                        {project.github && (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="card-btn-action btn-source-code"
-                            onClick={(e) => e.stopPropagation()}
-                            title="View Source Code"
-                          >
-                            <Github size={13} />
-                            <span>Code</span>
-                          </a>
-                        )}
+                        <div>
+                          <div className="card-tag-row">
+                            {project.tags?.slice(0, 3).map((tag, tIdx) => (
+                              <span key={tIdx} className="tag-pill">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className="card-actions-grid">
+                            <a
+                              href={project.link || project.github || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="card-btn-action btn-live-demo"
+                              onClick={(e) => e.stopPropagation()}
+                              title="Live Demo"
+                            >
+                              <span>Demo</span>
+                              <ArrowUpRight size={13} />
+                            </a>
+
+                            {project.github && (
+                              <a
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="card-btn-action btn-source-code"
+                                onClick={(e) => e.stopPropagation()}
+                                title="View Source Code"
+                              >
+                                <Github size={13} />
+                                <span>Code</span>
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </GlareHover>
                 </div>
               );
             })}
