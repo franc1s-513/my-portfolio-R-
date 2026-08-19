@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import profilePhoto from '../assets/photos/profile.jpg';
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper';
@@ -261,6 +262,52 @@ const Home = () => {
                     </motion.div>
                   </motion.div>
                 </div>
+
+                {/* SCROLL INDICATOR */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 1.5 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: isMobile ? '30px' : '40px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '8px',
+                    pointerEvents: 'auto',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                  }}
+                  onClick={() => {
+                    window.scrollBy({
+                      top: window.innerHeight * 0.8,
+                      behavior: 'smooth'
+                    });
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontWeight: '800',
+                    letterSpacing: '3px',
+                    textTransform: 'uppercase',
+                    color: 'var(--text-sub)',
+                    opacity: 0.8,
+                    textShadow: '0 2px 10px rgba(255,255,255,0.5)'
+                  }}>
+                    Swipe Down
+                  </span>
+                  <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <ChevronDown size={24} color="var(--color-primary, #0ea5e9)" />
+                  </motion.div>
+                </motion.div>
               </div>
             </motion.div>
           )}
