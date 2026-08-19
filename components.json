@@ -14,10 +14,7 @@
     "components": "@/components",
     "utils": "@/lib/utils"
   },
-  "registries": [
-    {
-      "name": "reactbits",
-      "url": "https://pro.reactbits.dev/registry"
-    }
-  ]
+  "registries": {
+    "@reactbits": "https://pro.reactbits.dev/registry/{name}.json"
+  }
 }
