@@ -566,7 +566,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
           position: fixed;
           inset: 0;
           z-index: 10001;
-          background: rgba(0, 0, 0, 0.7);
+          background: rgba(0, 0, 0, 0.4);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
           display: flex;
@@ -582,13 +582,13 @@ const PortfolioCarousel = ({ projects = [] }) => {
           max-height: 85vh;
           overflow-y: auto;
           border-radius: 22px;
-          background: rgba(8, 12, 62, 0.95);
-          border: 1.5px solid rgba(229, 169, 60, 0.5);
-          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(229, 169, 60, 0.2);
+          background: rgba(255, 255, 255, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.8);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           scrollbar-width: thin;
-          scrollbar-color: rgba(229, 169, 60, 0.4) transparent;
+          scrollbar-color: rgba(14, 165, 233, 0.4) transparent;
         }
 
         .project-modal-content::-webkit-scrollbar {
@@ -600,7 +600,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .project-modal-content::-webkit-scrollbar-thumb {
-          background: rgba(229, 169, 60, 0.4);
+          background: rgba(14, 165, 233, 0.4);
           border-radius: 50px;
         }
 
@@ -612,9 +612,9 @@ const PortfolioCarousel = ({ projects = [] }) => {
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          border: 1.5px solid rgba(255, 255, 255, 0.3);
-          background: rgba(8, 12, 62, 0.8);
-          color: #ffffff;
+          border: 1.5px solid rgba(0, 0, 0, 0.1);
+          background: rgba(255, 255, 255, 0.8);
+          color: #080c3e;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -625,10 +625,10 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .modal-close-btn:hover {
-          background: #e5a93c;
-          color: #080c3e;
+          background: #0ea5e9;
+          color: #ffffff;
           transform: rotate(90deg);
-          border-color: #e5a93c;
+          border-color: #0ea5e9;
         }
 
         .modal-image-wrapper {
@@ -652,7 +652,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
           left: 0;
           right: 0;
           height: 60%;
-          background: linear-gradient(to top, rgba(8, 12, 62, 1), transparent);
+          background: linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent);
           pointer-events: none;
         }
 
@@ -662,15 +662,15 @@ const PortfolioCarousel = ({ projects = [] }) => {
           left: 16px;
           font-size: 0.7rem;
           font-weight: 800;
-          color: #00f0ff;
+          color: #0284c7;
           text-transform: uppercase;
           letter-spacing: 0.8px;
-          background: rgba(8, 12, 62, 0.85);
+          background: rgba(255, 255, 255, 0.85);
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
           padding: 6px 14px;
           border-radius: 50px;
-          border: 1px solid rgba(0, 240, 255, 0.35);
+          border: 1px solid rgba(14, 165, 233, 0.35);
         }
 
         .modal-details {
@@ -683,7 +683,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
         .modal-project-title {
           font-size: 1.6rem;
           font-weight: 900;
-          color: #ffffff;
+          color: #080c3e;
           margin: 0;
           letter-spacing: -0.5px;
           line-height: 1.15;
@@ -691,7 +691,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
 
         .modal-project-desc {
           font-size: 0.88rem;
-          color: #cbd5e1;
+          color: #334155;
           line-height: 1.65;
           margin: 0;
           font-weight: 400;
@@ -706,11 +706,11 @@ const PortfolioCarousel = ({ projects = [] }) => {
         .modal-tag {
           padding: 5px 12px;
           border-radius: 50px;
-          background: rgba(0, 240, 255, 0.08);
-          border: 1px solid rgba(0, 240, 255, 0.3);
+          background: rgba(14, 165, 233, 0.12);
+          border: 1px solid rgba(14, 165, 233, 0.3);
           font-size: 0.72rem;
           font-weight: 700;
-          color: #00f0ff;
+          color: #0284c7;
           letter-spacing: 0.3px;
         }
 
@@ -734,29 +734,28 @@ const PortfolioCarousel = ({ projects = [] }) => {
         }
 
         .modal-github-btn {
-          background: rgba(229, 169, 60, 0.15);
-          border-color: rgba(229, 169, 60, 0.5);
-          color: #e5a93c;
+          background: rgba(255, 255, 255, 0.8);
+          border-color: rgba(14, 165, 233, 0.35);
+          color: #080c3e;
         }
 
         .modal-github-btn:hover {
-          background: #e5a93c;
-          color: #080c3e;
+          background: rgba(14, 165, 233, 0.15);
+          border-color: #0ea5e9;
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(229, 169, 60, 0.4);
+          box-shadow: 0 8px 25px rgba(14, 165, 233, 0.2);
         }
 
         .modal-live-btn {
-          background: rgba(0, 240, 255, 0.1);
-          border-color: rgba(0, 240, 255, 0.35);
-          color: #00f0ff;
+          background: linear-gradient(135deg, #0ea5e9, #0284c7);
+          border-color: rgba(255, 255, 255, 0.3);
+          color: #ffffff;
         }
 
         .modal-live-btn:hover {
-          background: #00f0ff;
-          color: #080c3e;
+          background: linear-gradient(135deg, #38bdf8, #0ea5e9);
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 240, 255, 0.35);
+          box-shadow: 0 8px 25px rgba(14, 165, 233, 0.35);
         }
 
         @media (max-width: 768px) {
