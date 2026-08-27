@@ -1,31 +1,27 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import {
   SiReact,
   SiNodedotjs,
   SiTailwindcss,
-  SiJavascript,
   SiPython,
   SiMongodb,
   SiGit,
   SiCplusplus,
   SiFramer,
   SiThreedotjs,
-  SiFastapi,
-  SiDocker
+  SiFastapi
 } from 'react-icons/si';
-import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaGraduationCap, FaCode, FaRocket } from 'react-icons/fa';
+import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaCode, FaRocket } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
 import {
-  FiExternalLink,
   FiCompass,
   FiCpu,
   FiTarget,
   FiCheckCircle,
   FiArrowRight,
   FiLayers,
-  FiTerminal,
   FiAward,
   FiMapPin
 } from 'react-icons/fi';
@@ -42,26 +38,17 @@ const About = () => {
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   const techStack = [
-    "React", "Three.js", "Node.js", "Python", "Framer Motion",
-    "TailwindCSS", "MongoDB", "FastAPI", "Git", "C++", "Java"
-  ];
-
-  const skillDomains = [
-    {
-      category: "Frontend & 3D Web",
-      icon: <SiReact size={18} color="#0ea5e9" />,
-      skills: ["React 19", "Three.js / R3F", "Framer Motion", "TailwindCSS", "WebGL Shaders"]
-    },
-    {
-      category: "Backend & Databases",
-      icon: <SiNodedotjs size={18} color="#22c55e" />,
-      skills: ["Node.js", "FastAPI", "Python", "MongoDB", "RESTful Architecture"]
-    },
-    {
-      category: "DevOps & Cloud Tools",
-      icon: <SiDocker size={18} color="#0ea5e9" />,
-      skills: ["Git / GitHub", "Docker", "Linux", "Vite", "CI / CD Pipelines"]
-    }
+    { name: "React", Icon: SiReact },
+    { name: "Three.js", Icon: SiThreedotjs },
+    { name: "Node.js", Icon: SiNodedotjs },
+    { name: "Python", Icon: SiPython },
+    { name: "Framer Motion", Icon: SiFramer },
+    { name: "TailwindCSS", Icon: SiTailwindcss },
+    { name: "MongoDB", Icon: SiMongodb },
+    { name: "FastAPI", Icon: SiFastapi },
+    { name: "Git", Icon: SiGit },
+    { name: "C++", Icon: SiCplusplus },
+    { name: "Java", Icon: FaJava }
   ];
 
   const timelineData = [
@@ -92,10 +79,10 @@ const About = () => {
   ];
 
   const stats = [
-    { label: "Engineering Track", value: "B.E. CSE" },
-    { label: "Core Focus", value: "Full-Stack & Systems" },
-    { label: "Performance Goal", value: "60+ FPS Polish" },
-    { label: "Location", value: "Tamil Nadu, IN" }
+    { label: "Education", value: "B.E. Computer Science" },
+    { label: "Discipline", value: "Full-Stack Engineering" },
+    { label: "Focus", value: "Web & 3D Applications" },
+    { label: "Location", value: "Tamil Nadu, India" }
   ];
 
   const socialLinks = [
@@ -127,8 +114,17 @@ const About = () => {
             </h1>
 
             <p className="hero-bio-paragraph">
-              I am <b>Francis Fernando</b>, an engineering student and full-stack software builder based in Tamil Nadu. I specialize in turning complex system workflows into high-performance web applications, interactive 3D landscapes, and intuitive digital tools.
+              I am <b>Francis Fernando</b>, a computer science engineer and full-stack software builder based in Tamil Nadu. I turn complex, real-world workflows into high-performance web applications, interactive 3D experiences, and cleanly-architected digital tools — with a focus on performance, accessibility, and maintainability.
             </p>
+
+            <div className="hero-roles-row">
+              {["Full-Stack Developer", "3D Web Engineer", "Systems Thinker"].map((role) => (
+                <span key={role} className="hero-role-chip">
+                  <FiCheckCircle size={12} color="#0ea5e9" />
+                  <span>{role}</span>
+                </span>
+              ))}
+            </div>
 
             <div className="stats-grid">
               {stats.map((s, idx) => (
@@ -146,7 +142,7 @@ const About = () => {
               <div className="profile-float-tag">
                 <div className="float-tag-left">
                   <div className="live-dot" aria-hidden="true" />
-                  <span>Building Software</span>
+                  <span>Full-Stack Developer</span>
                 </div>
                 <FiMapPin size={14} color="#38bdf8" />
               </div>
@@ -176,14 +172,14 @@ const About = () => {
                     <FiCompass size={20} />
                   </div>
                 </div>
-                <h3 className="bento-title">Roots in Hosur</h3>
+                <h3 className="bento-title">A Foundation in Engineering</h3>
                 <p className="bento-body">
-                  Growing up in Hosur, curiosity was my primary compass. From early experiments with electronics to taking apart computer programs, I learned that failure is just raw data for a comeback.
+                  My path to software began with an early curiosity for electronics and programming. That foundation grew into a structured, problem-solving mindset that I now apply to every system I build.
                 </p>
               </div>
               <div className="bento-footer">
                 <FiMapPin size={13} color="#0ea5e9" />
-                <span>Hosur, Tamil Nadu <time dateTime="2006">Est. 2006</time></span>
+                <span>Hosur, Tamil Nadu</span>
               </div>
             </motion.div>
 
@@ -201,9 +197,9 @@ const About = () => {
                     <FiCpu size={20} />
                   </div>
                 </div>
-                <h3 className="bento-title">Gaming to Full-Stack</h3>
+                <h3 className="bento-title">From Graphics to Full-Stack</h3>
                 <p className="bento-body">
-                  Intense gaming sessions uncovered my fascination for computer graphics and interactive responsiveness. That curiosity evolved into mastering JavaScript engines, full-stack frameworks, and 3D shaders.
+                  A deep interest in computer graphics led me to explore JavaScript engines, modern frameworks, and real-time rendering. This evolved into a full-stack practice spanning backend systems and interactive 3D interfaces.
                 </p>
               </div>
               <div className="bento-footer">
@@ -226,14 +222,14 @@ const About = () => {
                     <FiTarget size={20} />
                   </div>
                 </div>
-                <h3 className="bento-title">High-Impact Engineering</h3>
+                <h3 className="bento-title">High-Impact, Maintainable Systems</h3>
                 <p className="bento-body">
-                  Solving complex architectural challenges by pairing clean, modular backend pipelines with visceral, butter-smooth frontend interfaces that leave a lasting impression.
+                  I build clean, modular backends paired with responsive, high-performance frontends. My goal is software that is reliable, scalable, and a genuine pleasure to use.
                 </p>
               </div>
               <div className="bento-footer">
                 <FaRocket size={13} color="#0ea5e9" />
-                <span>Zero-Lag Scalable Solutions</span>
+                <span>Reliable, Scalable Solutions</span>
               </div>
             </motion.div>
           </div>
@@ -243,18 +239,11 @@ const About = () => {
         <section style={{ marginBottom: 'var(--space-section)' }}>
           <div style={{ overflow: 'hidden', padding: '20px 0', borderTop: '1px solid rgba(0,0,0,0.06)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
             <LogoLoop
-              logos={techStack.map((tech) => ({
+              logos={techStack.map(({ name, Icon }) => ({
                 node: (
-                  <div style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '1.4rem',
-                    fontWeight: '800',
-                    color: 'rgba(8, 12, 62, 0.45)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                  }}>
-                    <span>{tech}</span>
+                  <div className="logo-loop-item">
+                    <Icon size={22} color="#0ea5e9" />
+                    <span>{name}</span>
                   </div>
                 )
               }))}
@@ -267,44 +256,10 @@ const About = () => {
           </div>
         </section>
 
-        {/* SKILLS MATRIX */}
-        <section style={{ marginBottom: 'var(--space-section)' }}>
-          <div className="section-title-wrap">
-            <div className="section-label">03 / Technical Matrix</div>
-            <h2 className="section-title">Core Competencies</h2>
-          </div>
-
-          <div className="skills-matrix-grid">
-            {skillDomains.map((domain, idx) => (
-              <motion.div
-                key={idx}
-                className="domain-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-              >
-                <div className="domain-header">
-                  {domain.icon}
-                  <h3 className="domain-title">{domain.category}</h3>
-                </div>
-                <div className="chips-wrap">
-                  {domain.skills.map((skill, sIdx) => (
-                    <div key={sIdx} className="skill-chip-item">
-                      <FiCheckCircle size={11} color="#0ea5e9" />
-                      <span>{skill}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
         {/* ACADEMIC JOURNEY TIMELINE */}
         <section style={{ marginBottom: 'var(--space-section)' }}>
           <div className="section-title-wrap">
-            <div className="section-label">04 / Academic Journey</div>
+            <div className="section-label">03 / Academic Journey</div>
             <h2 className="section-title">Education & Milestones</h2>
           </div>
 
@@ -348,8 +303,9 @@ const About = () => {
         <section>
           <div className="bottom-cta-banner">
             <div>
-              <h3 className="cta-heading">Want to see these skills in action?</h3>
-              <p className="cta-sub">Explore deployed production projects or initiate a project conversation.</p>
+              <div className="section-label" style={{ marginBottom: '8px' }}>04 / Next Step</div>
+              <h3 className="cta-heading">Let's build something together.</h3>
+              <p className="cta-sub">Explore my production projects, or reach out to start a conversation about your next product.</p>
             </div>
             <div className="cta-button-group">
               <button
@@ -369,7 +325,6 @@ const About = () => {
             <div className="live-dot" aria-hidden="true" />
             <span style={{ fontWeight: '700' }}>Available for Engineering Roles & Projects</span>
           </div>
-
           <div className="socials-cluster">
             {socialLinks.map((item, i) => (
               <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" className="social-link-node">
