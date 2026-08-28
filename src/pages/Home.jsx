@@ -163,11 +163,12 @@ const Home = () => {
                       style={{
                         fontFamily: 'var(--font-display)',
                         fontWeight: '900',
-                        color: 'var(--color-navy)',
+                        color: '#0A192F', /* Navy Blue */
+                        WebkitTextStroke: '2px #D4AF37', /* Gold Outline */
                         margin: '0 0 8px',
                         lineHeight: '0.92',
                         letterSpacing: '-2px',
-                        textShadow: '0 2px 30px rgba(255, 255, 255, 0.45)',
+                        textShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
                         fontSize: isMobile ? '3.2rem' : 'clamp(3.5rem, 6vw, 5.8rem)',
                         textAlign: isMobile ? 'center' : 'left',
                       }}
@@ -238,13 +239,14 @@ const Home = () => {
                           }}
                           style={{
                             overflow: 'hidden',
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            backdropFilter: 'blur(15px)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(14, 165, 233, 0.15)',
+                            background: '#ffffff',
+                            border: '4px solid #ffffff',
+                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
                             cursor: 'pointer',
                             width: isMobile ? '280px' : 'clamp(320px, 30vw, 420px)',
                             height: isMobile ? '320px' : 'clamp(380px, 40vw, 480px)',
+                            position: 'relative',
+                            transform: 'rotate(2deg)',
                           }}
                         >
                           <img
@@ -255,6 +257,7 @@ const Home = () => {
                               height: '100%',
                               objectFit: 'cover',
                               objectPosition: 'center 15%',
+                              filter: 'grayscale(100%) contrast(1.1) sepia(10%)',
                             }}
                           />
                         </motion.div>

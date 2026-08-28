@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Github, X } from 'lucide-react';
 import GlareHover from './GlareHover';
@@ -297,7 +297,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
                   <GlareHover
                     width="100%"
                     height="100%"
-                    borderRadius="24px"
+                    borderRadius="0px"
                     glareColor="#ffffff"
                     glareOpacity={0.6}
                   >

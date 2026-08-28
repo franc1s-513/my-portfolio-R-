@@ -122,19 +122,17 @@ const Navbar = ({ onOpenModal }) => {
     width: '90%',
     maxWidth: '850px',
     padding: '0 25px',
-    borderRadius: '50px',
+    borderRadius: '0px',
     border: '1px solid',
     zIndex: 'var(--z-nav)',
     display: 'flex',
     alignItems: 'center',
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    background: scrolled ? 'var(--bg-nav-scrolled)' : 'var(--bg-nav)',
-    borderColor: 'var(--border-nav)',
-    backdropFilter: scrolled ? 'blur(28px) saturate(200%)' : 'blur(20px) saturate(180%)',
-    WebkitBackdropFilter: scrolled ? 'blur(28px) saturate(200%)' : 'blur(20px) saturate(180%)',
+    background: '#ffffff',
+    borderColor: 'rgba(0,0,0,0.1)',
     top: scrolled ? '12px' : '25px',
     height: scrolled ? '54px' : '65px',
-    boxShadow: scrolled ? 'var(--shadow-nav-scrolled)' : 'var(--shadow-nav)',
+    boxShadow: scrolled ? '0 10px 30px rgba(0,0,0,0.05)' : 'none',
   };
 
   return (
@@ -150,9 +148,9 @@ const Navbar = ({ onOpenModal }) => {
                 fontSize: '1.2rem',
                 letterSpacing: '2px',
                 transition: 'color 0.3s',
-                color: 'var(--text-main)',
+                color: '#0A192F',
                 textDecoration: 'none',
-                textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                textShadow: 'none',
               }}
               aria-label="Francis Fernando — Home"
             >
@@ -175,8 +173,8 @@ const Navbar = ({ onOpenModal }) => {
                     letterSpacing: '1px',
                     textTransform: 'uppercase',
                     transition: 'color 0.3s ease',
-                    color: isActive(item) ? 'var(--color-primary)' : 'var(--text-main)',
-                    textShadow: isActive(item) ? '0 0 10px rgba(14, 165, 233, 0.6)' : '0 1px 2px rgba(0,0,0,0.05)',
+                    color: isActive(item) ? '#0A192F' : 'rgba(10, 25, 47, 0.6)',
+                    textShadow: 'none',
                   }}
                   aria-current={isActive(item) ? 'page' : undefined}
                 >

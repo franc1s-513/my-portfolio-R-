@@ -28,7 +28,17 @@ const Certificates = () => {
   return (
     <div className="certificates-page">
       <div className="certificates-header">
-        <motion.h1 initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="certificates-title">
+        <motion.h1 
+          initial={{opacity:0, y:20}} 
+          animate={{opacity:1, y:0}} 
+          className="certificates-title"
+          style={{
+            fontFamily: 'var(--font-display)',
+            color: '#0A192F',
+            WebkitTextStroke: '2px #D4AF37',
+            textShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+          }}
+        >
            <span className="certificates-highlight">Achievements</span>
         </motion.h1>
       </div>
