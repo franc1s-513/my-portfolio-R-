@@ -84,15 +84,10 @@ const Contact = () => {
 
   return (
     <div className="contact-wrapper">
-      {/* Background Ambient Glows */}
-      <div className="ambient-glow-orb orb-top-right" aria-hidden="true" />
-      <div className="ambient-glow-orb orb-bottom-left" aria-hidden="true" />
-
-      <div className="contact-grid">
-
+      <div className="editorial-contact-grid">
         {/* LEFT: 3D LANYARD INTERACTIVE CARD */}
         <motion.div
-          className="lanyard-card-container"
+          className="lanyard-editorial-container"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -105,170 +100,118 @@ const Contact = () => {
 
         {/* RIGHT: CONTENT & FORM */}
         <motion.div
-          className="content-section"
+          className="editorial-contact-right"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* HEADER */}
-          <div className="content-header">
-            <h1 className="main-heading">Let's engineer something iconic.</h1>
+          <div className="editorial-contact-header">
+            <h1 className="contact-editorial-title">Let's engineer<br/>something iconic.</h1>
           </div>
 
-          {/* 1-CLICK COPY DIRECT EMAIL */}
-          <div className="email-direct-strip">
-            <div className="email-info-left">
-              <Mail size={15} color="#0284c7" />
-              <span>francisfernandov07@gmail.com</span>
-            </div>
-            <button className="copy-btn" onClick={handleCopyEmail}>
-              {copied ? <Check size={12} /> : <Copy size={12} />}
-              <span>{copied ? 'Copied!' : 'Copy Email'}</span>
-            </button>
-          </div>
-
-          {/* FORM & SOCIAL STACK */}
-          <div className="form-and-socials-grid">
-            {/* GLASS FORM */}
-            <div className="glass-form-card">
-              <form ref={form} onSubmit={sendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div className="input-group">
-                  <label className="input-label" htmlFor="contact-name">
-                    <User size={12} />
-                    <span>Your Name</span>
-                  </label>
+          <div className="editorial-form-wrapper">
+              <form ref={form} onSubmit={sendEmail} className="editorial-form">
+                <div className="editorial-input-group">
+                  <label className="editorial-label" htmlFor="contact-name">Y O U R &nbsp;&nbsp; N A M E</label>
                   <input
                     type="text"
                     id="contact-name"
                     name="user_name"
                     value={formData.user_name}
                     onChange={handleInputChange}
-                    className="glass-input"
-                    placeholder="e.g. Alex Morgan"
+                    className="editorial-input"
+                    placeholder="Alex Morgan"
                     required
                   />
                 </div>
 
-                <div className="input-group">
-                  <label className="input-label" htmlFor="contact-email">
-                    <Mail size={12} />
-                    <span>Your Email</span>
-                  </label>
+                <div className="editorial-input-group">
+                  <label className="editorial-label" htmlFor="contact-email">Y O U R &nbsp;&nbsp; E M A I L</label>
                   <input
                     type="email"
                     id="contact-email"
                     name="user_email"
                     value={formData.user_email}
                     onChange={handleInputChange}
-                    className="glass-input"
+                    className="editorial-input"
                     placeholder="alex@company.com"
                     required
                   />
                 </div>
 
-                <div className="input-group">
-                  <label className="input-label" htmlFor="contact-message">
-                    <MessageSquare size={12} />
-                    <span>Project Details</span>
-                  </label>
+                <div className="editorial-input-group">
+                  <label className="editorial-label" htmlFor="contact-message">P R O J E C T &nbsp;&nbsp; D E T A I L S</label>
                   <textarea
                     id="contact-message"
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="glass-input glass-textarea"
-                    placeholder="Tell me about your project goals..."
+                    className="editorial-input editorial-textarea"
+                    placeholder="Tell me about your goals..."
                     required
                   />
                 </div>
 
-                <GlareHover borderRadius="12px">
+                <div className="editorial-submit-row">
                   <button
                     type="submit"
                     disabled={status === 'SENDING'}
-                    className="submit-action-btn"
+                    className="editorial-submit-btn"
                   >
-                    <span>
-                      {status === 'SENDING'
-                        ? 'Sending...'
-                        : status === 'SUCCESS'
-                        ? 'Message Dispatched!'
-                        : 'Send Message'}
-                    </span>
-                    {status === 'SUCCESS' ? <Check size={16} /> : <Send size={15} />}
+                    {status === 'SENDING'
+                      ? 'SENDING...'
+                      : status === 'SUCCESS'
+                      ? 'DISPATCHED'
+                      : 'SEND MESSAGE'}
+                    {status === 'SUCCESS' ? <Check size={16} /> : <Send size={15} className="send-icon" />}
                   </button>
-                </GlareHover>
 
-                {/* STATUS FEEDBACK */}
-                <AnimatePresence>
-                  {status === 'SUCCESS' && (
-                    <motion.div
-                      className="status-feedback-banner status-success"
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Check size={14} />
-                      <span>Thank you! Your message was sent successfully.</span>
-                    </motion.div>
-                  )}
-                  {status === 'ERROR' && (
-                    <motion.div
-                      className="status-feedback-banner status-error"
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <span>Error sending. Please email directly above.</span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  {/* STATUS FEEDBACK */}
+                  <AnimatePresence>
+                    {status === 'SUCCESS' && (
+                      <motion.div
+                        className="editorial-status-msg success"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        Message received.
+                      </motion.div>
+                    )}
+                    {status === 'ERROR' && (
+                      <motion.div
+                        className="editorial-status-msg error"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        Error. Try email.
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </form>
-            </div>
+          </div>
 
-            {/* SOCIAL CARDS & METRICS */}
-            <div className="social-cards-stack">
-              {socials.map((s, idx) => (
+          <div className="editorial-socials-list">
+             {socials.map((s, idx) => (
                 <a
                   key={idx}
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-card-item"
-                  title={s.name}
+                  className="editorial-social-row"
                 >
-                  <div className="social-left">
-                    <div className="social-icon-box">
-                      {s.icon}
-                    </div>
-                    <div className="social-text-info">
-                      <span className="social-name">{s.name}</span>
-                      <span className="social-handle">{s.handle}</span>
-                    </div>
+                  <span className="editorial-social-name">{s.name}</span>
+                  <div className="editorial-social-right">
+                     <span className="editorial-social-handle">{s.handle}</span>
+                     <ArrowUpRight size={20} className="editorial-social-arrow" />
                   </div>
-                  <ArrowUpRight size={14} className="social-arrow-icon" />
                 </a>
               ))}
-
-              {/* QUICK METRICS */}
-              <div className="metrics-strip">
-                <div className="metric-mini-card">
-                  <Clock size={14} className="metric-icon" />
-                  <div>
-                    <div className="metric-label">Response</div>
-                    <div className="metric-value">&lt; 24h Reply</div>
-                  </div>
-                </div>
-                <div className="metric-mini-card">
-                  <MapPin size={14} className="metric-icon" />
-                  <div>
-                    <div className="metric-label">Location</div>
-                    <div className="metric-value">Tamil Nadu, IN</div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
+          
         </motion.div>
       </div>
     </div>
