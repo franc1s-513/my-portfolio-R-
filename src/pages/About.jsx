@@ -1,88 +1,203 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useSpring } from 'framer-motion';
-import {
-  SiReact,
-  SiNodedotjs,
-  SiTailwindcss,
-  SiPython,
-  SiMongodb,
-  SiGit,
-  SiCplusplus,
-  SiFramer,
-  SiThreedotjs,
-  SiFastapi
-} from 'react-icons/si';
-import { FaJava, FaGithub, FaLinkedin, FaInstagram, FaCode, FaRocket } from 'react-icons/fa';
+import { 
+  motion, 
+  useScroll,
+  useMotionValue,
+  useMotionTemplate
+} from 'framer-motion';
+
+import { FaJava, FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
-import {
-  FiCompass,
-  FiCpu,
-  FiTarget,
-  FiCheckCircle,
-  FiArrowRight,
-  FiLayers,
-  FiAward,
-  FiMapPin
-} from 'react-icons/fi';
+import { FiArrowRight, FiMapPin, FiCode, FiCpu } from 'react-icons/fi';
 import PageTransition from '../components/PageTransition';
-import LogoLoop from '../components/LogoLoop';
 import profilePhoto from '../assets/photos/profile.jpg';
 import './About.css';
 
+// -----------------------------------------------------
+// 1. HERO: EDITORIAL (PHOTO STAMP)
+// -----------------------------------------------------
+const EditorialHero = () => {
+  return (
+    <section className="editorial-hero-section">
+      
+      <div className="editorial-left">
+        <motion.h1 
+          className="editorial-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <span className="title-first">Francis</span>
+          <span className="title-last">Fernando</span>
+        </motion.h1>
+        
+        <motion.div 
+          className="editorial-bio-container"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        >
+          <p className="editorial-greeting">Hello, I'm Francis.</p>
+          <p className="editorial-bio">
+            I'm a Full-Stack Engineer and AI Developer based in Tamil Nadu, India.
+            <br/><br/>
+            I architect intelligent web systems and scalable backends. Focused on robust engineering, clean code, and pushing the boundaries of AI integration in modern applications.
+          </p>
+          
+          <div className="editorial-clients">
+            Focus areas include: React, Node.js, Python, FastAPI, and Machine Learning algorithms.
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="editorial-socials"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <a href="https://github.com/franc1s-513" target="_blank" rel="noreferrer">Github</a>
+          <a href="https://linkedin.com/in/francis-fernando-v-bb81a432a" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="https://instagram.com/franc1s._txt" target="_blank" rel="noreferrer">Instagram</a>
+        </motion.div>
+      </div>
+
+      <div className="editorial-right">
+        <motion.div 
+          className="photo-stamp"
+          initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+          animate={{ opacity: 1, scale: 1, rotate: 2 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <img src={profilePhoto} alt="Francis Fernando" />
+        </motion.div>
+      </div>
+
+    </section>
+  );
+};
+
+
+
+// -----------------------------------------------------
+// 2. EDITORIAL TIMELINE
+// -----------------------------------------------------
+const EditorialTimeline = ({ timelineData }) => {
+  return (
+    <section className="editorial-timeline-section">
+      <div className="editorial-section-header">
+        <h2 className="editorial-section-title">Academic Journey</h2>
+      </div>
+
+      <div className="editorial-timeline-list">
+        {timelineData.map((item, idx) => (
+          <motion.div 
+            key={idx} 
+            className="editorial-timeline-row"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: idx * 0.1 }}
+          >
+            <div className="editorial-timeline-year">
+              {item.year.split("—")[0].trim()}
+            </div>
+            
+            <div className="editorial-timeline-content">
+              <div className="editorial-timeline-header">
+                <h3 className="editorial-timeline-title">{item.title}</h3>
+                <span className="editorial-timeline-status">{item.status}</span>
+              </div>
+              <div className="editorial-timeline-inst">{item.institution}</div>
+              <p className="editorial-timeline-desc">{item.detail}</p>
+              
+              <div className="editorial-timeline-tags">
+                {item.highlights.map((h, hIdx) => (
+                  <span key={hIdx}>{h}</span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// -----------------------------------------------------
+// 3. EDITORIAL CONNECT
+// -----------------------------------------------------
+const EditorialConnect = ({ socialLinks }) => {
+  return (
+    <section className="editorial-connect-section">
+      <div className="editorial-connect-container">
+        <div className="editorial-connect-header">
+          <h2 className="editorial-huge-text">Let's Talk.</h2>
+          <p className="editorial-connect-desc">
+            Open for software engineering roles, product design collaborations, and AI partnership opportunities.
+          </p>
+        </div>
+
+        <div className="editorial-connect-links">
+          {socialLinks.map((item, idx) => (
+            <a 
+              key={idx} 
+              href={item.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="editorial-connect-link-item"
+            >
+              <span className="connect-link-label">{item.label}</span>
+              <FiArrowRight className="connect-link-arrow" />
+            </a>
+          ))}
+        </div>
+      </div>
+      
+      <div className="editorial-footer-bar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="pulse-dot" style={{ position: 'relative' }} />
+          <span style={{ fontWeight: '700' }}>Available for Engineering Roles</span>
+        </div>
+        <div className="copyright-text">
+          © 2026 Francis Fernando. All rights reserved.
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+// -----------------------------------------------------
+// MAIN ABOUT PAGE COMPONENT
+// -----------------------------------------------------
 const About = () => {
-  const navigate = useNavigate();
-  const containerRef = useRef(null);
 
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
-  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
-  const techStack = [
-    { name: "React", Icon: SiReact },
-    { name: "Three.js", Icon: SiThreedotjs },
-    { name: "Node.js", Icon: SiNodedotjs },
-    { name: "Python", Icon: SiPython },
-    { name: "Framer Motion", Icon: SiFramer },
-    { name: "TailwindCSS", Icon: SiTailwindcss },
-    { name: "MongoDB", Icon: SiMongodb },
-    { name: "FastAPI", Icon: SiFastapi },
-    { name: "Git", Icon: SiGit },
-    { name: "C++", Icon: SiCplusplus },
-    { name: "Java", Icon: FaJava }
-  ];
 
   const timelineData = [
     {
       year: "2024 — 2028",
       status: "CURRENT",
-      title: "B.E. Computer Science & Engineering",
+      title: "B.E. Computer Science",
       institution: "KSR College of Engineering",
-      detail: "II-Year undergraduate specializing in scalable web systems, interactive 3D visualization, and cloud-native software architecture.",
-      highlights: ["Core CS Foundations", "Full-Stack Development", "Software Architecture"]
+      detail: "II-Year undergraduate specializing in scalable web systems, AI development, and cloud architecture.",
+      highlights: ["Core CS", "Full-Stack Dev", "Machine Learning"]
     },
     {
       year: "2022 — 2024",
       status: "COMPLETED",
-      title: "Higher Secondary Education (HSC)",
+      title: "Higher Secondary (HSC)",
       institution: "Asian Christian Academy",
       detail: "Focused on Mathematics & Computer Science. Built foundational projects in software architecture and algorithms.",
-      highlights: ["Computer Science Major", "Algorithmic Logic", "Web Basics"]
+      highlights: ["CS Major", "Algorithmic Logic", "Web Basics"]
     },
     {
       year: "2022",
       status: "COMPLETED",
-      title: "Secondary School Education (SSLC)",
+      title: "Secondary School (SSLC)",
       institution: "St. Joseph's Academy",
       detail: "Graduated with excellence, sparking a passion for logic, analytical problem solving, and computational engineering.",
-      highlights: ["Mathematics Honors", "Analytical Foundations"]
+      highlights: ["Math Honors", "Analytical Foundations", "Logic"]
     }
-  ];
-
-  const stats = [
-    { label: "Education", value: "B.E. Computer Science" },
-    { label: "Discipline", value: "Full-Stack Engineering" },
-    { label: "Focus", value: "Web & 3D Applications" },
-    { label: "Location", value: "Tamil Nadu, India" }
   ];
 
   const socialLinks = [
@@ -93,247 +208,13 @@ const About = () => {
   ];
 
   return (
-    <div className="about-page-wrapper" ref={containerRef}>
+    <div className="about-page-wrapper">
       <PageTransition direction="up">
+        
+        <EditorialHero />
 
-        {/* HERO BIO SHOWCASE */}
-        <motion.section
-          className="hero-bio-card"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="hero-bio-left">
-            <div className="badge-pill">
-              <FaCode size={13} />
-              <span>01 / Profile & Persona</span>
-            </div>
-
-            <h1 className="hero-main-title">
-              Engineering the <span className="hero-highlight">logic</span> behind the interface.
-            </h1>
-
-            <p className="hero-bio-paragraph">
-              I am <b>Francis Fernando</b>, a computer science engineer and full-stack software builder based in Tamil Nadu. I turn complex, real-world workflows into high-performance web applications, interactive 3D experiences, and cleanly-architected digital tools — with a focus on performance, accessibility, and maintainability.
-            </p>
-
-            <div className="hero-roles-row">
-              {["Full-Stack Developer", "3D Web Engineer", "Systems Thinker"].map((role) => (
-                <span key={role} className="hero-role-chip">
-                  <FiCheckCircle size={12} color="#0ea5e9" />
-                  <span>{role}</span>
-                </span>
-              ))}
-            </div>
-
-            <div className="stats-grid">
-              {stats.map((s, idx) => (
-                <div key={idx} className="stat-card">
-                  <span className="stat-label">{s.label}</span>
-                  <span className="stat-value">{s.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="hero-bio-right">
-            <div className="profile-frame-wrap">
-              <img src={profilePhoto} alt="Francis Fernando" className="profile-img-element" />
-              <div className="profile-float-tag">
-                <div className="float-tag-left">
-                  <div className="live-dot" aria-hidden="true" />
-                  <span>Full-Stack Developer</span>
-                </div>
-                <FiMapPin size={14} color="#38bdf8" />
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* BENTO BIO TRILOGY */}
-        <section style={{ marginBottom: 'var(--space-section)' }}>
-          <div className="section-title-wrap">
-            <div className="section-label">02 / Narrative Trilogy</div>
-            <h2 className="section-title">The Engineering Story</h2>
-          </div>
-
-          <div className="bento-grid">
-            <motion.div
-              className="bento-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div>
-                <div className="bento-card-header">
-                  <span className="bento-step-pill">01 / ORIGIN</span>
-                  <div className="bento-icon-wrap">
-                    <FiCompass size={20} />
-                  </div>
-                </div>
-                <h3 className="bento-title">A Foundation in Engineering</h3>
-                <p className="bento-body">
-                  My path to software began with an early curiosity for electronics and programming. That foundation grew into a structured, problem-solving mindset that I now apply to every system I build.
-                </p>
-              </div>
-              <div className="bento-footer">
-                <FiMapPin size={13} color="#0ea5e9" />
-                <span>Hosur, Tamil Nadu</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="bento-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <div>
-                <div className="bento-card-header">
-                  <span className="bento-step-pill">02 / EVOLUTION</span>
-                  <div className="bento-icon-wrap">
-                    <FiCpu size={20} />
-                  </div>
-                </div>
-                <h3 className="bento-title">From Graphics to Full-Stack</h3>
-                <p className="bento-body">
-                  A deep interest in computer graphics led me to explore JavaScript engines, modern frameworks, and real-time rendering. This evolved into a full-stack practice spanning backend systems and interactive 3D interfaces.
-                </p>
-              </div>
-              <div className="bento-footer">
-                <FiLayers size={13} color="#0ea5e9" />
-                <span>Full-Stack & 3D Interactive Web</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="bento-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div>
-                <div className="bento-card-header">
-                  <span className="bento-step-pill">03 / MISSION</span>
-                  <div className="bento-icon-wrap">
-                    <FiTarget size={20} />
-                  </div>
-                </div>
-                <h3 className="bento-title">High-Impact, Maintainable Systems</h3>
-                <p className="bento-body">
-                  I build clean, modular backends paired with responsive, high-performance frontends. My goal is software that is reliable, scalable, and a genuine pleasure to use.
-                </p>
-              </div>
-              <div className="bento-footer">
-                <FaRocket size={13} color="#0ea5e9" />
-                <span>Reliable, Scalable Solutions</span>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* LOGO LOOP MARQUEE */}
-        <section style={{ marginBottom: 'var(--space-section)' }}>
-          <div style={{ overflow: 'hidden', padding: '20px 0', borderTop: '1px solid rgba(0,0,0,0.06)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-            <LogoLoop
-              logos={techStack.map(({ name, Icon }) => ({
-                node: (
-                  <div className="logo-loop-item">
-                    <Icon size={22} color="#0ea5e9" />
-                    <span>{name}</span>
-                  </div>
-                )
-              }))}
-              speed={55}
-              direction="left"
-              logoHeight={40}
-              gap={50}
-              hoverSpeed={15}
-            />
-          </div>
-        </section>
-
-        {/* ACADEMIC JOURNEY TIMELINE */}
-        <section style={{ marginBottom: 'var(--space-section)' }}>
-          <div className="section-title-wrap">
-            <div className="section-label">03 / Academic Journey</div>
-            <h2 className="section-title">Education & Milestones</h2>
-          </div>
-
-          <div className="timeline-container">
-            <div className="timeline-line-base" aria-hidden="true" />
-            <motion.div className="timeline-line-active" style={{ scaleY }} />
-
-            {timelineData.map((item, idx) => (
-              <motion.div
-                key={idx}
-                className="timeline-item-row"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-              >
-                <div className="timeline-dot-pin" aria-hidden="true" />
-                <div className="timeline-content-card">
-                  <div className="timeline-top-meta">
-                    <span className="timeline-year-text">{item.year}</span>
-                    <span className="timeline-status-badge">{item.status}</span>
-                  </div>
-                  <h3 className="timeline-degree-title">{item.title}</h3>
-                  <div className="timeline-institution-text">{item.institution}</div>
-                  <p className="timeline-description">{item.detail}</p>
-                  <div className="timeline-highlights-row">
-                    {item.highlights.map((h, hIdx) => (
-                      <span key={hIdx} className="highlight-chip">
-                        <FiAward size={11} />
-                        <span>{h}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* BOTTOM CALL TO ACTION */}
-        <section>
-          <div className="bottom-cta-banner">
-            <div>
-              <div className="section-label" style={{ marginBottom: '8px' }}>04 / Next Step</div>
-              <h3 className="cta-heading">Let's build something together.</h3>
-              <p className="cta-sub">Explore my production projects, or reach out to start a conversation about your next product.</p>
-            </div>
-            <div className="cta-button-group">
-              <button
-                onClick={() => navigate('/projects')}
-                className="cta-btn-primary"
-              >
-                <span>Explore Works</span>
-                <FiArrowRight size={15} />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* BOTTOM STATUS BAR */}
-        <div className="bottom-status-bar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div className="live-dot" aria-hidden="true" />
-            <span style={{ fontWeight: '700' }}>Available for Engineering Roles & Projects</span>
-          </div>
-          <div className="socials-cluster">
-            {socialLinks.map((item, i) => (
-              <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" className="social-link-node">
-                <item.Icon size={14} />
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
+        <EditorialTimeline timelineData={timelineData} />
+        <EditorialConnect socialLinks={socialLinks} />
 
       </PageTransition>
     </div>
