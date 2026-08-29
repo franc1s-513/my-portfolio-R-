@@ -169,7 +169,7 @@ const Home = () => {
                         lineHeight: '0.92',
                         letterSpacing: '-2px',
                         textShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
-                        fontSize: isMobile ? '3.2rem' : 'clamp(3.5rem, 6vw, 5.8rem)',
+                        fontSize: isMobile ? '2.8rem' : 'clamp(2.8rem, 5vw, 4.8rem)',
                         textAlign: isMobile ? 'center' : 'left',
                       }}
                     >
@@ -177,12 +177,12 @@ const Home = () => {
                         <>FRANCIS<br />FERNANDO<span style={{ color: 'var(--color-primary)' }}>.</span></>
                       ) : (
                         <>
-                          <motion.span variants={wordVariants} style={{ display: 'block', overflow: 'hidden' }}>
+                          <motion.span variants={wordVariants} style={{ display: 'block', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                             {"FRANCIS".split('').map((c, i) => (
                               <motion.span key={i} variants={letterVariants} style={{ display: 'inline-block' }}>{c}</motion.span>
                             ))}
                           </motion.span>
-                          <motion.span variants={wordVariants} style={{ display: 'block', overflow: 'hidden' }}>
+                          <motion.span variants={wordVariants} style={{ display: 'block', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                             {"FERNANDO".split('').map((c, i) => (
                               <motion.span key={i} variants={letterVariants} style={{ display: 'inline-block' }}>{c}</motion.span>
                             ))}
