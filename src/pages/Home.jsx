@@ -257,7 +257,6 @@ const Home = () => {
                               height: '100%',
                               objectFit: 'cover',
                               objectPosition: 'center 15%',
-                              filter: 'grayscale(100%) contrast(1.1) sepia(10%)',
                             }}
                           />
                         </motion.div>
