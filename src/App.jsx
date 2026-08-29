@@ -129,6 +129,7 @@ function App() {
             exit={{ opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             onClick={() => setActiveModal(null)}
+            data-lenis-prevent="true"
             style={{
               position: 'fixed',
               inset: 0,

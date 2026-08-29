@@ -105,7 +105,7 @@ const PortfolioCarousel = ({ projects = [] }) => {
   const totalItems = projects.length || 1;
   const angleStep = 360 / totalItems;
   // Radius tuned for spacious 3D cylinder
-  const radius = isMobile ? 240 : 380;
+  const radius = isMobile ? 320 : 460;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -153,11 +153,24 @@ const PortfolioCarousel = ({ projects = [] }) => {
   // Smooth lerp loop
   useEffect(() => {
     const loop = () => {
+      // Auto-rotation when not interacting
+      if (!isDraggingRef.current) {
+        // Find nearest snap point to check if we're close to settling
+        const nearestIndex = Math.round(-targetRotationRef.current / angleStep);
+        const snapRotation = -nearestIndex * angleStep;
+        const diffToSnap = Math.abs(targetRotationRef.current - snapRotation);
+        
+        // If we are settled (very close to a snap point), slowly auto-rotate
+        if (diffToSnap < 1) {
+          targetRotationRef.current -= 0.12; 
+        }
+      }
+
       const diff = targetRotationRef.current - currentRotationRef.current;
       currentRotationRef.current += diff * 0.085;
 
       if (cylinderGroupRef.current) {
-        cylinderGroupRef.current.style.transform = `rotateY(${currentRotationRef.current}deg)`;
+        cylinderGroupRef.current.style.transform = `translateZ(-${radius}px) rotateY(${currentRotationRef.current}deg)`;
       }
 
       const rawIndex = Math.round(-currentRotationRef.current / angleStep);
