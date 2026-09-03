@@ -74,10 +74,7 @@ function SkyboxModel({ activeModal }) {
 
   return (
     <>
-      {!activeModal && <primitive ref={animeRef} object={animeScene} raycast={() => null} />}
-      {activeModal && clonedFantasy && (
-        <primitive ref={fantasyRef} object={clonedFantasy} scale={[5, 5, 5]} raycast={() => null} />
-      )}
+      <primitive ref={animeRef} object={animeScene} raycast={() => null} />
     </>
   );
 }

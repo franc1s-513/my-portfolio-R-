@@ -88,314 +88,174 @@ const ProjectModal = ({ project, onClose }) => {
 };
 
 const PortfolioCarousel = ({ projects = [] }) => {
-  const containerRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [selectedProject, setSelectedProject] = useState(null);
-  
-  // Physics / Animation refs
-  const currentRotationRef = useRef(0);
-  const targetRotationRef = useRef(0);
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const lastMouseXRef = useRef(0);
-  const animFrameIdRef = useRef(null);
-  const cylinderGroupRef = useRef(null);
-
+  const [isHovered, setIsHovered] = useState(false);
   const totalItems = projects.length || 1;
-  const angleStep = 360 / totalItems;
-  // Radius tuned for spacious 3D cylinder
-  const radius = isMobile ? 320 : 460;
 
+  // Auto-play interval
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    if (isHovered || selectedProject) return;
 
-  // Trackpad / Mouse Pad wheel swipe support
-  useEffect(() => {
-    const viewport = containerRef.current;
-    if (!viewport) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % totalItems);
+    }, 3000);
 
-    const onWheel = (e) => {
-      e.preventDefault();
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      targetRotationRef.current -= delta * 0.16;
-    };
-
-    viewport.addEventListener('wheel', onWheel, { passive: false });
-    return () => viewport.removeEventListener('wheel', onWheel);
-  }, []);
-
-  const rotateTo = (index) => {
-    const normalized = (index % totalItems + totalItems) % totalItems;
-    setCurrentIndex(normalized);
-    targetRotationRef.current = -index * angleStep;
-  };
+    return () => clearInterval(timer);
+  }, [isHovered, selectedProject, totalItems]);
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => {
-      const next = (prev - 1 + totalItems) % totalItems;
-      targetRotationRef.current += angleStep;
-      return next;
-    });
+    setCurrentIndex((prev) => (prev - 1 + totalItems) % totalItems);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => {
-      const next = (prev + 1) % totalItems;
-      targetRotationRef.current -= angleStep;
-      return next;
-    });
+    setCurrentIndex((prev) => (prev + 1) % totalItems);
   };
 
-  // Smooth lerp loop
-  useEffect(() => {
-    const loop = () => {
-      // Auto-rotation when not interacting
-      if (!isDraggingRef.current) {
-        // Find nearest snap point to check if we're close to settling
-        const nearestIndex = Math.round(-targetRotationRef.current / angleStep);
-        const snapRotation = -nearestIndex * angleStep;
-        const diffToSnap = Math.abs(targetRotationRef.current - snapRotation);
-        
-        // If we are settled (very close to a snap point), slowly auto-rotate
-        if (diffToSnap < 1) {
-          targetRotationRef.current -= 0.12; 
-        }
-      }
-
-      const diff = targetRotationRef.current - currentRotationRef.current;
-      currentRotationRef.current += diff * 0.085;
-
-      if (cylinderGroupRef.current) {
-        cylinderGroupRef.current.style.transform = `translateZ(-${radius}px) rotateY(${currentRotationRef.current}deg)`;
-      }
-
-      const rawIndex = Math.round(-currentRotationRef.current / angleStep);
-      const activeIdx = (rawIndex % totalItems + totalItems) % totalItems;
-      setCurrentIndex((prev) => (prev !== activeIdx ? activeIdx : prev));
-
-      animFrameIdRef.current = requestAnimationFrame(loop);
-    };
-
-    animFrameIdRef.current = requestAnimationFrame(loop);
-    return () => {
-      if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current);
-    };
-  }, [angleStep, totalItems]);
-
-  // Mouse handlers
-  const handleMouseDown = (e) => {
-    isDraggingRef.current = true;
-    startXRef.current = e.clientX;
-    lastMouseXRef.current = e.clientX;
-  };
-
-  const handleMouseMove = (e) => {
-    if (!containerRef.current) return;
-    
-    if (isDraggingRef.current) {
-      const deltaX = e.clientX - lastMouseXRef.current;
-      lastMouseXRef.current = e.clientX;
-      targetRotationRef.current += deltaX * 0.28;
+  const handleCardClick = (index, project, isCenter) => {
+    if (isCenter) {
+      setSelectedProject(project);
     } else {
-      const rect = containerRef.current.getBoundingClientRect();
-      const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      const baseSnap = -Math.round(-currentRotationRef.current / angleStep) * angleStep;
-      targetRotationRef.current = baseSnap - normX * 10;
+      setCurrentIndex(index);
     }
-  };
-
-  const handleMouseUp = () => {
-    if (isDraggingRef.current) {
-      isDraggingRef.current = false;
-      const nearestIndex = Math.round(-targetRotationRef.current / angleStep);
-      targetRotationRef.current = -nearestIndex * angleStep;
-      setCurrentIndex((nearestIndex % totalItems + totalItems) % totalItems);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (isDraggingRef.current) {
-      isDraggingRef.current = false;
-    }
-    const nearestIndex = Math.round(-targetRotationRef.current / angleStep);
-    targetRotationRef.current = -nearestIndex * angleStep;
-  };
-
-  // Touch handlers
-  const handleTouchStart = (e) => {
-    isDraggingRef.current = true;
-    startXRef.current = e.touches[0].clientX;
-    lastMouseXRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDraggingRef.current) return;
-    const deltaX = e.touches[0].clientX - lastMouseXRef.current;
-    lastMouseXRef.current = e.touches[0].clientX;
-    targetRotationRef.current += deltaX * 0.35;
-  };
-
-  const handleTouchEnd = () => {
-    isDraggingRef.current = false;
-    const nearestIndex = Math.round(-targetRotationRef.current / angleStep);
-    targetRotationRef.current = -nearestIndex * angleStep;
-    setCurrentIndex((nearestIndex % totalItems + totalItems) % totalItems);
   };
 
   return (
-    <section className="portfolio-showcase">
-
-      {/* HEADER WITH GENEROUS SPACING & REFINED SUBTITLE */}
+    <section 
+      className="portfolio-showcase coverflow-section"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* HEADER */}
       <div className="showcase-header">
         <div className="showcase-badge">Selected Works</div>
         <h1 className="showcase-title">
           My <span className="highlight">Works</span>
         </h1>
         <div className="showcase-title-rule" />
-        <p className="showcase-subtitle">
-          Explore interactive architectures, machine learning models, and full-stack systems. Click on the center card to see full details.
-        </p>
       </div>
 
-      {/* MAIN CAROUSEL AREA WITH SIDE CONTROLS */}
-      <div className="carousel-main-container">
+      {/* MAIN CAROUSEL AREA */}
+      <div className="carousel-main-container coverflow-container">
         <button 
           className="nav-arrow-btn nav-arrow-left" 
           onClick={handlePrev}
           aria-label="Previous project"
-          title="Previous (or Swipe Left)"
         >
           <ArrowLeft size={20} />
         </button>
 
-        {/* 3D DRUM VIEWPORT */}
-        <div 
-          className="carousel-viewport"
-          ref={containerRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className="cylinder-drum" ref={cylinderGroupRef}>
+        <div className="coverflow-viewport">
+          <AnimatePresence initial={false}>
             {projects.map((project, index) => {
-              const cardAngle = index * angleStep;
-              const isCenter = currentIndex === index;
+              // Calculate offset considering infinite loop wrapping
+              let offset = index - currentIndex;
+              if (offset < -Math.floor(totalItems / 2)) offset += totalItems;
+              if (offset > Math.floor(totalItems / 2)) offset -= totalItems;
+
+              const isCenter = offset === 0;
+              const isLeft = offset < 0;
+              const isRight = offset > 0;
+              
+              const zIndex = 10 - Math.abs(offset);
+
+              // Responsive scaling/translation
+              const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+              const xOffset = isMobile ? 80 : 180;
+              const zPush = isMobile ? -100 : -200;
+              
+              let x = 0;
+              let rotateY = 0;
+              let z = isCenter ? 0 : zPush;
+              let scale = isCenter ? 1.05 : 0.85 - Math.abs(offset) * 0.1;
+              let opacity = isCenter ? 1 : Math.max(0, 0.7 - Math.abs(offset) * 0.3);
+
+              if (isLeft) {
+                x = offset * xOffset;
+                rotateY = 45;
+              } else if (isRight) {
+                x = offset * xOffset;
+                rotateY = -45;
+              }
+
+              // Only render cards that are relatively close to viewport
+              if (Math.abs(offset) > 2) return null;
 
               return (
-                <div
+                <motion.div
                   key={project.id || index}
-                  className={`project-3d-card ${isCenter ? 'active-card' : ''}`}
-                  onClick={() => {
-                    if (isDraggingRef.current) return;
-                    setSelectedProject(project);
-                    if (!isCenter) {
-                      rotateTo(index);
-                    }
+                  className={`project-coverflow-card ${isCenter ? 'active-card' : ''}`}
+                  onClick={() => handleCardClick(index, project, isCenter)}
+                  animate={{ 
+                    x, 
+                    z, 
+                    rotateY, 
+                    scale, 
+                    opacity, 
+                    zIndex 
                   }}
-                  style={{
-                    transform: `rotateY(${cardAngle}deg) translateZ(${radius}px)`,
-                    opacity: isCenter ? 1 : 0.45,
-                    filter: isCenter ? 'brightness(1)' : 'brightness(0.75)',
-                    cursor: 'pointer'
+                  transition={{ 
+                    type: 'spring', 
+                    stiffness: 260, 
+                    damping: 25,
+                    mass: 0.8 
+                  }}
+                  style={{ 
+                    position: 'absolute', 
+                    cursor: 'pointer',
+                    transformStyle: 'preserve-3d'
                   }}
                 >
-                  <GlareHover
-                    width="100%"
-                    height="100%"
-                    borderRadius="0px"
-                    glareColor="#ffffff"
-                    glareOpacity={0.6}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-                      {/* Card Visual Header */}
-                      <div className="card-img-wrap">
-                        <img 
-                          src={project.image} 
-                          alt={project.title} 
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800";
-                          }}
-                        />
-                        <span className="card-category-badge">{project.category}</span>
-                        <div className="card-status-dot">
-                          <div className="live-dot" />
-                          <span>{project.status || 'Active'}</span>
-                        </div>
+                  <div className="card-content-wrapper">
+                    {/* Card Visual Header */}
+                    <div className="card-img-wrap neon-glow-border">
+                      <img 
+                        src={project.image} 
+                        alt={project.title} 
+                        loading="lazy"
+                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800"; }}
+                      />
+                      <div className="card-img-overlay" />
+                    </div>
+
+                    {/* Card Body Content */}
+                    <div className="card-body-panel neon-glow-border">
+                      <div className="card-header-row">
+                        <h3 className="card-main-title">{project.title}</h3>
+                        {project.price && <span className="card-price">{project.price}</span>}
+                      </div>
+                      
+                      <p className="card-desc-paragraph">{project.description}</p>
+
+                      <div className="card-tag-row">
+                        {project.tags?.slice(0, 3).map((tag, tIdx) => (
+                          <span key={tIdx} className="tag-pill neon-text">{tag}</span>
+                        ))}
                       </div>
 
-                      {/* Card Body Content */}
-                      <div className="card-body-panel">
-                        <div>
-                          <h3 className="card-main-title">{project.title}</h3>
-                          <p className="card-desc-paragraph">
-                            {project.description}
-                          </p>
-                        </div>
-
-                        <div className="card-divider" />
-
-                        <div>
-                          <div className="card-tag-row">
-                            {project.tags?.slice(0, 3).map((tag, tIdx) => (
-                              <span key={tIdx} className="tag-pill">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-
-                          <div className="card-actions-grid">
-                            {project.link && (
-                              <a
-                                href={project.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="card-btn-action btn-live-demo"
-                                onClick={(e) => e.stopPropagation()}
-                                title="Live Demo"
-                              >
-                                <span>Demo</span>
-                                <ArrowUpRight size={13} />
-                              </a>
-                            )}
-
-                            {project.github && (
-                              <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`card-btn-action ${project.link ? 'btn-source-code' : 'btn-live-demo'}`}
-                                onClick={(e) => e.stopPropagation()}
-                                title="View Source Code"
-                              >
-                                <Github size={13} />
-                                <span>Code</span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
+                      <div className="card-actions-grid">
+                        <a
+                          href={project.link || project.github || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="card-btn-action btn-book-now"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {project.link ? 'View Demo' : 'View Code'}
+                        </a>
                       </div>
                     </div>
-                  </GlareHover>
-                </div>
+                  </div>
+                </motion.div>
               );
             })}
-          </div>
+          </AnimatePresence>
         </div>
 
         <button 
           className="nav-arrow-btn nav-arrow-right" 
           onClick={handleNext}
           aria-label="Next project"
-          title="Next (or Swipe Right)"
         >
           <ArrowRight size={20} />
         </button>

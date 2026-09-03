@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Maximize2, Download, ShieldCheck } from 'lucide-react';
 import GlareHover from '../components/GlareHover';
+import DepthCarousel from '../components/DepthCarousel';
 import './Certificates.css';
 
 // IMPORT YOUR IMAGES (Keep your existing imports here)
@@ -33,7 +34,7 @@ const Certificates = () => {
           animate={{opacity:1, y:0}} 
           className="certificates-title"
           style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font-disney)',
             color: '#0A192F',
             WebkitTextStroke: '2px #D4AF37',
             textShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
@@ -43,34 +44,15 @@ const Certificates = () => {
         </motion.h1>
       </div>
 
-      <div className="certificates-mask">
-        <div className="certificates-bento-container">
-          {/* ROW 1: LEFT */}
-          <div className="marquee-row">
-            <motion.div 
-              className="cert-track"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-            >
-              {doubledRow1.map((cert, i) => (
-                <EnhancedBentoCard key={`r1-${i}`} cert={cert} onOpen={() => setSelectedCert(cert)} />
-              ))}
-            </motion.div>
-          </div>
-
-          {/* ROW 2: RIGHT */}
-          <div className="marquee-row">
-            <motion.div 
-              className="cert-track"
-              animate={{ x: ["-50%", "0%"] }}
-              transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
-            >
-              {doubledRow2.map((cert, i) => (
-                <EnhancedBentoCard key={`r2-${i}`} cert={cert} onOpen={() => setSelectedCert(cert)} />
-              ))}
-            </motion.div>
-          </div>
-        </div>
+      <div className="certificates-mask" style={{ display: 'flex', justifyContent: 'center', height: '500px', margin: '40px 0' }}>
+        <DepthCarousel 
+          items={certs}
+          autoplay={true}
+          onItemClick={(item) => setSelectedCert(item)}
+          cardWidth={450}
+          cardHeight={320}
+          radius={20}
+        />
       </div>
 
       <AnimatePresence>

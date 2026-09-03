@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { projectsData } from '../data/projectsData';
 import PortfolioCarousel from '../components/PortfolioCarousel';
+import { ExternalLink, Github } from 'lucide-react';
+import './ProjectsTable.css'; // We'll add table styles to PortfolioCarousel.css, or inline. Let's just use regular classes.
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -24,15 +26,14 @@ const Projects = () => {
 
 const styles = {
   pageWrapper: {
-    height: 'calc(100vh - 75px)',
-    padding: '0 4%',
+    minHeight: '100vh',
+    padding: '100px 4% 50px',
     position: 'relative',
     background: 'transparent',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    justifyContent: 'flex-start',
   },
   container: {
     width: '100%',
