@@ -134,7 +134,9 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: 'rgba(240, 248, 255, 0.55)',
+              background: 'rgba(240, 248, 255, 0.88)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               overflowY: 'auto',
             }}
           >
