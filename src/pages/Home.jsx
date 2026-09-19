@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import profilePhoto from '../assets/photos/profile.jpg';
+import profilePhoto from "../assets/photos/portF.jpeg";
 import PageTransition from '../components/PageTransition';
 import MagneticWrapper from '../components/MagneticWrapper';
 

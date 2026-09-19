@@ -1,0 +1,26 @@
+.professional-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Should be behind content */
+  background: #ffffff; /* Pure white background */
+  pointer-events: none; /* Let clicks pass through to content */
+  overflow: hidden;
+}
+
+/* Interactive Canvas */
+.professional-bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto; /* Needs pointer events for mouse hover effect */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 35%, black 60%, black 100%);
+  mask-image: linear-gradient(to right, transparent 0%, transparent 35%, black 60%, black 100%);
+}
+
+/* Vignette removed for tall container compatibility */

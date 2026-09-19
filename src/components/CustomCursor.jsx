@@ -88,7 +88,7 @@ export default function CustomCursor() {
           zIndex: 99999,
           x: dotX,
           y: dotY,
-          opacity: isVisible ? 1 : 0,
+          opacity: 0, // Hidden as per design review
           mixBlendMode: 'difference'
         }}
         animate={{ scale: isClicking ? 0.5 : 1 }}

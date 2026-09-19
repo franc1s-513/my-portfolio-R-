@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
 /* ═══════════════════════════════════════════════════════════
    DESIGN TOKEN SYSTEM — Single source of truth
@@ -7,6 +7,7 @@
 :root {
   /* ── Typography ── */
   --font-display: 'Syne', 'Plus Jakarta Sans', 'Outfit', sans-serif;
+  --font-editorial: 'Anton', 'Bebas Neue', sans-serif;
   --font-disney: 'Waltograph', cursive;
   --font-body: 'Space Grotesk', 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;

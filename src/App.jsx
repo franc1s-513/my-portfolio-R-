@@ -134,10 +134,10 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: 'rgba(240, 248, 255, 0.88)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              overflowY: 'auto',
+              background: activeModal === 'projects' ? '#c6ae8e' : '#ffffff',
+              backdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
+              WebkitBackdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
+              overflowY: activeModal === 'projects' ? 'hidden' : 'auto',
             }}
           >
             <motion.button
@@ -149,20 +149,20 @@ function App() {
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               style={{
                 position: 'fixed',
-                top: '25px',
-                right: '25px',
+                top: 'clamp(20px, 4vh, 40px)',
+                right: 'clamp(20px, 4vw, 40px)',
                 zIndex: 10000,
                 width: '48px',
                 height: '48px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: 'rgba(255,255,255,0.75)',
-                border: '1.5px solid rgba(0, 0, 0, 0.25)',
-                color: '#000000',
+                background: activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : '#1C1917',
+                border: activeModal === 'projects' ? '1.5px solid rgba(255, 255, 255, 0.3)' : '1.5px solid transparent',
+                color: activeModal === 'projects' ? '#f6efe1' : '#ffffff',
                 borderRadius: '50%',
                 cursor: 'pointer',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
                 transition: 'background 0.3s ease, color 0.3s ease',
@@ -173,20 +173,27 @@ function App() {
                 e.currentTarget.style.borderColor = 'rgba(14, 165, 233, 0.9)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.75)';
-                e.currentTarget.style.color = '#000000';
-                e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.25)';
+                e.currentTarget.style.background = activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : '#1C1917';
+                e.currentTarget.style.color = activeModal === 'projects' ? '#f6efe1' : '#ffffff';
+                e.currentTarget.style.borderColor = activeModal === 'projects' ? 'rgba(255, 255, 255, 0.3)' : 'transparent';
               }}
             >
               <X size={22} strokeWidth={2.5} />
             </motion.button>
 
             <div
-              style={{ position: 'relative', zIndex: 10, paddingTop: '45px', paddingBottom: '30px' }}
+              style={{
+                position: 'relative',
+                zIndex: 10,
+                width: '100%',
+                height: activeModal === 'projects' ? '100vh' : 'auto',
+                paddingTop: activeModal === 'projects' ? 0 : '45px',
+                paddingBottom: activeModal === 'projects' ? 0 : '30px',
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <Suspense fallback={null}>
-                {activeModal === 'about' && <About />}
+                {activeModal === 'about' && <About onNavigate={handleOpenModal} />}
                 {activeModal === 'projects' && <Projects />}
                 {activeModal === 'certificates' && <Certificates />}
                 {activeModal === 'contact' && <Contact />}
