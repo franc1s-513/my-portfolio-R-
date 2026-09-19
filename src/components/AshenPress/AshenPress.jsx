@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './AshenPress.css';
 
-export function AshenPress({ className = "", style = {}, onSelectProject }) {
+export function AshenPress({ className = "", style = {}, onSelectProject, onNavigate }) {
   const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(() => typeof document === "undefined" || !document.hidden);
   const [isIntersecting, setIsIntersecting] = useState(true);
@@ -41,11 +41,15 @@ export function AshenPress({ className = "", style = {}, onSelectProject }) {
         if (onSelectProject) {
           onSelectProject(e.data.project);
         }
+      } else if (e.data && e.data.type === 'ASHEN_NAVIGATE') {
+        if (onNavigate) {
+          onNavigate(e.data.page);
+        }
       }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [onSelectProject]);
+  }, [onSelectProject, onNavigate]);
 
   return (
     <div
@@ -60,7 +64,7 @@ export function AshenPress({ className = "", style = {}, onSelectProject }) {
         height: "100%",
         minHeight: "720px",
         overflow: "hidden",
-        background: "#c6ae8e",
+        background: "#eae2d3",
         borderRadius: "24px",
         boxShadow: "0 28px 70px -15px rgba(27, 21, 15, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15) inset",
         ...style,
@@ -87,7 +91,7 @@ export function AshenPress({ className = "", style = {}, onSelectProject }) {
             width: "100%",
             height: "100%",
             border: 0,
-            background: "#c6ae8e",
+            background: "#eae2d3",
             opacity: isLoaded ? 1 : 0,
             pointerEvents: isLoaded ? "auto" : "none",
             transition: "opacity 320ms ease-out",

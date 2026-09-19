@@ -52,9 +52,10 @@ function App() {
 
   const handleOpenModal = (modalName) => {
     setIsTransitioning(true);
+    // Eagerly set the active modal so it loads and renders behind the opaque tunnel overlay
+    setActiveModal(modalName);
     setTimeout(() => {
       setIsTransitioning(false);
-      setActiveModal(modalName);
     }, 2000);
   };
 
@@ -134,7 +135,7 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: activeModal === 'projects' ? '#c6ae8e' : '#ffffff',
+              background: activeModal === 'projects' ? '#eae2d3' : '#ffffff',
               backdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
               WebkitBackdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
               overflowY: activeModal === 'projects' ? 'hidden' : 'auto',
@@ -194,7 +195,7 @@ function App() {
             >
               <Suspense fallback={null}>
                 {activeModal === 'about' && <About onNavigate={handleOpenModal} />}
-                {activeModal === 'projects' && <Projects />}
+                {activeModal === 'projects' && <Projects onNavigate={handleOpenModal} />}
                 {activeModal === 'certificates' && <Certificates />}
                 {activeModal === 'contact' && <Contact />}
               </Suspense>

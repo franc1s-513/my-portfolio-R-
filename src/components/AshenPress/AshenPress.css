@@ -6,7 +6,7 @@
   margin: 0 auto;
   overflow: hidden;
   border-radius: 24px;
-  background: #c6ae8e;
+  background: #38150c;
   box-shadow: 
     0 20px 60px -15px rgba(18, 14, 10, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.12) inset;
@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: #c6ae8e;
+  background: #38150c;
   z-index: 10;
   transition: opacity 0.3s ease;
 }

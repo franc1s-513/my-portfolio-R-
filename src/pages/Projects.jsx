@@ -1,7 +1,7 @@
 import React from 'react';
 import AshenPress from '../components/AshenPress/AshenPress';
 
-const Projects = () => {
+const Projects = ({ onNavigate }) => {
   return (
     <div style={styles.pageWrapper}>
       <AshenPress
@@ -15,6 +15,7 @@ const Projects = () => {
         onSelectProject={(proj) => {
           console.log('Selected book:', proj);
         }}
+        onNavigate={onNavigate}
       />
     </div>
   );
@@ -29,7 +30,7 @@ const styles = {
     margin: 0,
     padding: 0,
     overflow: 'hidden',
-    background: '#c6ae8e',
+    background: '#eae2d3',
     zIndex: 10,
   },
 };
