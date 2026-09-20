@@ -25,6 +25,68 @@ const createRadialAlpha = () => {
   return new THREE.CanvasTexture(canvas);
 };
 
+// ─── Custom Round Stars ───────────────────────────────────────────────────────
+const createCircleTexture = () => {
+  const canvas = document.createElement("canvas");
+  canvas.width = 32;
+  canvas.height = 32;
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+  gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 32, 32);
+  return new THREE.CanvasTexture(canvas);
+};
+
+function CustomStars() {
+  const pointsRef = useRef();
+  const count = 1500;
+  
+  const [positions, phases] = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const ph = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      const r = 40 + Math.random() * 40;
+      const theta = 2 * Math.PI * Math.random();
+      const phi = Math.acos(2 * Math.random() - 1);
+      pos[i * 3 + 0] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = r * Math.cos(phi);
+      ph[i] = Math.random() * Math.PI * 2;
+    }
+    return [pos, ph];
+  }, []);
+
+  const starMap = useMemo(() => createCircleTexture(), []);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = t * 0.02; // slow celestial rotation
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <pointsMaterial 
+        map={starMap}
+        size={0.8}
+        sizeAttenuation
+        transparent
+        opacity={0.8}
+        alphaTest={0.5}
+        color="#fef4eb"
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
 // ─── Eywa Tree (Original Bark + Glowing Strands + Float Bob) ──────────────────
 function EywaTree({ onReady }) {
   const { scene } = useGLTF("/eywa_tree.glb");
@@ -99,8 +161,9 @@ function EywaTree({ onReady }) {
       child.material = new THREE.MeshBasicMaterial({
         color: new THREE.Color(hexColor),
         transparent: true,
-        opacity: 0.95, // slight transparency for soft look
-        depthWrite: true,
+        opacity: 0.85, // softer
+        depthWrite: false, // Fix occlusion
+        blending: THREE.AdditiveBlending // Glow!
       });
     });
 
@@ -115,6 +178,8 @@ function EywaTree({ onReady }) {
     groupRef.current.position.y = treeTransform.offsetY + Math.sin(t * 0.55) * 0.28;
     // Very slow Y-axis sway
     groupRef.current.rotation.y = Math.sin(t * 0.045) * 0.022;
+    // Shift base left slightly to center the heavy right canopy, but don't lean it
+    groupRef.current.position.x = -0.8;
   });
 
   useEffect(() => {
@@ -128,11 +193,13 @@ function EywaTree({ onReady }) {
 
   return (
     <group ref={groupRef} position={[0, treeTransform.offsetY, 0]} scale={[sc, sc, sc]}>
-      {/* Floating Island Base (The Red Land) */}
+      {/* Floating Island Base (Dark emissive mist, tightened for roots) */}
       <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[h * 0.38 / sc, 64]} />
+        <circleGeometry args={[h * 0.22 / sc, 64]} />
         <meshStandardMaterial 
-          color="#500724" // Deep red/purple earth
+          color="#050110" 
+          emissive="#1a0b3b"
+          emissiveIntensity={0.6}
           alphaMap={alphaMap}
           transparent={true}
           roughness={1}
@@ -187,14 +254,25 @@ function MilestoneBeacon({ milestone, treeInfo, onHover, onUnhover, onSelect }) 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (!groupRef.current) return;
+
+    // Orbital movement
+    const orbitRadius = Math.sqrt(pos[0] * pos[0] + pos[2] * pos[2]);
+    const baseAngle = Math.atan2(pos[2], pos[0]);
+    // Slower orbit for higher tiers, faster for lower to feel dynamic
+    const orbitSpeed = 0.08 + (1 / (pos[1] + 1)) * 0.05; 
+    const currentAngle = baseAngle + (t * orbitSpeed);
+
+    groupRef.current.position.x = Math.cos(currentAngle) * orbitRadius;
+    groupRef.current.position.z = Math.sin(currentAngle) * orbitRadius;
+
     // Float up/down gently
     groupRef.current.position.y = pos[1] + Math.sin(t * 0.85 + pos[0]) * 0.14;
     
     // Core pulsing effect
     if (coreRef.current) {
-      const pulse = 0.5 + 0.5 * Math.sin(t * 1.8);
-      coreRef.current.material.emissiveIntensity = hovered ? 2.2 : 1.2 + pulse * 0.5;
-      const s = hovered ? 1.4 : 1 + pulse * 0.08;
+      const pulse = 0.5 + 0.5 * Math.sin(t * 3.0 + pos[0]); // Faster blink
+      coreRef.current.material.emissiveIntensity = hovered ? 3.0 : 1.5 + pulse * 1.5;
+      const s = hovered ? 1.4 : 1 + pulse * 0.15;
       coreRef.current.scale.setScalar(s);
     }
     
@@ -238,10 +316,10 @@ function MilestoneBeacon({ milestone, treeInfo, onHover, onUnhover, onSelect }) 
         <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.5} roughness={0.05} metalness={0.6} />
       </mesh>
 
-      {/* Saturn Planetary Ring (Dark, translucent) */}
+      {/* Saturn Planetary Ring (Glowing with milestone color) */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 2.2, Math.PI / 10, 0]}>
-        <ringGeometry args={[0.24, 0.38, 64]} />
-        <meshBasicMaterial color="#0d0520" transparent opacity={0.8} side={THREE.DoubleSide} depthWrite={false} />
+        <ringGeometry args={[0.24, 0.35, 64]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.8} transparent opacity={0.6} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
 
       {/* Tiny orbiting moon */}
@@ -397,11 +475,8 @@ const TechJourney = ({ onNavigate }) => {
         {/* Wide pink hemisphere overhead */}
         <hemisphereLight args={["#c026d3", "#0d0520", 1.2]} />
 
-        {/* Stars — fewer, more subtle behind purple fog */}
-        <Stars
-          radius={80} depth={50} count={2500}
-          factor={2.8} saturation={0.4} fade speed={0.3}
-        />
+        {/* Stars — Custom round stars */}
+        <CustomStars />
 
         {/* Camera — gets actual tree height once model loads */}
         <CameraController treeHeight={treeInfo?.height} />
@@ -461,52 +536,110 @@ const TechJourney = ({ onNavigate }) => {
         )}
       </AnimatePresence>
 
-      {/* ── Top header ────────────────────────────────────────────────────── */}
-      <AnimatePresence>
-        <motion.div
-          key="title-overlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute top-7 left-7 z-20 pointer-events-none"
+      {/* ── Top Left Main Title ─────────────────────────────────────────── */}
+      <div
+        className="select-none pointer-events-none"
+        style={{
+          position: "absolute",
+          top: "40px",
+          left: "48px",
+          zIndex: 99999,
+          userSelect: "none"
+        }}
+      >
+        <h1 
+          style={{ 
+            fontFamily: "var(--font-editorial), 'Playfair Display', serif",
+            fontSize: "64px",
+            fontWeight: 400,
+            color: "#D4AF37", /* Gold shade */
+            WebkitTextStroke: "1px #ffffff", /* White outline for pop */
+            textTransform: "uppercase",
+            letterSpacing: "-1px",
+            textShadow: "0 10px 30px rgba(0,0,0,0.9), 0 0 25px rgba(212,175,55,0.8)",
+            margin: 0,
+            lineHeight: 1
+          }}
         >
-          <div className="flex items-center gap-3">
-            <span className="inline-block w-2.5 h-2.5 rounded-full animate-pulse bg-fuchsia-400 shadow-[0_0_14px_#e879f9]" />
-            <span className="text-xs font-bold tracking-[0.28em] uppercase text-fuchsia-300" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
-              The Journey • Celestial Milestones
-            </span>
-          </div>
-          <p className="text-sm text-violet-300/70 italic mt-1.5 max-w-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Approach the glowing beacons in the tree to explore each chapter.
-          </p>
-        </motion.div>
-      </AnimatePresence>
+          Tech Journey
+        </h1>
+        <p style={{ color: "rgba(255,255,255,0.8)", fontFamily: "sans-serif", letterSpacing: "1px", fontSize: "14px", marginTop: "8px", fontWeight: 500 }}>
+          7 chapters · hackathons, talks, internships
+        </p>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontFamily: "sans-serif", fontSize: "12px", marginTop: "4px" }}>
+          Click a planet or rail item to open a chapter.
+        </p>
+      </div>
+
+
 
       {/* ── Bottom milestone selector ──────────────────────────────────────── */}
-      <AnimatePresence>
-        <motion.div 
-          key="bottom-selector"
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 max-w-[96vw] overflow-x-auto py-2.5 px-4 rounded-2xl backdrop-blur-2xl bg-black/50 border border-white/12 shadow-2xl"
-        >
-          {DEFAULT_MILESTONES.map((m) => (
+      <div 
+        className="select-none hide-scrollbar"
+        style={{
+          position: "absolute",
+          bottom: "30px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 99999,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          width: "max-content",
+          maxWidth: "90vw",
+          overflowX: "auto",
+          padding: "10px 16px",
+          borderRadius: "16px",
+          background: "rgba(0, 0, 0, 0.6)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+          userSelect: "none"
+        }}
+      >
+        <style>{`
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+          .hide-scrollbar { scrollbar-width: none; }
+        `}</style>
+        {DEFAULT_MILESTONES.map((m) => {
+          const isActive = hoveredMilestone?.id === m.id;
+          return (
             <button
               key={m.id}
               type="button"
               onClick={() => onNavigate(`milestone-${m.id}`)}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wider flex items-center gap-2 border cursor-pointer hover:scale-105 transition-all duration-200 shrink-0"
+              onPointerEnter={() => setHoveredMilestone(m)}
+              onPointerLeave={() => setHoveredMilestone(null)}
               style={{
-                background: "rgba(5, 12, 30, 0.80)",
-                borderColor: "rgba(255,255,255,0.12)",
-                color: "#94a3b8",
+                padding: "8px 16px",
+                borderRadius: "12px",
+                fontSize: "13px",
+                fontWeight: 600,
+                letterSpacing: "0.5px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                border: isActive ? `1px solid ${m.color}` : "1px solid rgba(255, 255, 255, 0.12)",
+                cursor: "pointer",
+                background: isActive ? `${m.color}20` : "rgba(5, 12, 30, 0.8)",
+                color: isActive ? "#ffffff" : "#e2e8f0",
+                flexShrink: 0,
+                fontVariantNumeric: "tabular-nums lining-nums",
+                transition: "all 0.2s ease"
               }}
             >
-              <span className="w-2 h-2 rounded-full" style={{ background: m.color }} />
-              <span>{m.number}. {m.title.split(":")[0].trim()}</span>
+              <span style={{ 
+                width: "8px", height: "8px", borderRadius: "50%", 
+                background: m.color, 
+                boxShadow: isActive ? `0 0 10px ${m.color}` : "none",
+                transition: "all 0.2s ease"
+              }} />
+              <span style={{ fontFamily: "monospace", opacity: 0.7, fontSize: "11px" }}>{m.number}</span>
+              <span>{m.shortTitle || m.title.split(":")[0].trim()}</span>
             </button>
-          ))}
-        </motion.div>
-      </AnimatePresence>
+          );
+        })}
+      </div>
 
       {/* Note: The detail modal has been moved to a separate global page (MilestoneNode) for global navigation transitions */}
     </div>

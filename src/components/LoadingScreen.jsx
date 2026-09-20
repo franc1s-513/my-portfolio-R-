@@ -4,8 +4,8 @@ import StrokeText from './StrokeText';
 
 const MESSAGE = 'WELCOME TO MY SPACE';
 const TYPING_MS = 75;
-const TIMER_DURATION_MS = 2800;
-const MAX_LOAD_MS = 8000;
+const TIMER_DURATION_MS = 6000;
+const MAX_LOAD_MS = 12000;
 
 const LoadingScreen = ({ onFinish }) => {
   const [typed, setTyped] = useState('');

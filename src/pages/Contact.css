@@ -12,7 +12,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background-color: #071010;
+  background: radial-gradient(circle at center, #8a0c25 0%, #170208 100%);
 }
 
 .shader-frame iframe {

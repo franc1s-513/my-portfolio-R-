@@ -21,6 +21,11 @@ const BLANK_PIXEL =
 const FRONT_UV_RECT = { x: 0, y: 0, w: 0.5, h: 0.755 };
 const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 
+const _vec = new THREE.Vector3();
+const _dir = new THREE.Vector3();
+const _q = new THREE.Quaternion();
+const _euler = new THREE.Euler();
+
 export default function Lanyard({
   position = [0, 0, 30],
   gravity = [0, -40, 0],
@@ -88,8 +93,7 @@ function Band({
     j2 = useRef(),
     j3 = useRef(),
     card = useRef();
-  const vec = new THREE.Vector3(),
-    dir = new THREE.Vector3();
+  
   const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 6.0, linearDamping: 5.0 };
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardImage || lanyard);
@@ -218,23 +222,23 @@ function Band({
 
   useFrame((state, delta) => {
     if (dragged) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      dir.copy(vec).sub(state.camera.position).normalize();
-      vec.add(dir.multiplyScalar(state.camera.position.length()));
+      _vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
+      _dir.copy(_vec).sub(state.camera.position).normalize();
+      _vec.add(_dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
+      card.current?.setNextKinematicTranslation({ x: _vec.x - dragged.x, y: _vec.y - dragged.y, z: _vec.z - dragged.z });
     } else if (card.current) {
       // Natural rest position: convert quaternion to Euler to avoid quaternion oscillation feedback
       const rot = card.current.rotation();
-      const q = new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w);
-      const euler = new THREE.Euler().setFromQuaternion(q);
+      _q.set(rot.x, rot.y, rot.z, rot.w);
+      _euler.setFromQuaternion(_q);
       const angvel = card.current.angvel();
 
-      if (Math.abs(euler.y) > 0.008 || Math.abs(angvel.y) > 0.008 || Math.abs(angvel.x) > 0.008 || Math.abs(angvel.z) > 0.008) {
+      if (Math.abs(_euler.y) > 0.008 || Math.abs(angvel.y) > 0.008 || Math.abs(angvel.x) > 0.008 || Math.abs(angvel.z) > 0.008) {
         card.current.setAngvel({
-          x: angvel.x * 0.88 - euler.x * 1.5,
-          y: angvel.y * 0.88 - euler.y * 2.0,
-          z: angvel.z * 0.88 - euler.z * 1.5
+          x: angvel.x * 0.88 - _euler.x * 1.5,
+          y: angvel.y * 0.88 - _euler.y * 2.0,
+          z: angvel.z * 0.88 - _euler.z * 1.5
         }, false);
       }
     }
@@ -282,7 +286,7 @@ function Band({
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
             onPointerDown={e => (
               e.target.setPointerCapture(e.pointerId),
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
+              drag(new THREE.Vector3().copy(e.point).sub(_vec.copy(card.current.translation())))
             )}
           >
             <mesh geometry={nodes.card.geometry}>

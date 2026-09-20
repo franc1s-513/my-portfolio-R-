@@ -1,8 +1,9 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import { DEFAULT_MILESTONES } from './data/milestones';
 
 // --- COMPONENTS (3D scene is code-split into its own chunk) ---
 import WindParticles from './components/WindParticles';
@@ -11,14 +12,23 @@ import LightTunnel from './components/LightTunnel';
 import LoadingScreen from './components/LoadingScreen';
 
 const SkyAndBirds = lazy(() => import('./components/SkyAndBirds'));
+import { useGLTF } from '@react-three/drei';
 
-// --- PAGES (code-split, loaded on demand when their modal opens) ---
+// Preload heavy assets globally so they download during the initial LoadingScreen
+useGLTF.preload('/eywa_tree.glb');
+useGLTF.preload('/free_-_skybox_anime_sky.glb');
+useGLTF.preload('/mystic_stones_of_the_sky.glb');
+useGLTF.preload('/Castle.glb');
+useGLTF.preload('/Castle 2.glb');
+useGLTF.preload('/Castle 3.glb');
+
+// --- PAGES (eagerly loaded to remove navigation lag) ---
 import Home from './pages/Home';
-const About = lazy(() => import('./pages/About'));
-const Projects = lazy(() => import('./pages/Projects'));
-const TechJourney = lazy(() => import('./pages/TechJourney'));
-const Contact = lazy(() => import('./pages/Contact'));
-const MilestoneNode = lazy(() => import('./pages/MilestoneNode'));
+import About from './pages/About';
+import Projects from './pages/Projects';
+import TechJourney from './pages/TechJourney';
+import Contact from './pages/Contact';
+import MilestoneNode from './pages/MilestoneNode';
 
 function App() {
   const [activeModal, setActiveModal] = useState(null);
@@ -53,8 +63,10 @@ function App() {
 
   const handleOpenModal = (modalName) => {
     setIsTransitioning(true);
-    // Eagerly set the active modal so it loads and renders behind the opaque tunnel overlay
-    setActiveModal(modalName);
+    // Eagerly set the active modal inside a transition so React can prepare the 3D scene in the background
+    startTransition(() => {
+      setActiveModal(modalName);
+    });
     setTimeout(() => {
       setIsTransitioning(false);
     }, 2000);
@@ -155,46 +167,135 @@ function App() {
               overflowY: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'hidden' : 'auto',
             }}
           >
-            <motion.button
-              aria-label="Close page"
-              title="Close (Esc)"
-              onClick={(e) => { e.stopPropagation(); setActiveModal(null); }}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-              style={{
-                position: 'fixed',
-                top: 'clamp(20px, 4vh, 40px)',
-                right: 'clamp(20px, 4vw, 40px)',
-                zIndex: 10000,
-                width: '48px',
-                height: '48px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917',
-                border: activeModal === 'projects' ? '1.5px solid rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? '1.5px solid rgba(255, 255, 255, 0.2)' : '1.5px solid transparent',
-                color: activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff',
-                borderRadius: '50%',
-                cursor: 'pointer',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                transition: 'background 0.3s ease, color 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = activeModal === 'contact' ? 'rgba(124, 58, 237, 0.9)' : 'rgba(14, 165, 233, 0.9)';
-                e.currentTarget.style.color = '#fff';
-                e.currentTarget.style.borderColor = activeModal === 'contact' ? 'rgba(167, 139, 250, 0.9)' : 'rgba(14, 165, 233, 0.9)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917';
-                e.currentTarget.style.color = activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff';
-                e.currentTarget.style.borderColor = activeModal === 'projects' ? 'rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? 'rgba(255, 255, 255, 0.2)' : 'transparent';
-              }}
-            >
-              <X size={22} strokeWidth={2.5} />
-            </motion.button>
+            {activeModal?.startsWith('milestone-') ? (
+              <>
+                <motion.button
+                  aria-label="Back to Journey"
+                  onClick={(e) => { e.stopPropagation(); setActiveModal('tech-journey'); }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    position: 'fixed',
+                    top: 'clamp(20px, 4vh, 40px)',
+                    right: 'clamp(20px, 4vw, 40px)',
+                    zIndex: 10000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    background: 'rgba(28, 25, 23, 0.8)',
+                    border: '1.5px solid rgba(255, 255, 255, 0.15)',
+                    color: '#fbbf24',
+                    borderRadius: '30px',
+                    cursor: 'pointer',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    transition: 'background 0.3s ease, border-color 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(42, 39, 37, 0.9)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(28, 25, 23, 0.8)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Back to Tree</span>
+                </motion.button>
+                
+                {/* Global Title Overlay for Milestone */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  style={{
+                    position: 'fixed',
+                    top: 'clamp(20px, 4vh, 40px)',
+                    left: 'clamp(24px, 4vw, 48px)',
+                    zIndex: 10000,
+                    pointerEvents: 'none',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
+                >
+                  <h1 
+                    style={{ 
+                      fontSize: 'clamp(2rem, 4vw, 3.5rem)', 
+                      margin: 0, 
+                      lineHeight: 1, 
+                      color: '#D4AF37', 
+                      fontFamily: "var(--font-editorial), 'Playfair Display', serif", 
+                      textShadow: '0 4px 16px rgba(0,0,0,0.8)' 
+                    }}
+                  >
+                    {(() => {
+                      const m = DEFAULT_MILESTONES.find(x => x.id === activeModal.replace('milestone-', '')) || DEFAULT_MILESTONES[0];
+                      return m.overlayTitle || m.title;
+                    })()}
+                  </h1>
+                  <p 
+                    style={{ 
+                      margin: '8px 0 0 0', 
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', 
+                      color: 'rgba(255,255,255,0.9)', 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.1em', 
+                      fontWeight: 700, 
+                      textShadow: '0 2px 8px rgba(0,0,0,0.8)' 
+                    }}
+                  >
+                    {(() => {
+                      const m = DEFAULT_MILESTONES.find(x => x.id === activeModal.replace('milestone-', '')) || DEFAULT_MILESTONES[0];
+                      return m.overlaySubtitle || m.badge;
+                    })()}
+                  </p>
+                </motion.div>
+              </>
+            ) : (
+              <motion.button
+                aria-label="Close page"
+                title="Close (Esc)"
+                onClick={(e) => { e.stopPropagation(); setActiveModal(null); }}
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                style={{
+                  position: 'fixed',
+                  top: 'clamp(20px, 4vh, 40px)',
+                  right: 'clamp(20px, 4vw, 40px)',
+                  zIndex: 10000,
+                  width: '48px',
+                  height: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917',
+                  border: activeModal === 'projects' ? '1.5px solid rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? '1.5px solid rgba(255, 255, 255, 0.2)' : '1.5px solid transparent',
+                  color: activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  transition: 'background 0.3s ease, color 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = activeModal === 'contact' ? 'rgba(124, 58, 237, 0.9)' : 'rgba(14, 165, 233, 0.9)';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.borderColor = activeModal === 'contact' ? 'rgba(167, 139, 250, 0.9)' : 'rgba(14, 165, 233, 0.9)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917';
+                  e.currentTarget.style.color = activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff';
+                  e.currentTarget.style.borderColor = activeModal === 'projects' ? 'rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? 'rgba(255, 255, 255, 0.2)' : 'transparent';
+                }}
+              >
+                <X size={22} strokeWidth={2.5} />
+              </motion.button>
+            )}
 
             <div
               style={{

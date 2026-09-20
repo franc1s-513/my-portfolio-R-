@@ -106,8 +106,8 @@ export default function CustomCursor() {
           left: 0,
           width: '36px',
           height: '36px',
-          border: '1.5px solid rgba(217, 119, 54, 0.92)',
-          boxShadow: '0 0 0 1px rgba(20, 16, 12, 0.35), 0 0 14px rgba(217, 119, 54, 0.35)',
+          border: '1.5px solid rgba(212, 175, 55, 0.92)',
+          boxShadow: '0 0 0 1px rgba(20, 16, 12, 0.35), 0 0 14px rgba(212, 175, 55, 0.35)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 99998,
@@ -117,7 +117,7 @@ export default function CustomCursor() {
         }}
         animate={{
           scale: isTextElement ? 0 : (isClicking ? 0.75 : (isHovering ? 1.7 : 1)),
-          backgroundColor: isHovering ? 'rgba(217, 119, 54, 0.18)' : 'rgba(217, 119, 54, 0.04)',
+          backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.18)' : 'rgba(212, 175, 55, 0.04)',
         }}
         transition={{ duration: 0.18 }}
       />
