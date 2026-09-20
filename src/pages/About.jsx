@@ -1,18 +1,13 @@
-import React, { useRef } from 'react';
-import { 
-  motion, 
-  useScroll,
-  useMotionValue,
-  useMotionTemplate
-} from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
-import { FaJava, FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
-import { IoMail } from 'react-icons/io5';
-import { FiArrowRight, FiMapPin, FiCode, FiCpu } from 'react-icons/fi';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FiArrowRight } from 'react-icons/fi';
 import PageTransition from '../components/PageTransition';
 import { GitHubCalendar } from 'react-github-calendar';
 import profilePhoto from '../assets/photos/portF.jpeg';
 import ProfessionalBackground from '../components/ProfessionalBackground';
+import IgnitionButton from '../components/IgnitionButton';
 import './About.css';
 
 // -----------------------------------------------------
@@ -58,12 +53,13 @@ const EditorialHero = ({ onNavigate }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <button 
+          <IgnitionButton 
+            color="gold"
             onClick={() => onNavigate && onNavigate('projects')}
             className="primary-cta-btn"
           >
             View Projects <FiArrowRight />
-          </button>
+          </IgnitionButton>
 
           <div className="editorial-socials-minimal">
             <a href="https://github.com/franc1s-513" target="_blank" rel="noreferrer"><FaGithub size={18}/> GitHub</a>
@@ -170,41 +166,29 @@ const MagazineTimeline = ({ timelineData }) => {
 // -----------------------------------------------------
 // 3. EDITORIAL CONNECT
 // -----------------------------------------------------
-const EditorialConnect = ({ socialLinks }) => {
+const EditorialConnect = ({ navLinks, onNavigate }) => {
   return (
     <section className="editorial-connect-section">
       <div className="editorial-connect-container">
         <div className="editorial-connect-header">
-          <h2 className="editorial-huge-text">Let's Talk.</h2>
+          <h2 className="editorial-huge-text">Much More.</h2>
           <p className="editorial-connect-desc">
-            Open for software engineering roles, product design collaborations, and AI partnership opportunities.
+            Explore featured engineering projects, my journey through tech, and how to get in touch.
           </p>
         </div>
 
         <div className="editorial-connect-links">
-          {socialLinks.map((item, idx) => (
-            <a 
+          {navLinks.map((item, idx) => (
+            <button 
               key={idx} 
-              href={item.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+              type="button"
+              onClick={() => onNavigate && onNavigate(item.target)}
               className="editorial-connect-link-item"
             >
               <span className="connect-link-label">{item.label}</span>
               <FiArrowRight className="connect-link-arrow" />
-            </a>
+            </button>
           ))}
-        </div>
-
-        <div className="next-project-block">
-          <button 
-            onClick={() => onNavigate && onNavigate('projects')}
-            className="next-project-btn"
-          >
-            <span className="next-label">Next</span>
-            <span className="next-title">View Projects</span>
-            <FiArrowRight className="next-arrow" />
-          </button>
         </div>
       </div>
       
@@ -255,11 +239,10 @@ const About = ({ onNavigate }) => {
     }
   ];
 
-  const socialLinks = [
-    { Icon: FaGithub, url: "https://github.com/franc1s-513", label: "GITHUB" },
-    { Icon: FaLinkedin, url: "https://linkedin.com/in/francis-fernando-v-bb81a432a", label: "LINKEDIN" },
-    { Icon: FaInstagram, url: "https://instagram.com/franc1s._txt", label: "INSTAGRAM" },
-    { Icon: IoMail, url: "mailto:francisfernandov07@gmail.com", label: "EMAIL" }
+  const navLinks = [
+    { target: "projects", label: "THE PROJECT" },
+    { target: "tech-journey", label: "THE JOURNEY" },
+    { target: "contact", label: "CONTACT" }
   ];
 
   return (
@@ -270,7 +253,7 @@ const About = ({ onNavigate }) => {
         <EditorialHero onNavigate={onNavigate} />
 
         <MagazineTimeline timelineData={timelineData} />
-        <EditorialConnect socialLinks={socialLinks} onNavigate={onNavigate} />
+        <EditorialConnect navLinks={navLinks} onNavigate={onNavigate} />
 
       </PageTransition>
     </div>

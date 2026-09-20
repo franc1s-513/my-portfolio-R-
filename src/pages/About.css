@@ -149,27 +149,49 @@
   box-shadow: none;
 }
 
-.primary-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.primary-cta-btn.ignition-btn-shell {
+  width: fit-content;
   margin-top: 0;
-  padding: 14px 28px;
-  background: #1C1917;
-  color: #ffffff;
-  border-radius: 40px;
-  text-decoration: none;
-  font-weight: 700;
+}
+
+.primary-cta-btn .ignition-inner-chamber {
+  padding: 12px 28px;
+  border-radius: 16px;
+}
+
+.primary-cta-btn .ignition-content {
   font-size: 0.95rem;
-  font-family: var(--font-main);
-  transition: all 0.3s ease;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.next-project-block {
+  margin-top: 20px;
+}
+
+.next-project-btn.ignition-btn-shell {
   width: fit-content;
 }
 
-.primary-cta-btn:hover {
-  background: #D4AF37;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+.next-project-btn .ignition-inner-chamber {
+  padding: 10px 24px;
+  border-radius: 14px;
+}
+
+.next-project-btn .ignition-content {
+  font-size: 0.9rem;
+  gap: 10px;
+}
+
+.next-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.75;
+}
+
+.next-title {
+  font-weight: 800;
 }
 
 .editorial-right {
@@ -547,6 +569,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: 30px 40px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
@@ -555,6 +578,9 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
   text-decoration: none;
   color: var(--text-main);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;

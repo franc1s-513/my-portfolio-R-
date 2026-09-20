@@ -3,6 +3,7 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
+  const [isTextElement, setIsTextElement] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
@@ -49,7 +50,9 @@ export default function CustomCursor() {
     const handleMouseUp = () => setIsClicking(false);
 
     const handleMouseOver = (e) => {
-      const isInteractive = Boolean(e.target.closest('a, button, [role="button"], .interactive, .btn-press, input, textarea'));
+      const isTextInput = Boolean(e.target.closest('input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]'));
+      setIsTextElement(isTextInput);
+      const isInteractive = Boolean(e.target.closest('a, button, [role="button"], .interactive, .btn-press'));
       setIsHovering((prev) => (prev !== isInteractive ? isInteractive : prev));
     };
 
@@ -110,10 +113,10 @@ export default function CustomCursor() {
           zIndex: 99998,
           x: cursorX,
           y: cursorY,
-          opacity: isVisible ? 1 : 0,
+          opacity: isTextElement ? 0 : (isVisible ? 1 : 0),
         }}
         animate={{
-          scale: isClicking ? 0.75 : (isHovering ? 1.7 : 1),
+          scale: isTextElement ? 0 : (isClicking ? 0.75 : (isHovering ? 1.7 : 1)),
           backgroundColor: isHovering ? 'rgba(217, 119, 54, 0.18)' : 'rgba(217, 119, 54, 0.04)',
         }}
         transition={{ duration: 0.18 }}

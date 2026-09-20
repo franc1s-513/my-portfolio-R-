@@ -45,6 +45,12 @@ class ErrorBoundary extends React.Component {
             <p style={{ opacity: 0.8, marginBottom: '24px', fontSize: '0.9rem', lineHeight: '1.5' }}>
               An unexpected display glitch occurred while rendering components.
             </p>
+            <div style={{ background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '8px', fontSize: '11px', textAlign: 'left', overflowX: 'auto', marginBottom: '24px', color: '#ff4d4f', whiteSpace: 'pre-wrap' }}>
+              <strong>ERROR INFO:</strong><br />
+              {this.state.error ? String(this.state.error.message || this.state.error) : 'NO ERROR OBJECT (null/undefined)'}
+              <br /><br />
+              {this.state.error && this.state.error.stack ? String(this.state.error.stack) : 'NO STACK TRACE'}
+            </div>
             <button
               onClick={() => window.location.reload()}
               style={{

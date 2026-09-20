@@ -1,11 +1,13 @@
 import * as THREE from 'three';
-import React, { useRef, useMemo, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Html, useProgress } from '@react-three/drei';
 
 import { ModelLoader } from './ModelLoader';
 import { ScrollCamera } from './ScrollCamera';
 import FlyingBirds from './FlyingBirds';
+import IgnitionButton from './IgnitionButton';
+import { User, Layers, Rocket, Mail } from 'lucide-react';
 
 function CanvasLoader() {
   const { progress, active } = useProgress();
@@ -45,31 +47,12 @@ function CanvasLoader() {
   );
 }
 
-function SkyboxModel({ activeModal }) {
+function SkyboxModel() {
   const { scene: animeScene } = useGLTF('/free_-_skybox_anime_sky.glb');
-  const { scene: fantasyScene } = useGLTF('/fantasy_sky_background.glb');
   const animeRef = useRef();
-  const fantasyRef = useRef();
 
-  const clonedFantasy = useMemo(() => {
-    if (!fantasyScene) return null;
-    const clone = fantasyScene.clone(true);
-    clone.traverse((child) => {
-      if (child.isMesh && child.material) {
-        child.material = child.material.clone();
-        child.material.side = THREE.DoubleSide;
-        child.material.depthWrite = false;
-      }
-    });
-    return clone;
-  }, [fantasyScene]);
-
-  useFrame(({ camera }, delta) => {
+  useFrame(({ camera }) => {
     if (animeRef.current) animeRef.current.position.y = camera.position.y;
-    if (fantasyRef.current) {
-      fantasyRef.current.position.y = camera.position.y;
-      if (activeModal) fantasyRef.current.rotation.y += delta * 0.05;
-    }
   });
 
   return (
@@ -79,58 +62,33 @@ function SkyboxModel({ activeModal }) {
   );
 }
 
-/* DRY Nav Button for 3D HTML overlays */
-function NavButton3D({ label, emoji, gradientColors, glowColor, onClick }) {
-  const btnStyle = useMemo(() => ({
-    background: `linear-gradient(135deg, ${gradientColors[0]}, ${gradientColors[1]})`,
-    color: '#ffffff',
-    padding: '12px 24px',
-    borderRadius: '14px',
-    fontFamily: "'JetBrains Mono', monospace",
-    fontWeight: '800',
-    fontSize: '14px',
-    cursor: 'pointer',
-    border: '1.5px solid rgba(255,255,255,0.9)',
-    boxShadow: `0 0 25px ${glowColor}, 0 8px 25px rgba(0,0,0,0.35)`,
-    whiteSpace: 'nowrap',
-    backdropFilter: 'blur(8px)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    userSelect: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  }), [gradientColors, glowColor]);
-
-  const handleEnter = useCallback((e) => {
-    e.currentTarget.style.transform = 'scale(1.08)';
-    e.currentTarget.style.boxShadow = `0 0 35px ${glowColor}, 0 10px 30px rgba(0,0,0,0.45)`;
-  }, [glowColor]);
-
-  const handleLeave = useCallback((e) => {
-    e.currentTarget.style.transform = 'scale(1)';
-    e.currentTarget.style.boxShadow = `0 0 25px ${glowColor}, 0 8px 25px rgba(0,0,0,0.35)`;
-  }, [glowColor]);
-
+/* DRY Nav Button for 3D HTML overlays with ThreeUI Ignition WebGL Effect */
+function NavButton3D({ label, icon: Icon, color, onClick }) {
   return (
     <Html position={[0, -18, 0]} center distanceFactor={120} style={{ pointerEvents: 'auto' }}>
-      <button
-        onClick={(e) => { e.stopPropagation(); onClick(); }}
-        style={btnStyle}
-        className="btn-press"
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
+      <IgnitionButton
+        color={color}
+        variant="pill"
+        disableObserver={true}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+        className="nav-3d-ignition-btn"
+        style={{ transformOrigin: 'center center' }}
       >
-        {label} {emoji}
-      </button>
+        <span>{label}</span>
+        {Icon && <Icon size={16} strokeWidth={2.4} className="nav-btn-icon" />}
+      </IgnitionButton>
     </Html>
   );
 }
 
 const NAV_ZONES = [
-  { position: [18, -100, -45], modelPath: '/Castle 3.glb', floatPreset: 'castle3', glowColor: '#22c55e', gradientColors: ['#16a34a', '#22c55e'], label: 'ABOUT PAGE', emoji: '👤', key: 'about', rotation: [0, -Math.PI / 6, 0] },
-  { position: [-18, -200, -45], modelPath: '/Castle.glb', floatPreset: 'castle1', glowColor: '#0ea5e9', gradientColors: ['#0284c7', '#0ea5e9'], label: 'PROJECTS PAGE', emoji: '🎯', key: 'projects', rotation: [0, Math.PI / 4, 0] },
-  { position: [15, -300, -45], modelPath: '/Castle 2.glb', floatPreset: 'castle2', glowColor: '#a855f7', gradientColors: ['#7e22ce', '#a855f7'], label: 'CERTIFICATE PAGE', emoji: '📜', key: 'certificates', rotation: [0, -Math.PI / 8, 0] },
-  { position: [-15, -400, -45], modelPath: '/mystic_stones_of_the_sky.glb', floatPreset: 'stones', glowColor: '#eab308', gradientColors: ['#ca8a04', '#eab308'], label: 'CONTACT PAGE', emoji: '📞', key: 'contact', rotation: [0, Math.PI / 6, 0] },
+  { position: [18, -100, -45], modelPath: '/Castle 3.glb', floatPreset: 'castle3', glowColor: '#22c55e', color: 'green', label: 'ABOUT PAGE', icon: User, key: 'about', rotation: [0, -Math.PI / 6, 0] },
+  { position: [-18, -200, -45], modelPath: '/Castle.glb', floatPreset: 'castle1', glowColor: '#0ea5e9', color: 'blue', label: 'PROJECTS PAGE', icon: Layers, key: 'projects', rotation: [0, Math.PI / 4, 0] },
+  { position: [15, -300, -45], modelPath: '/Castle 2.glb', floatPreset: 'castle2', glowColor: '#38bdf8', color: 'cyan', label: 'TECH JOURNEY', icon: Rocket, key: 'tech-journey', rotation: [0, -Math.PI / 8, 0] },
+  { position: [-15, -400, -45], modelPath: '/mystic_stones_of_the_sky.glb', floatPreset: 'stones', glowColor: '#eab308', color: 'gold', label: 'CONTACT PAGE', icon: Mail, key: 'contact', rotation: [0, Math.PI / 6, 0] },
 ];
 
 const AnimeSkybox = ({ onOpenModal, activeModal }) => {
@@ -165,9 +123,8 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
                   />
                   <NavButton3D
                     label={zone.label}
-                    emoji={zone.emoji}
-                    gradientColors={zone.gradientColors}
-                    glowColor={zone.glowColor}
+                    icon={zone.icon}
+                    color={zone.color}
                     onClick={() => onOpenModal(zone.key)}
                   />
                 </group>
@@ -181,6 +138,5 @@ const AnimeSkybox = ({ onOpenModal, activeModal }) => {
 };
 
 useGLTF.preload('/free_-_skybox_anime_sky.glb');
-useGLTF.preload('/fantasy_sky_background.glb');
 
 export default AnimeSkybox;

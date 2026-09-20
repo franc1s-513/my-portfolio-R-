@@ -30,9 +30,11 @@ export function AshenPress({ className = "", style = {}, onSelectProject, onNavi
 
   const shouldMount = isIntersecting && isVisible;
 
-  useEffect(() => {
+  const [prevShouldMount, setPrevShouldMount] = useState(shouldMount);
+  if (prevShouldMount !== shouldMount) {
+    setPrevShouldMount(shouldMount);
     setIsLoaded(false);
-  }, [shouldMount]);
+  }
 
   // Listen for messages from the iframe
   useEffect(() => {

@@ -23,4 +23,14 @@
   mask-image: linear-gradient(to right, transparent 0%, transparent 35%, black 60%, black 100%);
 }
 
-/* Vignette removed for tall container compatibility */
+/* Transparent background modifier for pages like Contact */
+.professional-bg-container.transparent-bg {
+  background: transparent;
+}
+
+.professional-bg-container.transparent-bg .professional-bg-canvas {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0.85;
+  pointer-events: none;
+}

@@ -16,8 +16,9 @@ const SkyAndBirds = lazy(() => import('./components/SkyAndBirds'));
 import Home from './pages/Home';
 const About = lazy(() => import('./pages/About'));
 const Projects = lazy(() => import('./pages/Projects'));
-const Certificates = lazy(() => import('./pages/Certificates'));
+const TechJourney = lazy(() => import('./pages/TechJourney'));
 const Contact = lazy(() => import('./pages/Contact'));
+const MilestoneNode = lazy(() => import('./pages/MilestoneNode'));
 
 function App() {
   const [activeModal, setActiveModal] = useState(null);
@@ -58,6 +59,19 @@ function App() {
       setIsTransitioning(false);
     }, 2000);
   };
+
+  useEffect(() => {
+    window.__openModal = handleOpenModal;
+    const handleNavMessage = (e) => {
+      if (e.data && e.data.type === 'ASHEN_NAVIGATE' && e.data.page) {
+        handleOpenModal(e.data.page);
+      }
+    };
+    window.addEventListener('message', handleNavMessage);
+    return () => {
+      window.removeEventListener('message', handleNavMessage);
+    };
+  }, []);
 
   useEffect(() => {
     if (activeModal) {
@@ -135,10 +149,10 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: activeModal === 'projects' ? '#eae2d3' : '#ffffff',
-              backdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
-              WebkitBackdropFilter: activeModal === 'projects' ? 'none' : 'blur(20px)',
-              overflowY: activeModal === 'projects' ? 'hidden' : 'auto',
+              background: activeModal === 'projects' ? '#eae2d3' : (activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? '#02050e' : activeModal === 'contact' ? '#071010' : '#ffffff',
+              backdropFilter: (activeModal === 'projects' || activeModal === 'contact' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'none' : 'blur(20px)',
+              WebkitBackdropFilter: (activeModal === 'projects' || activeModal === 'contact' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'none' : 'blur(20px)',
+              overflowY: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'hidden' : 'auto',
             }}
           >
             <motion.button
@@ -158,9 +172,9 @@ function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : '#1C1917',
-                border: activeModal === 'projects' ? '1.5px solid rgba(255, 255, 255, 0.3)' : '1.5px solid transparent',
-                color: activeModal === 'projects' ? '#f6efe1' : '#ffffff',
+                background: activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917',
+                border: activeModal === 'projects' ? '1.5px solid rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? '1.5px solid rgba(255, 255, 255, 0.2)' : '1.5px solid transparent',
+                color: activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff',
                 borderRadius: '50%',
                 cursor: 'pointer',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
@@ -169,14 +183,14 @@ function App() {
                 transition: 'background 0.3s ease, color 0.3s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(14, 165, 233, 0.9)';
+                e.currentTarget.style.background = activeModal === 'contact' ? 'rgba(124, 58, 237, 0.9)' : 'rgba(14, 165, 233, 0.9)';
                 e.currentTarget.style.color = '#fff';
-                e.currentTarget.style.borderColor = 'rgba(14, 165, 233, 0.9)';
+                e.currentTarget.style.borderColor = activeModal === 'contact' ? 'rgba(167, 139, 250, 0.9)' : 'rgba(14, 165, 233, 0.9)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : '#1C1917';
-                e.currentTarget.style.color = activeModal === 'projects' ? '#f6efe1' : '#ffffff';
-                e.currentTarget.style.borderColor = activeModal === 'projects' ? 'rgba(255, 255, 255, 0.3)' : 'transparent';
+                e.currentTarget.style.background = activeModal === 'projects' ? 'rgba(36, 26, 18, 0.88)' : activeModal === 'contact' ? 'rgba(15, 23, 42, 0.85)' : '#1C1917';
+                e.currentTarget.style.color = activeModal === 'projects' ? '#f6efe1' : activeModal === 'contact' ? '#ffffff' : '#ffffff';
+                e.currentTarget.style.borderColor = activeModal === 'projects' ? 'rgba(255, 255, 255, 0.3)' : activeModal === 'contact' ? 'rgba(255, 255, 255, 0.2)' : 'transparent';
               }}
             >
               <X size={22} strokeWidth={2.5} />
@@ -187,16 +201,21 @@ function App() {
                 position: 'relative',
                 zIndex: 10,
                 width: '100%',
-                height: activeModal === 'projects' ? '100vh' : 'auto',
-                paddingTop: activeModal === 'projects' ? 0 : '45px',
-                paddingBottom: activeModal === 'projects' ? 0 : '30px',
+                height: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal?.startsWith('milestone-')) ? '100vh' : 'auto',
+                paddingTop: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal?.startsWith('milestone-')) ? 0 : '45px',
+                paddingBottom: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal?.startsWith('milestone-')) ? 0 : '30px',
               }}
               onClick={(e) => e.stopPropagation()}
             >
               <Suspense fallback={null}>
                 {activeModal === 'about' && <About onNavigate={handleOpenModal} />}
                 {activeModal === 'projects' && <Projects onNavigate={handleOpenModal} />}
-                {activeModal === 'certificates' && <Certificates />}
+                {(activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates') && (
+                  <TechJourney onNavigate={handleOpenModal} />
+                )}
+                {activeModal?.startsWith('milestone-') && (
+                  <MilestoneNode activeModal={activeModal} onNavigate={handleOpenModal} />
+                )}
                 {activeModal === 'contact' && <Contact />}
               </Suspense>
             </div>

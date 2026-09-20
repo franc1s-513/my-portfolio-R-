@@ -1,0 +1,328 @@
+/* ==========================================================================
+   IGNITION BUTTON — ThreeUI Tactile WebGL Hyperdrive Control
+   Preserves canonical ThreeUI ignition-terminal physics, tactile beveling,
+   and dynamic color theme glow.
+   ========================================================================== */
+
+.ignition-btn-shell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  padding: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  outline: none;
+  background: linear-gradient(180deg, #3c3f46 0%, #15171b 55%, #2a2d33 100%);
+  box-shadow: 
+    0 16px 36px rgba(15, 12, 10, 0.35),
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: 
+    transform 0.28s cubic-bezier(0.34, 1.4, 0.5, 1),
+    box-shadow 0.28s ease,
+    opacity 0.2s ease;
+  user-select: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ignition-btn-shell:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.ignition-btn-shell:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+
+.ignition-btn-shell:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Color Variant Hover Glows */
+.ignition-btn-shell--gold:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(212, 175, 55, 0.32),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ignition-btn-shell--gold:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 4px;
+}
+
+.ignition-btn-shell--cyan:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(14, 165, 233, 0.35),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ignition-btn-shell--cyan:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 4px;
+}
+
+.ignition-btn-shell--green:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(34, 197, 94, 0.4),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.ignition-btn-shell--green:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 4px;
+}
+
+.ignition-btn-shell--blue:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(14, 165, 233, 0.4),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.ignition-btn-shell--blue:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 4px;
+}
+
+.ignition-btn-shell--violet:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(139, 92, 246, 0.35),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ignition-btn-shell--violet:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 4px;
+}
+
+.ignition-btn-shell--orange:hover:not(:disabled) {
+  box-shadow: 
+    0 22px 48px rgba(212, 61, 23, 0.35),
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ignition-btn-shell--orange:focus-visible {
+  outline: 2px solid #d43d17;
+  outline-offset: 4px;
+}
+
+/* Inner Recessed Chamber for Default Tactical Buttons */
+.ignition-inner-chamber {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 11px 24px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #06050a;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Compact padding variant */
+.ignition-btn-shell--compact .ignition-inner-chamber {
+  padding: 8px 18px;
+  border-radius: 13px;
+}
+
+/* Large CTA variant */
+.ignition-btn-shell--large .ignition-inner-chamber {
+  padding: 14px 32px;
+  border-radius: 17px;
+}
+
+/* ==========================================================================
+   PILL / 3D NAVIGATION ISLAND VARIANT (Matching User Specification)
+   Seamless, sleek deep-space glass pill with crisp hairline border and zero black bezel.
+   ========================================================================== */
+.ignition-btn-shell--pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  padding: 0;
+  background: rgba(8, 10, 15, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 28px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.8);
+  transition: 
+    transform 0.3s cubic-bezier(0.34, 1.3, 0.5, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+  user-select: none;
+}
+
+/* Frosted glass top specular gloss reflection */
+.ignition-btn-shell--pill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  border-radius: 9999px 9999px 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ignition-btn-shell--pill:hover:not(:disabled) {
+  transform: scale(1.05) translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.ignition-btn-shell--pill:active:not(:disabled) {
+  transform: scale(0.97) translateY(1px);
+}
+
+/* Base Rest Atmospheric Pill Glows */
+.ignition-btn-shell--pill.ignition-btn-shell--green {
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--blue {
+  box-shadow: 0 0 16px rgba(14, 165, 233, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--cyan {
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--gold {
+  box-shadow: 0 0 16px rgba(234, 179, 8, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Hover Expanded Luxury Accent Glows */
+.ignition-btn-shell--pill.ignition-btn-shell--green:hover:not(:disabled) {
+  border-color: rgba(74, 222, 128, 0.85);
+  box-shadow: 
+    0 0 24px rgba(34, 197, 94, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--blue:hover:not(:disabled) {
+  border-color: rgba(56, 189, 248, 0.85);
+  box-shadow: 
+    0 0 24px rgba(14, 165, 233, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--cyan:hover:not(:disabled) {
+  border-color: rgba(56, 189, 248, 0.85);
+  box-shadow: 
+    0 0 24px rgba(56, 189, 248, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.ignition-btn-shell--pill.ignition-btn-shell--gold:hover:not(:disabled) {
+  border-color: rgba(250, 204, 21, 0.85);
+  box-shadow: 
+    0 0 24px rgba(234, 179, 8, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.ignition-btn-shell--pill .ignition-inner-chamber {
+  background: transparent;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  box-shadow: none;
+}
+
+.ignition-btn-shell--pill .ignition-content {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 12px rgba(0, 0, 0, 0.8) !important;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* Sleek Vector Icons in Pill Nav Buttons */
+.nav-btn-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  color: #ffffff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+  transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+.ignition-btn-shell--pill:hover .nav-btn-icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+/* WebGL Background Canvas */
+.ignition-gl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Foreground Content */
+.ignition-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-main, 'Inter', sans-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fdf6ee;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.ignition-btn-shell--green .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.ignition-btn-shell--blue .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.ignition-btn-shell--gold .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.ignition-btn-shell--cyan .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.ignition-btn-shell--violet .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.ignition-btn-shell--orange .ignition-content {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+}
