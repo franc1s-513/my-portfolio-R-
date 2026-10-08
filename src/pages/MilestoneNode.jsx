@@ -14,10 +14,13 @@ const COLOR_TITLE = "#1e3a8a"; // Deep navy
 const COLOR_TEXT = "#334155"; // Rich slate
 const COLOR_ACCENT = "#92400e"; // Deep gold/bronze
 
+const FACE_PLANE_GEO = new THREE.PlaneGeometry(S, S);
+const FACE_EDGES_GEO = new THREE.EdgesGeometry(FACE_PLANE_GEO);
+const CREASE_LINE_MAT = new THREE.LineBasicMaterial({ color: "#000000", transparent: true, opacity: 0.1 });
+
 function Face({ children, color, offsetPos, rotateAxis = "x", closedAngle = 0, isCover = false, milestone, explodeDir = [0,0,0] }) {
   const hingeRef = useRef();
   const scroll = useScroll();
-  const htmlRef = useRef();
 
   useFrame(() => {
     if (!hingeRef.current || !scroll) return;
@@ -54,10 +57,7 @@ function Face({ children, color, offsetPos, rotateAxis = "x", closedAngle = 0, i
           <meshStandardMaterial color={color} roughness={0.7} side={THREE.FrontSide} />
           
           {/* Subtle Crease line on the outside edge */}
-          <lineSegments>
-            <edgesGeometry args={[new THREE.PlaneGeometry(S, S)]} />
-            <lineBasicMaterial color="#000000" transparent opacity={0.1} />
-          </lineSegments>
+          <lineSegments geometry={FACE_EDGES_GEO} material={CREASE_LINE_MAT} />
 
           {isCover && milestone && (
             <group position={[0, 0, 0.02]}>
@@ -102,7 +102,7 @@ function UnfoldingBox({ milestone }) {
         <mesh position={[0, 0, -0.01]} rotation={[0, Math.PI, 0]}>
           <planeGeometry args={[S, S]} />
           <meshStandardMaterial color={c} roughness={0.7} side={THREE.FrontSide} />
-          <lineSegments><edgesGeometry args={[new THREE.PlaneGeometry(S, S)]} /><lineBasicMaterial color="#000000" transparent opacity={0.1} /></lineSegments>
+          <lineSegments geometry={FACE_EDGES_GEO} material={CREASE_LINE_MAT} />
         </mesh>
         
         <mesh position={[0, 0, 0.01]}>
@@ -322,7 +322,7 @@ function Scene({ milestone }) {
   );
 }
 
-const MilestoneNode = ({ activeModal, onNavigate }) => {
+const MilestoneNode = ({ activeModal }) => {
   const milestoneId = activeModal.replace("milestone-", "");
   const selectedMilestone = DEFAULT_MILESTONES.find(m => m.id === milestoneId) || DEFAULT_MILESTONES[0];
 
@@ -355,22 +355,6 @@ const MilestoneNode = ({ activeModal, onNavigate }) => {
       >
         <Scene milestone={selectedMilestone} />
       </Canvas>
-
-      {/* Screen-Space Title Overlay for Context */}
-      <div
-        className="absolute z-[9999] pointer-events-none flex flex-col"
-        style={{ top: 'clamp(80px, 12vh, 120px)', left: 'clamp(24px, 5vw, 60px)', animation: 'fadeIn 1s ease-out forwards' }}
-      >
-        <h1 
-          className="text-4xl sm:text-5xl lg:text-6xl font-normal text-[#D4AF37] drop-shadow-2xl m-0 leading-none"
-          style={{ fontFamily: "var(--font-editorial), 'Playfair Display', serif", textShadow: '0 4px 24px rgba(0,0,0,0.8)' }}
-        >
-          {selectedMilestone.id === "praskala-intern" ? "Praskala Technology" : selectedMilestone.title}
-        </h1>
-        <p className="text-white/90 font-sans tracking-widest text-sm sm:text-base mt-4 uppercase font-bold" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}>
-          {selectedMilestone.id === "praskala-intern" ? "Graphic Design & Sales Intern" : selectedMilestone.badge}
-        </p>
-      </div>
     </div>
   );
 };

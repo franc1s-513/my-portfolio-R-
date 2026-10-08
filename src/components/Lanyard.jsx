@@ -25,6 +25,7 @@ const _vec = new THREE.Vector3();
 const _dir = new THREE.Vector3();
 const _q = new THREE.Quaternion();
 const _euler = new THREE.Euler();
+const SHEEN_COLOR = new THREE.Color('#8b5cf6');
 
 export default function Lanyard({
   position = [0, 0, 30],
@@ -220,12 +221,27 @@ function Band({
     }
   }, [hovered, dragged]);
 
+  const numPoints = isMobile ? 16 : 32;
+  const ribbonPoints = useMemo(
+    () => Array.from({ length: numPoints + 1 }, () => new THREE.Vector3()),
+    [numPoints]
+  );
+
+  useEffect(() => {
+    curve.curveType = 'chordal';
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  }, [curve, texture]);
+
   useFrame((state, delta) => {
     if (dragged) {
       _vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       _dir.copy(_vec).sub(state.camera.position).normalize();
       _vec.add(_dir.multiplyScalar(state.camera.position.length()));
-      [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
+      card.current?.wakeUp();
+      j1.current?.wakeUp();
+      j2.current?.wakeUp();
+      j3.current?.wakeUp();
+      fixed.current?.wakeUp();
       card.current?.setNextKinematicTranslation({ x: _vec.x - dragged.x, y: _vec.y - dragged.y, z: _vec.z - dragged.z });
     } else if (card.current) {
       // Natural rest position: convert quaternion to Euler to avoid quaternion oscillation feedback
@@ -243,25 +259,38 @@ function Band({
       }
     }
 
-    if (fixed.current) {
-      [j1, j2].forEach(ref => {
-        if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        const clampedDistance = Math.max(0.01, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
-        ref.current.lerped.lerp(
-          ref.current.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
-      });
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
+    const fixedRef = fixed.current;
+    const j1Ref = j1.current;
+    const j2Ref = j2.current;
+    const j3Ref = j3.current;
+    const bandRef = band.current;
+
+    if (fixedRef && j1Ref && j2Ref && j3Ref && bandRef) {
+      if (!j1Ref.lerped) j1Ref.lerped = new THREE.Vector3().copy(j1Ref.translation());
+      const dist1 = Math.max(0.01, Math.min(1, j1Ref.lerped.distanceTo(j1Ref.translation())));
+      j1Ref.lerped.lerp(
+        j1Ref.translation(),
+        delta * (minSpeed + dist1 * (maxSpeed - minSpeed))
+      );
+
+      if (!j2Ref.lerped) j2Ref.lerped = new THREE.Vector3().copy(j2Ref.translation());
+      const dist2 = Math.max(0.01, Math.min(1, j2Ref.lerped.distanceTo(j2Ref.translation())));
+      j2Ref.lerped.lerp(
+        j2Ref.translation(),
+        delta * (minSpeed + dist2 * (maxSpeed - minSpeed))
+      );
+
+      curve.points[0].copy(j3Ref.translation());
+      curve.points[1].copy(j2Ref.lerped);
+      curve.points[2].copy(j1Ref.lerped);
+      curve.points[3].copy(fixedRef.translation());
+
+      for (let i = 0; i <= numPoints; i++) {
+        curve.getPoint(i / numPoints, ribbonPoints[i]);
+      }
+      bandRef.geometry.setPoints(ribbonPoints);
     }
   });
-
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   return (
     <>
@@ -298,7 +327,7 @@ function Band({
                 roughness={0.12}
                 metalness={0.04}
                 sheen={0.4}
-                sheenColor={new THREE.Color('#8b5cf6')}
+                sheenColor={SHEEN_COLOR}
               />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.15} material-metalness={0.95} />
@@ -321,3 +350,5 @@ function Band({
     </>
   );
 }
+
+useGLTF.preload(cardGLB);

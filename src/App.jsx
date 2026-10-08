@@ -13,6 +13,7 @@ import LoadingScreen from './components/LoadingScreen';
 
 const SkyAndBirds = lazy(() => import('./components/SkyAndBirds'));
 import { useGLTF } from '@react-three/drei';
+import cardGLB from './assets/lanyard/card.glb';
 
 // Preload heavy assets globally so they download during the initial LoadingScreen
 useGLTF.preload('/eywa_tree.glb');
@@ -21,6 +22,7 @@ useGLTF.preload('/mystic_stones_of_the_sky.glb');
 useGLTF.preload('/Castle.glb');
 useGLTF.preload('/Castle 2.glb');
 useGLTF.preload('/Castle 3.glb');
+useGLTF.preload(cardGLB);
 
 // --- PAGES (eagerly loaded to remove navigation lag) ---
 import Home from './pages/Home';
@@ -161,7 +163,7 @@ function App() {
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
-              background: activeModal === 'projects' ? '#eae2d3' : (activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? '#02050e' : activeModal === 'contact' ? '#071010' : '#ffffff',
+              background: activeModal === 'projects' ? '#eae2d3' : (activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? '#02050e' : activeModal === 'contact' ? '#170208' : '#ffffff',
               backdropFilter: (activeModal === 'projects' || activeModal === 'contact' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'none' : 'blur(20px)',
               WebkitBackdropFilter: (activeModal === 'projects' || activeModal === 'contact' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'none' : 'blur(20px)',
               overflowY: (activeModal === 'projects' || activeModal === 'tech-journey' || activeModal === 'tech-journy' || activeModal === 'certificates' || activeModal?.startsWith('milestone-')) ? 'hidden' : 'auto',

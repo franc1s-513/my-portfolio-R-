@@ -43,9 +43,8 @@ function CustomStars() {
   const pointsRef = useRef();
   const count = 1500;
   
-  const [positions, phases] = useMemo(() => {
+  const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
-    const ph = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       const r = 40 + Math.random() * 40;
       const theta = 2 * Math.PI * Math.random();
@@ -53,9 +52,8 @@ function CustomStars() {
       pos[i * 3 + 0] = r * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
-      ph[i] = Math.random() * Math.PI * 2;
     }
-    return [pos, ph];
+    return pos;
   }, []);
 
   const starMap = useMemo(() => createCircleTexture(), []);
@@ -91,10 +89,9 @@ function CustomStars() {
 function EywaTree({ onReady }) {
   const { scene } = useGLTF("/eywa_tree.glb");
   const groupRef = useRef();
-  const [treeTransform, setTreeTransform] = useState({ scale: 1, offsetY: 0, height: 12 });
 
   // Clone the scene so we don't permanently mutate the cached GLTF materials
-  const clonedScene = useMemo(() => {
+  const { clonedScene, treeTransform } = useMemo(() => {
     const clone = scene.clone();
     
     const box = new THREE.Box3().setFromObject(clone);
@@ -107,7 +104,7 @@ function EywaTree({ onReady }) {
     // Shift so the base sits at y=0, then bring it down slightly (-1.2 units)
     const offsetY = (-box.min.y * s) - 1.2;
 
-    setTreeTransform({ scale: s, offsetY, height: size.y * s });
+    const transform = { scale: s, offsetY, height: size.y * s };
 
     const treeMinY = box.min.y;
     const treeRangeY = size.y;
@@ -167,7 +164,7 @@ function EywaTree({ onReady }) {
       });
     });
 
-    return clone;
+    return { clonedScene: clone, treeTransform: transform };
   }, [scene]);
 
   // Float bob + gentle sway
@@ -240,7 +237,7 @@ function MilestoneBeacon({ milestone, treeInfo, onHover, onUnhover, onSelect }) 
   // Derive world position from treeRatio + actual tree bounding box
   const pos = useMemo(() => {
     if (!treeInfo) return [0, 2, 0];
-    const { scale, offsetY, height } = treeInfo;
+    const { offsetY, height } = treeInfo;
     // treeRatio: [xFraction of width, yFraction of height, zFraction of depth]
     // tree spans roughly ±3.5 in X/Z at full scale — approximate
     const spread = (height / 12) * 3.5;
