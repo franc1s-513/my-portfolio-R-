@@ -71,60 +71,148 @@ const LoadingScreen = ({ onFinish }) => {
         position: 'fixed',
         inset: 0,
         zIndex: 100000,
-        background: 'radial-gradient(ellipse at center, #fff9ec 0%, #fff1d6 45%, #fff7e8 100%)',
+        background: 'radial-gradient(ellipse at center, #fffbf2 0%, #fff4df 45%, #fff8eb 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '36px',
+        gap: '32px',
         color: '#030339',
         fontFamily: "var(--font-display)",
-        padding: '20px',
+        padding: '24px',
         boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
+      {/* Ambient Radial Golden Aura */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          width: 'clamp(320px, 65vw, 760px)',
+          height: 'clamp(320px, 65vw, 760px)',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(200, 153, 11, 0.14) 0%, rgba(200, 153, 11, 0) 70%)',
+          filter: 'blur(50px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Main Animated Headline & Badge */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          gap: '6px',
+        }}
       >
-        <div style={{ width: 'min(90vw, 900px)' }}>
+        {/* Subtle Luxury Pre-title Pill */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 18px',
+            borderRadius: '999px',
+            background: 'rgba(200, 153, 11, 0.08)',
+            border: '1px solid rgba(200, 153, 11, 0.28)',
+            boxShadow: '0 2px 14px rgba(200, 153, 11, 0.08)',
+            marginBottom: '10px',
+          }}
+        >
+          <span
+            style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: '#c8990b',
+              boxShadow: '0 0 10px #c8990b',
+              display: 'inline-block'
+            }}
+          />
+          <span
+            style={{
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              letterSpacing: '3px',
+              textTransform: 'uppercase',
+              color: '#8a6500',
+              fontFamily: "var(--font-mono, monospace)"
+            }}
+          >
+            FRANCIS FERNANDO • PORTFOLIO
+          </span>
+        </motion.div>
+
+        {/* Line 1: HEY THERE, (Tall & Prominent) */}
+        <div style={{ width: 'min(92vw, 580px)' }}>
           <StrokeText
-            text={"HEY THERE ,GREAT TO PULL YOUR EYE !"}
+            text={"HEY THERE,"}
             strokeColor="#c8990b"
             fillColor="#030339"
-            strokeWidth={1.4}
-            drawDuration={1.6}
-            fillDelay={0.2}
-            stagger={0.05}
+            strokeWidth={1.8}
+            drawDuration={1.3}
+            fillDelay={0.15}
+            stagger={0.045}
             ease="power2.out"
             trigger="mount"
             fillMode="wipe"
-            fontSize={64}
+            fontSize={96}
             fontWeight={800}
-            letterSpacing={-2}
+            letterSpacing={-1.5}
+          />
+        </div>
+
+        {/* Line 2: GREAT TO PULL YOUR EYE ! (Wide, Clear & Bold) */}
+        <div style={{ width: 'min(95vw, 1020px)' }}>
+          <StrokeText
+            text={"GREAT TO PULL YOUR EYE !"}
+            strokeColor="#c8990b"
+            fillColor="#030339"
+            strokeWidth={1.6}
+            drawDuration={1.6}
+            fillDelay={0.25}
+            stagger={0.035}
+            ease="power2.out"
+            trigger="mount"
+            fillMode="wipe"
+            fontSize={82}
+            fontWeight={800}
+            letterSpacing={-1.5}
           />
         </div>
       </motion.div>
 
-      <div style={{ width: 'min(420px, 82vw)' }}>
+      {/* Progress Section */}
+      <div style={{ width: 'min(440px, 84vw)', position: 'relative', zIndex: 1 }}>
         <div
           style={{
-            height: '10px',
+            height: '8px',
             borderRadius: '50px',
             overflow: 'hidden',
-            background: 'rgba(14,165,233,0.07)',
-            border: '1px solid rgba(14,165,233,0.4)',
-            boxShadow: '0 0 24px rgba(14,165,233,0.15)',
+            background: 'rgba(200, 153, 11, 0.12)',
+            border: '1px solid rgba(200, 153, 11, 0.35)',
+            boxShadow: '0 0 24px rgba(200, 153, 11, 0.12)',
           }}
         >
           <div
             style={{
               height: '100%',
               width: `${displayed}%`,
-              background: 'linear-gradient(90deg, #0284c7, #0ea5e9, #38bdf8)',
-              boxShadow: '0 0 14px rgba(56,189,248,0.85)',
+              background: 'linear-gradient(90deg, #b48310, #d4af37, #fef08a)',
+              boxShadow: '0 0 16px rgba(212, 175, 55, 0.75)',
               borderRadius: '50px',
               transition: 'width 0.15s linear',
             }}
@@ -134,15 +222,18 @@ const LoadingScreen = ({ onFinish }) => {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            marginTop: '10px',
-            fontSize: '0.7rem',
-            letterSpacing: '2px',
+            alignItems: 'center',
+            marginTop: '12px',
+            fontSize: '0.72rem',
+            letterSpacing: '2.5px',
             color: '#030339',
-            opacity: 0.65,
+            fontFamily: "var(--font-mono, monospace)",
+            fontWeight: 600,
+            opacity: 0.75,
           }}
         >
           <span>{assetsLoading ? 'UPLINKING 3D ENVIRONMENT...' : 'INITIALIZING PORTFOLIO...'}</span>
-          <span style={{ color: '#0284c7', fontWeight: 800, opacity: 1 }}>{displayed}%</span>
+          <span style={{ color: '#8a6500', fontWeight: 800, opacity: 1, letterSpacing: '1px' }}>{displayed}%</span>
         </div>
       </div>
     </motion.div>
